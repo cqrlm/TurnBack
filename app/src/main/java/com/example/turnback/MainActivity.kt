@@ -29,29 +29,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.turnback.services.SharedPreferencesService
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class MainActivity : ComponentActivity() {
+
+    private val sharedPreferencesService = SharedPreferencesService(this)
+
+    private var time = Duration.ZERO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        time = sharedPreferencesService.getTime().toDuration(DurationUnit.MILLISECONDS)
+
         setContent {
             TurnBackTheme {
-                MainScreen()
+                MainScreen(time) { changedTime ->
+                    time = changedTime
+                }
             }
         }
+    }
+
+    override fun onPause() {
+        sharedPreferencesService.saveTime(time.inWholeMilliseconds)
+        super.onPause()
     }
 }
 
 @Composable
-private fun MainScreen() {
+private fun MainScreen(initialTime: Duration, changeTime: (Duration) -> Unit) {
     var time by remember {
-        mutableStateOf(Duration.ZERO)
+        mutableStateOf(initialTime)
     }
 
     val formattedTime by remember(time) {
@@ -69,11 +85,13 @@ private fun MainScreen() {
     LaunchedEffect(resetTime, time) {
         if (resetTime) {
             time = Duration.ZERO
+            changeTime(time)
             resetTime = false
         } else {
             val interval = 1.seconds
             delay(interval)
             time += interval
+            changeTime(time)
         }
     }
 
@@ -120,6 +138,6 @@ private fun MainScreen() {
 @Composable
 private fun MainScreenPreview() {
     TurnBackTheme {
-        MainScreen()
+        MainScreen(Duration.ZERO) {}
     }
 }
