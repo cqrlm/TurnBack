@@ -20,12 +20,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
+import kotlinx.coroutines.delay
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
 
@@ -42,6 +50,33 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainScreen() {
+    var time by remember {
+        mutableStateOf(Duration.ZERO)
+    }
+
+    val formattedTime by remember(time) {
+        mutableStateOf(
+            time.toComponents { hours, minutes, seconds, _ ->
+                "%02d:%02d:%02d".format(hours, minutes, seconds)
+            }
+        )
+    }
+
+    var resetTime by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(resetTime, time) {
+        if (resetTime) {
+            time = Duration.ZERO
+            resetTime = false
+        } else {
+            val interval = 1.seconds
+            delay(interval)
+            time += interval
+        }
+    }
+
     Scaffold { paddingValues ->
         Box(
             contentAlignment = Alignment.Center,
@@ -60,7 +95,7 @@ private fun MainScreen() {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "00:00:00",
+                    text = formattedTime,
                     style = Typography.displayLarge
                 )
 
@@ -68,7 +103,7 @@ private fun MainScreen() {
 
                 Button(
                     contentPadding = PaddingValues(20.dp),
-                    onClick = {},
+                    onClick = { resetTime = true },
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .fillMaxWidth()
