@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.example.turnback.services.SharedPreferencesService
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
+import com.example.turnback.utils.formatTime
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -71,11 +72,7 @@ private fun MainScreen(initialTime: Duration, changeTime: (Duration) -> Unit) {
     }
 
     val formattedTime by remember(time) {
-        mutableStateOf(
-            time.toComponents { hours, minutes, seconds, _ ->
-                "%02d:%02d:%02d".format(hours, minutes, seconds)
-            }
-        )
+        mutableStateOf(time.formatTime())
     }
 
     var resetTime by remember {
