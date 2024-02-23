@@ -20,76 +20,58 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.example.turnback.services.SharedPreferencesService
+import com.example.turnback.services.TimeService
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatTime
-import kotlinx.coroutines.delay
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 class MainActivity : ComponentActivity() {
 
-    private val sharedPreferencesService = SharedPreferencesService(this)
-
-    private var time = Duration.ZERO
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        time = sharedPreferencesService.getTime().toDuration(DurationUnit.MILLISECONDS)
+        val sharedPreferencesService = SharedPreferencesService(this)
+
+        val timeService = TimeService(
+            initialTime = sharedPreferencesService.getTime().toDuration(DurationUnit.MILLISECONDS)
+        )
 
         setContent {
             TurnBackTheme {
-                MainScreen(time) { changedTime ->
-                    time = changedTime
+                val time = timeService
+                    .timeFlow
+                    .collectAsState(initial = timeService.initialTime)
+
+                LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+                    sharedPreferencesService.saveTime(time.value.inWholeMilliseconds)
+                }
+
+                MainScreen(time.value) {
+                    timeService.resetTime()
                 }
             }
         }
     }
-
-    override fun onPause() {
-        sharedPreferencesService.saveTime(time.inWholeMilliseconds)
-        super.onPause()
-    }
 }
 
 @Composable
-private fun MainScreen(initialTime: Duration, changeTime: (Duration) -> Unit) {
-    var time by remember {
-        mutableStateOf(initialTime)
-    }
-
+private fun MainScreen(time: Duration, resetTime: () -> Unit) {
     val formattedTime by remember(time) {
         mutableStateOf(time.formatTime())
-    }
-
-    var resetTime by remember {
-        mutableStateOf(false)
-    }
-
-    LaunchedEffect(resetTime, time) {
-        if (resetTime) {
-            time = Duration.ZERO
-            changeTime(time)
-            resetTime = false
-        } else {
-            val interval = 1.seconds
-            delay(interval)
-            time += interval
-            changeTime(time)
-        }
     }
 
     Scaffold { paddingValues ->
@@ -118,7 +100,7 @@ private fun MainScreen(initialTime: Duration, changeTime: (Duration) -> Unit) {
 
                 Button(
                     contentPadding = PaddingValues(20.dp),
-                    onClick = { resetTime = true },
+                    onClick = resetTime,
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .fillMaxWidth()
