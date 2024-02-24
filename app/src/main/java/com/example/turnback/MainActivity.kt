@@ -21,59 +21,46 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.example.turnback.services.SharedPreferencesService
-import com.example.turnback.services.TimeService
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatTime
 import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedPreferencesService = SharedPreferencesService(this)
-
-        val timeService = TimeService(
-            initialTime = sharedPreferencesService.getTime().toDuration(DurationUnit.MILLISECONDS)
-        )
-
         setContent {
             TurnBackTheme {
-                val time = timeService
-                    .timeFlow
-                    .collectAsState(initial = timeService.initialTime)
-
-                LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-                    sharedPreferencesService.saveTime(time.value.inWholeMilliseconds)
-                }
-
-                MainScreen(time.value) {
-                    timeService.resetTime()
-                }
+                MainScreen()
             }
         }
     }
 }
 
 @Composable
-private fun MainScreen(time: Duration, resetTime: () -> Unit) {
-    val formattedTime by remember(time) {
-        mutableStateOf(time.formatTime())
+private fun MainScreen(viewModel: MainViewModel = viewModel()) {
+    val time = viewModel.timeFlow.collectAsState()
+
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+        viewModel.saveTime(time.value)
     }
 
+    MainContent(time.value) {
+        viewModel.resetTime()
+    }
+}
+
+@Composable
+fun MainContent(time: Duration, resetTime: () -> Unit) {
     Scaffold { paddingValues ->
         Box(
             contentAlignment = Alignment.Center,
@@ -92,7 +79,7 @@ private fun MainScreen(time: Duration, resetTime: () -> Unit) {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = formattedTime,
+                    text = time.formatTime(),
                     style = Typography.displayLarge
                 )
 
@@ -117,6 +104,6 @@ private fun MainScreen(time: Duration, resetTime: () -> Unit) {
 @Composable
 private fun MainScreenPreview() {
     TurnBackTheme {
-        MainScreen(Duration.ZERO) {}
+        MainContent(Duration.ZERO) {}
     }
 }
