@@ -31,8 +31,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatTime
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.time.Duration
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

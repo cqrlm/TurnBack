@@ -1,32 +1,29 @@
 package com.example.turnback
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.services.SharedPreferencesService
 import com.example.turnback.services.TimeService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val sharedPreferencesService = SharedPreferencesService(application.applicationContext)
-
-    private val initialTime: Duration =
-        sharedPreferencesService.getTime().toDuration(DurationUnit.MILLISECONDS)
-
-    private val timeService = TimeService(initialTime, viewModelScope)
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val timeService: TimeService
+) : ViewModel() {
 
     val timeFlow: StateFlow<Duration> = timeService.timeFlow
 
     init {
-        timeService.startTimeCounting()
+        viewModelScope.launch {
+            timeService.startTimeCounting()
+        }
     }
 
     fun saveTime(time: Duration) {
-        sharedPreferencesService.saveTime(time.inWholeMilliseconds)
+        timeService.saveTime(time)
     }
 
     fun resetTime() {
