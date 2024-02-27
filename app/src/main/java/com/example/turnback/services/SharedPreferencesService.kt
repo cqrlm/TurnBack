@@ -1,8 +1,12 @@
 package com.example.turnback.services
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class SharedPreferencesService(private val context: Context) {
+class SharedPreferencesService @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     fun saveTime(milliseconds: Long) =
         context
