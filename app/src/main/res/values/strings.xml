@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TurnBack</string>
+    <string name="timer">Timer</string>
+    <string name="stopwatch">Stopwatch</string>
 </resources>
