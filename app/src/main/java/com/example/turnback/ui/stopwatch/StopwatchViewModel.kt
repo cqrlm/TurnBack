@@ -1,4 +1,4 @@
-package com.example.turnback
+package com.example.turnback.ui.stopwatch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import kotlin.time.Duration
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class StopwatchViewModel @Inject constructor(
     private val timeService: TimeService
 ) : ViewModel() {
 
