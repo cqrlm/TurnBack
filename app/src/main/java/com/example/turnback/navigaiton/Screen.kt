@@ -4,12 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.turnback.R
 
-sealed class Screen(open val route: String) {
+sealed class Screen(open val route: String, open val titleId: Int? = null) {
 
     sealed class BottomBarItem(
         override val route: String,
         @StringRes
-        val titleId: Int,
+        override val titleId: Int,
         @DrawableRes
         val iconId: Int
     ) : Screen(route) {
