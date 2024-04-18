@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import com.example.turnback.services.stopwatch.StopwatchState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatTime
@@ -44,14 +45,24 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
         viewModel.saveTime(time.value)
     }
 
-    StopwatchContent(time.value) {
-        viewModel.resetTime()
-    }
+    StopwatchContent(
+        time = time.value,
+        stopwatchState = viewModel.stopwatchState,
+        startAction = { viewModel.start() },
+        pauseAction = { viewModel.pause() },
+        stopAction = { viewModel.reset() }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StopwatchContent(time: Duration, resetTime: () -> Unit) {
+private fun StopwatchContent(
+    time: Duration,
+    stopwatchState: StopwatchState,
+    startAction: () -> Unit,
+    pauseAction: () -> Unit,
+    stopAction: () -> Unit
+) {
     Surface {
         Box(
             contentAlignment = Alignment.Center,
@@ -68,13 +79,13 @@ private fun StopwatchContent(time: Duration, resetTime: () -> Unit) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                    var selectedIndex by remember { mutableIntStateOf(0) }
+                    var selectedIndex by remember { mutableIntStateOf(stopwatchState.ordinal) }
 
                     val buttonsData = remember {
                         StopwatchButtonData.getAll(
-                            startAction = {},
-                            pauseAction = {},
-                            stopAction = { resetTime() }
+                            startAction = startAction,
+                            pauseAction = pauseAction,
+                            stopAction = stopAction
                         )
                     }
 
@@ -116,6 +127,12 @@ private fun StopwatchContent(time: Duration, resetTime: () -> Unit) {
 @Composable
 private fun StopwatchPreview() {
     TurnBackTheme {
-        StopwatchContent(Duration.ZERO) {}
+        StopwatchContent(
+            time = Duration.ZERO,
+            stopwatchState = StopwatchState.STOP,
+            startAction = {},
+            pauseAction = {},
+            stopAction = {}
+        )
     }
 }
