@@ -15,15 +15,15 @@ data class StopwatchButtonData(
     companion object {
 
         fun getAll(
-            playAction: () -> Unit,
+            startAction: () -> Unit,
             pauseAction: () -> Unit,
             stopAction: () -> Unit
         ): List<StopwatchButtonData> =
             listOf(
                 StopwatchButtonData(
-                    iconId = R.drawable.ic_play,
-                    descriptionId = R.string.play,
-                    onClick = playAction
+                    iconId = R.drawable.ic_start,
+                    descriptionId = R.string.start,
+                    onClick = startAction
                 ),
                 StopwatchButtonData(
                     iconId = R.drawable.ic_pause,

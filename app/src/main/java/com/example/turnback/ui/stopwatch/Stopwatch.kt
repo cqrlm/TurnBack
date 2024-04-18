@@ -72,7 +72,7 @@ private fun StopwatchContent(time: Duration, resetTime: () -> Unit) {
 
                     val buttonsData = remember {
                         StopwatchButtonData.getAll(
-                            playAction = {},
+                            startAction = {},
                             pauseAction = {},
                             stopAction = { resetTime() }
                         )
