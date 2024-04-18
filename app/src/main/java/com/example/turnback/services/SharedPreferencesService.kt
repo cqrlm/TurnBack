@@ -1,14 +1,18 @@
 package com.example.turnback.services
 
 import android.content.Context
+import com.example.turnback.services.stopwatch.StopwatchState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class SharedPreferencesService @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    fun saveTime(milliseconds: Long) =
+    fun saveTime(milliseconds: Long) {
         context
             .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
             .edit()
@@ -16,15 +20,34 @@ class SharedPreferencesService @Inject constructor(
                 putLong(PREFERENCES_TIME_KEY, milliseconds)
                 apply()
             }
+    }
 
-    fun getTime(): Long =
+    fun saveStopwatchState(stopwatchState: StopwatchState) {
+        context
+            .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
+            .edit()
+            .run {
+                putInt(PREFERENCES_STOPWATCH_STATE_KEY, stopwatchState.ordinal)
+                apply()
+            }
+    }
+
+    fun getTime(): Duration =
         context
             .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
             .getLong(PREFERENCES_TIME_KEY, 0)
+            .run { toDuration(DurationUnit.MILLISECONDS) }
+
+    fun getStopwatchState(): StopwatchState =
+        context
+            .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
+            .getInt(PREFERENCES_STOPWATCH_STATE_KEY, StopwatchState.STOP.ordinal)
+            .run { StopwatchState.entries[this] }
 
     companion object {
 
         private const val PREFERENCES_FILENAME = "preferences"
         private const val PREFERENCES_TIME_KEY = "time"
+        private const val PREFERENCES_STOPWATCH_STATE_KEY = "stopwatch_state"
     }
 }
