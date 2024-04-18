@@ -1,50 +1,61 @@
 package com.example.turnback.services.stopwatch
 
 import com.example.turnback.services.SharedPreferencesService
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.Timer
 import javax.inject.Inject
+import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 
 class StopwatchService @Inject constructor(
     private val sharedPreferencesService: SharedPreferencesService
 ) {
 
-    private val initialTime: Duration =
-        sharedPreferencesService.getTime()
-
-    private val _timeFlow = MutableStateFlow(initialTime)
+    private val _timeFlow = MutableStateFlow(sharedPreferencesService.getTime())
     val timeFlow = _timeFlow.asStateFlow()
 
-    private var resetTime = false
+    private var stopwatchStateFlow = MutableStateFlow(sharedPreferencesService.getStopwatchState())
+    val stopwatchState: StopwatchState
+        get() = stopwatchStateFlow.value
 
-    suspend fun startTimeCounting() {
+    private var timer: Timer? = null
+
+    suspend fun observeStopwatchState() {
         var time = _timeFlow.value
 
-        while (true) {
-            if (resetTime) {
-                time = Duration.ZERO
-                resetTime = false
-            } else {
-                delay(TIME_INTERVAL)
-                time += TIME_INTERVAL
-            }
+        stopwatchStateFlow.collect { stopwatchState ->
+            when (stopwatchState) {
+                StopwatchState.START -> {
+                    timer = fixedRateTimer(period = TIME_INTERVAL) {
+                        time += TIME_INTERVAL_DURATION
+                        _timeFlow.tryEmit(time)
+                    }
+                }
 
-            _timeFlow.emit(time)
+                StopwatchState.STOP -> {
+                    timer?.cancel()
+                    time = Duration.ZERO
+                    _timeFlow.emit(time)
+                }
+
+                StopwatchState.PAUSE -> timer?.cancel()
+            }
         }
     }
 
     fun saveTime(time: Duration) {
         sharedPreferencesService.saveTime(time.inWholeMilliseconds)
+        sharedPreferencesService.saveStopwatchState(stopwatchStateFlow.value)
     }
 
-    fun resetTime() {
-        resetTime = true
+    suspend fun changeStopwatchState(stopwatchState: StopwatchState) {
+        stopwatchStateFlow.emit(stopwatchState)
     }
 
     companion object {
-        private val TIME_INTERVAL = 1.seconds
+        private const val TIME_INTERVAL = 1000L
+        private val TIME_INTERVAL_DURATION = TIME_INTERVAL.milliseconds
     }
 }
