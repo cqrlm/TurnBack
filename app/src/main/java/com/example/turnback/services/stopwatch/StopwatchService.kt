@@ -1,20 +1,19 @@
-package com.example.turnback.services
+package com.example.turnback.services.stopwatch
 
+import com.example.turnback.services.SharedPreferencesService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
-class TimeService @Inject constructor(
+class StopwatchService @Inject constructor(
     private val sharedPreferencesService: SharedPreferencesService
 ) {
 
     private val initialTime: Duration =
-        sharedPreferencesService.getTime().toDuration(DurationUnit.MILLISECONDS)
+        sharedPreferencesService.getTime()
 
     private val _timeFlow = MutableStateFlow(initialTime)
     val timeFlow = _timeFlow.asStateFlow()
