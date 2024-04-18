@@ -48,9 +48,13 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
     StopwatchContent(
         time = time.value,
         stopwatchState = viewModel.stopwatchState,
-        startAction = { viewModel.start() },
-        pauseAction = { viewModel.pause() },
-        stopAction = { viewModel.reset() }
+        buttonsAction = { stopwatchState ->
+            when (stopwatchState) {
+                StopwatchState.START -> viewModel.start()
+                StopwatchState.PAUSE -> viewModel.pause()
+                StopwatchState.STOP -> viewModel.reset()
+            }
+        }
     )
 }
 
@@ -59,9 +63,7 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
 private fun StopwatchContent(
     time: Duration,
     stopwatchState: StopwatchState,
-    startAction: () -> Unit,
-    pauseAction: () -> Unit,
-    stopAction: () -> Unit
+    buttonsAction: (StopwatchState) -> Unit
 ) {
     Surface {
         Box(
@@ -82,11 +84,9 @@ private fun StopwatchContent(
                     var selectedIndex by remember { mutableIntStateOf(stopwatchState.ordinal) }
 
                     val buttonsData = remember {
-                        StopwatchButtonData.getAll(
-                            startAction = startAction,
-                            pauseAction = pauseAction,
-                            stopAction = stopAction
-                        )
+                        StopwatchButtonData.getAll {
+                            buttonsAction(StopwatchState.entries[selectedIndex])
+                        }
                     }
 
                     buttonsData.forEachIndexed { index, buttonData ->
@@ -130,9 +130,7 @@ private fun StopwatchPreview() {
         StopwatchContent(
             time = Duration.ZERO,
             stopwatchState = StopwatchState.STOP,
-            startAction = {},
-            pauseAction = {},
-            stopAction = {}
+            buttonsAction = {}
         )
     }
 }

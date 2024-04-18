@@ -3,6 +3,7 @@ package com.example.turnback.ui.stopwatch
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.turnback.R
+import com.example.turnback.services.stopwatch.StopwatchState
 
 data class StopwatchButtonData(
     @DrawableRes
@@ -14,26 +15,22 @@ data class StopwatchButtonData(
 
     companion object {
 
-        fun getAll(
-            startAction: () -> Unit,
-            pauseAction: () -> Unit,
-            stopAction: () -> Unit
-        ): List<StopwatchButtonData> =
+        inline fun getAll(crossinline action: (StopwatchState) -> Unit): List<StopwatchButtonData> =
             listOf(
                 StopwatchButtonData(
                     iconId = R.drawable.ic_start,
                     descriptionId = R.string.start,
-                    onClick = startAction
+                    onClick = { action(StopwatchState.START) }
                 ),
                 StopwatchButtonData(
                     iconId = R.drawable.ic_pause,
                     descriptionId = R.string.pause,
-                    onClick = pauseAction
+                    onClick = { action(StopwatchState.PAUSE) }
                 ),
                 StopwatchButtonData(
                     iconId = R.drawable.ic_stop,
                     descriptionId = R.string.stop,
-                    onClick = stopAction
+                    onClick = { action(StopwatchState.STOP) }
                 )
             )
     }
