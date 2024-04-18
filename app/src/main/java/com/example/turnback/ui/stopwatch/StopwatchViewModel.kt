@@ -2,7 +2,8 @@ package com.example.turnback.ui.stopwatch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.services.TimeService
+import com.example.turnback.services.stopwatch.StopwatchService
+import com.example.turnback.services.stopwatch.StopwatchState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -11,22 +12,38 @@ import kotlin.time.Duration
 
 @HiltViewModel
 class StopwatchViewModel @Inject constructor(
-    private val timeService: TimeService
+    private val stopwatchService: StopwatchService
 ) : ViewModel() {
 
-    val timeFlow: StateFlow<Duration> = timeService.timeFlow
+    val timeFlow: StateFlow<Duration> = stopwatchService.timeFlow
+    val stopwatchState: StopwatchState
+        get() = stopwatchService.stopwatchState
 
     init {
         viewModelScope.launch {
-            timeService.startTimeCounting()
+            stopwatchService.observeStopwatchState()
         }
     }
 
     fun saveTime(time: Duration) {
-        timeService.saveTime(time)
+        stopwatchService.saveTime(time)
     }
 
-    fun resetTime() {
-        timeService.resetTime()
+    fun start() {
+        viewModelScope.launch {
+            stopwatchService.changeStopwatchState(StopwatchState.START)
+        }
+    }
+
+    fun pause() {
+        viewModelScope.launch {
+            stopwatchService.changeStopwatchState(StopwatchState.PAUSE)
+        }
+    }
+
+    fun reset() {
+        viewModelScope.launch {
+            stopwatchService.changeStopwatchState(StopwatchState.STOP)
+        }
     }
 }
