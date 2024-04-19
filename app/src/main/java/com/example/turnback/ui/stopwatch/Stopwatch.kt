@@ -49,13 +49,7 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
     StopwatchContent(
         time = time.value,
         stopwatchState = viewModel.stopwatchState,
-        buttonsAction = { stopwatchState ->
-            when (stopwatchState) {
-                StopwatchState.START -> viewModel.start()
-                StopwatchState.PAUSE -> viewModel.pause()
-                StopwatchState.STOP -> viewModel.reset()
-            }
-        }
+        buttonsAction = viewModel::changeStopwatchState
     )
 }
 
