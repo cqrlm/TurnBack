@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import com.example.turnback.services.stopwatch.StopwatchState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
+import com.example.turnback.utils.enumValueOrDefault
 import com.example.turnback.utils.formatTime
 import kotlin.time.Duration
 
@@ -85,7 +86,7 @@ private fun StopwatchContent(
 
                     val buttonsData = remember {
                         StopwatchButtonData.getAll {
-                            buttonsAction(StopwatchState.entries[selectedIndex])
+                            buttonsAction(enumValueOrDefault(selectedIndex, StopwatchState.STOP))
                         }
                     }
 

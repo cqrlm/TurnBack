@@ -2,6 +2,7 @@ package com.example.turnback.services
 
 import android.content.Context
 import com.example.turnback.services.stopwatch.StopwatchState
+import com.example.turnback.utils.enumValueOrDefault
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -42,7 +43,7 @@ class SharedPreferencesService @Inject constructor(
         context
             .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
             .getInt(PREFERENCES_STOPWATCH_STATE_KEY, StopwatchState.STOP.ordinal)
-            .run { StopwatchState.entries[this] }
+            .run { enumValueOrDefault(this, StopwatchState.STOP) }
 
     companion object {
 
