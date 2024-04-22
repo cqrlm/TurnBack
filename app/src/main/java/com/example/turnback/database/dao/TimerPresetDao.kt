@@ -5,26 +5,26 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.turnback.database.entities.TimerPreset
+import com.example.turnback.database.entities.TimerPresetDBO
 
 @Dao
 interface TimerPresetDao {
 
     @Query("SELECT * FROM timer_presets")
-    fun getAll(): List<TimerPreset>
+    fun getAll(): List<TimerPresetDBO>
 
     @Query("SELECT * FROM timer_presets WHERE duration = :duration")
-    fun findByDuration(duration: Long) : TimerPreset
+    fun findByDuration(duration: Long) : TimerPresetDBO
 
     @Insert
-    fun insert(timerPreset: TimerPreset)
+    fun insert(timerPresetDBO: TimerPresetDBO)
 
     @Update
-    fun update(timerPreset: TimerPreset)
+    fun update(timerPresetDBO: TimerPresetDBO)
 
     @Update
-    fun updateAll(vararg timerPresets: TimerPreset)
+    fun updateAll(vararg timerPresetDBOS: TimerPresetDBO)
 
     @Delete
-    fun delete(vararg timerPresets: TimerPreset)
+    fun delete(vararg timerPresetDBOS: TimerPresetDBO)
 }

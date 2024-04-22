@@ -1,32 +1,32 @@
 package com.example.turnback.database.repositories
 
 import com.example.turnback.database.dao.TimerPresetDao
-import com.example.turnback.database.entities.TimerPreset
+import com.example.turnback.database.entities.TimerPresetDBO
 import javax.inject.Inject
 
 class TimerPresetRepository @Inject constructor(
     private val timerPresetDao: TimerPresetDao
 ) {
 
-    fun getAll(): List<TimerPreset> =
+    fun getAll(): List<TimerPresetDBO> =
         timerPresetDao.getAll()
 
-    fun findByDuration(duration: Long): TimerPreset =
+    fun findByDuration(duration: Long): TimerPresetDBO =
         timerPresetDao.findByDuration(duration)
 
-    fun insert(timerPreset: TimerPreset) {
-        timerPresetDao.insert(timerPreset)
+    fun insert(timerPresetDBO: TimerPresetDBO) {
+        timerPresetDao.insert(timerPresetDBO)
     }
 
-    fun update(timerPreset: TimerPreset) {
-        timerPresetDao.update(timerPreset)
+    fun update(timerPresetDBO: TimerPresetDBO) {
+        timerPresetDao.update(timerPresetDBO)
     }
 
-    fun updateAll(vararg timerPresets: TimerPreset) {
-        timerPresetDao.updateAll(*timerPresets)
+    fun updateAll(vararg timerPresetDBOS: TimerPresetDBO) {
+        timerPresetDao.updateAll(*timerPresetDBOS)
     }
 
-    fun delete(vararg timerPresets: TimerPreset) {
-        timerPresetDao.delete(*timerPresets)
+    fun delete(vararg timerPresetDBOS: TimerPresetDBO) {
+        timerPresetDao.delete(*timerPresetDBOS)
     }
 }
