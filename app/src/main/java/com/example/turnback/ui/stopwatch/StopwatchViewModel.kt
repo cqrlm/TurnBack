@@ -16,8 +16,7 @@ class StopwatchViewModel @Inject constructor(
 ) : ViewModel() {
 
     val timeFlow: StateFlow<Duration> = stopwatchService.timeFlow
-    val stopwatchState: StopwatchState
-        get() = stopwatchService.stopwatchState
+    val stopwatchState: StateFlow<StopwatchState> = stopwatchService.stopwatchState
 
     init {
         viewModelScope.launch {
@@ -25,13 +24,25 @@ class StopwatchViewModel @Inject constructor(
         }
     }
 
-    fun saveTime(time: Duration) {
-        stopwatchService.saveTime(time)
+    fun start() {
+        viewModelScope.launch {
+            stopwatchService.start()
+        }
     }
 
-    fun changeStopwatchState(stopwatchState: StopwatchState) {
+    fun pause() {
         viewModelScope.launch {
-            stopwatchService.changeStopwatchState(stopwatchState)
+            stopwatchService.pause()
         }
+    }
+
+    fun stop() {
+        viewModelScope.launch {
+            stopwatchService.stop()
+        }
+    }
+
+    fun saveTime(time: Duration) {
+        stopwatchService.saveTime(time)
     }
 }

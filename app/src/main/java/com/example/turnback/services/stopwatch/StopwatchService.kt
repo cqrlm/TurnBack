@@ -17,8 +17,7 @@ class StopwatchService @Inject constructor(
     val timeFlow = _timeFlow.asStateFlow()
 
     private var stopwatchStateFlow = MutableStateFlow(sharedPreferencesService.getStopwatchState())
-    val stopwatchState: StopwatchState
-        get() = stopwatchStateFlow.value
+    val stopwatchState = stopwatchStateFlow.asStateFlow()
 
     private var timer: Timer? = null
 
@@ -50,8 +49,16 @@ class StopwatchService @Inject constructor(
         sharedPreferencesService.saveStopwatchState(stopwatchStateFlow.value)
     }
 
-    suspend fun changeStopwatchState(stopwatchState: StopwatchState) {
-        stopwatchStateFlow.emit(stopwatchState)
+    suspend fun start() {
+        stopwatchStateFlow.emit(StopwatchState.START)
+    }
+
+    suspend fun pause() {
+        stopwatchStateFlow.emit(StopwatchState.PAUSE)
+    }
+
+    suspend fun stop() {
+        stopwatchStateFlow.emit(StopwatchState.STOP)
     }
 
     companion object {
