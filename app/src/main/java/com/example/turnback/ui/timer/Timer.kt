@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -34,6 +33,7 @@ import com.example.turnback.R
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
 import com.example.turnback.ui.theme.TurnBackTheme
+import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatElapsedTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
@@ -45,9 +45,12 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
     val timerDuration = viewModel.timeFlow.collectAsState()
     val timerState = viewModel.timerState.collectAsState()
 
+    val times = TIMES
+
     TimerContent(
         timerState = timerState.value,
         timerDuration = timerDuration.value,
+        times = times,
         start = viewModel::start,
         pause = viewModel::pause,
         resume = viewModel::resume,
@@ -60,6 +63,7 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
 private fun TimerContent(
     timerState: TimerState,
     timerDuration: Duration,
+    times: List<TimerPreset>,
     start: (Duration) -> Unit,
     pause: () -> Unit,
     resume: () -> Unit,
@@ -72,64 +76,63 @@ private fun TimerContent(
                 .fillMaxSize()
                 .padding(30.dp)
         ) {
-            val time = listOf(
-                TimerPreset(0, 30.seconds),
-                TimerPreset(1, 2.minutes),
-                TimerPreset(2, 3.minutes),
-                TimerPreset(3, 5.minutes),
-                TimerPreset(4, 10.minutes),
-                TimerPreset(5, 15.minutes),
-                TimerPreset(6, 20.minutes),
-                TimerPreset(7, 30.minutes),
-                TimerPreset(8, 1.hours)
-            )
-
             AnimatedVisibility(
                 visible = timerState != TimerState.STOP,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier.align(Alignment.TopCenter)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = timerDuration.formatElapsedTime()
-                    )
+                Text(
+                    text = timerDuration.formatElapsedTime(),
+                    style = Typography.displayLarge
+                )
+            }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        ActionButton(
-                            icon = if (timerState == TimerState.PAUSE) {
-                                ImageVector.vectorResource(id = R.drawable.ic_start)
-                            } else ImageVector.vectorResource(id = R.drawable.ic_pause)
-                        ) {
-                            if (timerState == TimerState.PAUSE) {
-                                resume()
-                            } else pause()
-                        }
-
-                        ActionButton(icon = ImageVector.vectorResource(id = R.drawable.ic_stop)) {
-                            stop()
+            AnimatedVisibility(
+                visible = timerState == TimerState.STOP,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    times.forEach { time ->
+                        Chip(time.duration.formatElapsedTime()) {
+                            start(time.duration)
                         }
                     }
                 }
             }
 
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                time.forEach { time ->
-                    Chip(time.duration.formatElapsedTime()) {
-                        start(time.duration)
-                    }
-                }
-            }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                ActionButton(Icons.Outlined.Add)
-                ActionButton(Icons.Outlined.Edit)
+                ActionButton(
+                    icon = when (timerState) {
+                        TimerState.START -> ImageVector.vectorResource(R.drawable.ic_pause)
+                        TimerState.PAUSE -> ImageVector.vectorResource(R.drawable.ic_start)
+                        TimerState.STOP -> Icons.Outlined.Add
+                    }
+                ) {
+                    when (timerState) {
+                        TimerState.START -> pause()
+                        TimerState.PAUSE -> resume()
+                        TimerState.STOP -> Unit
+                    }
+                }
+
+                ActionButton(
+                    icon = when (timerState) {
+                        TimerState.START, TimerState.PAUSE ->
+                            ImageVector.vectorResource(R.drawable.ic_stop)
+
+                        TimerState.STOP -> Icons.Outlined.Edit
+                    }
+                ) {
+                    when (timerState) {
+                        TimerState.START, TimerState.PAUSE -> stop()
+                        TimerState.STOP -> Unit
+                    }
+                }
             }
         }
     }
@@ -156,14 +159,44 @@ private fun ActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
     }
 }
 
+private val TIMES = listOf(
+    TimerPreset(0, 30.seconds),
+    TimerPreset(1, 2.minutes),
+    TimerPreset(2, 3.minutes),
+    TimerPreset(3, 5.minutes),
+    TimerPreset(4, 10.minutes),
+    TimerPreset(5, 15.minutes),
+    TimerPreset(6, 20.minutes),
+    TimerPreset(7, 30.minutes),
+    TimerPreset(8, 1.hours)
+)
+
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun TimerPreview() {
+private fun TimerPreviewStop() {
+    TurnBackTheme {
+        TimerContent(
+            timerState = TimerState.STOP,
+            timerDuration = 0.seconds,
+            times = TIMES,
+            start = {},
+            pause = {},
+            resume = {},
+            stop = {}
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun TimerPreviewPause() {
     TurnBackTheme {
         TimerContent(
             timerState = TimerState.PAUSE,
             timerDuration = 10.seconds,
+            times = TIMES,
             start = {},
             pause = {},
             resume = {},
