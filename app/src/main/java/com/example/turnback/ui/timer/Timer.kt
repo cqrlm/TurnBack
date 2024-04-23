@@ -35,7 +35,6 @@ import com.example.turnback.services.timer.TimerState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatElapsedTime
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -48,89 +47,87 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
     val times = TIMES
 
     TimerContent(
-        timerState = timerState.value,
-        timerDuration = timerDuration.value,
-        times = times,
-        start = viewModel::start,
-        pause = viewModel::pause,
-        resume = viewModel::resume,
-        stop = viewModel::stop
+        screenState = TimerScreenState(
+            timerState = timerState.value,
+            timerDuration = timerDuration.value,
+            times = times,
+            actions = TimerScreenActions(
+                start = viewModel::start,
+                pause = viewModel::pause,
+                resume = viewModel::resume,
+                stop = viewModel::stop
+            ),
+        )
     )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TimerContent(
-    timerState: TimerState,
-    timerDuration: Duration,
-    times: List<TimerPreset>,
-    start: (Duration) -> Unit,
-    pause: () -> Unit,
-    resume: () -> Unit,
-    stop: () -> Unit
-) {
-    Surface {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(30.dp)
-        ) {
-            AnimatedVisibility(
-                visible = timerState != TimerState.STOP,
-                enter = fadeIn(),
-                exit = fadeOut(),
+private fun TimerContent(screenState: TimerScreenState) {
+    with(screenState) {
+        Surface {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(30.dp)
             ) {
-                Text(
-                    text = timerDuration.formatElapsedTime(),
-                    style = Typography.displayLarge
-                )
-            }
+                AnimatedVisibility(
+                    visible = timerState != TimerState.STOP,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Text(
+                        text = timerDuration.formatElapsedTime(),
+                        style = Typography.displayLarge
+                    )
+                }
 
-            AnimatedVisibility(
-                visible = timerState == TimerState.STOP,
-                enter = fadeIn(),
-                exit = fadeOut(),
-            ) {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    times.forEach { time ->
-                        Chip(time.duration.formatElapsedTime()) {
-                            start(time.duration)
+                AnimatedVisibility(
+                    visible = timerState == TimerState.STOP,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        times.forEach { time ->
+                            Chip(time.duration.formatElapsedTime()) {
+                                actions.start(time.duration)
+                            }
                         }
                     }
                 }
-            }
 
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
-                ActionButton(
-                    icon = when (timerState) {
-                        TimerState.START -> ImageVector.vectorResource(R.drawable.ic_pause)
-                        TimerState.PAUSE -> ImageVector.vectorResource(R.drawable.ic_start)
-                        TimerState.STOP -> Icons.Outlined.Add
-                    }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier.align(Alignment.BottomCenter)
                 ) {
-                    when (timerState) {
-                        TimerState.START -> pause()
-                        TimerState.PAUSE -> resume()
-                        TimerState.STOP -> Unit
+                    ActionButton(
+                        icon = when (timerState) {
+                            TimerState.START -> ImageVector.vectorResource(R.drawable.ic_pause)
+                            TimerState.PAUSE -> ImageVector.vectorResource(R.drawable.ic_start)
+                            TimerState.STOP -> Icons.Outlined.Add
+                        }
+                    ) {
+                        when (timerState) {
+                            TimerState.START -> actions.pause()
+                            TimerState.PAUSE -> actions.resume()
+                            TimerState.STOP -> Unit
+                        }
                     }
-                }
 
-                ActionButton(
-                    icon = when (timerState) {
-                        TimerState.START, TimerState.PAUSE ->
-                            ImageVector.vectorResource(R.drawable.ic_stop)
+                    ActionButton(
+                        icon = when (timerState) {
+                            TimerState.START, TimerState.PAUSE ->
+                                ImageVector.vectorResource(R.drawable.ic_stop)
 
-                        TimerState.STOP -> Icons.Outlined.Edit
-                    }
-                ) {
-                    when (timerState) {
-                        TimerState.START, TimerState.PAUSE -> stop()
-                        TimerState.STOP -> Unit
+                            TimerState.STOP -> Icons.Outlined.Edit
+                        }
+                    ) {
+                        when (timerState) {
+                            TimerState.START, TimerState.PAUSE -> actions.stop()
+                            TimerState.STOP -> Unit
+                        }
                     }
                 }
             }
@@ -177,13 +174,10 @@ private val TIMES = listOf(
 private fun TimerPreviewStop() {
     TurnBackTheme {
         TimerContent(
-            timerState = TimerState.STOP,
-            timerDuration = 0.seconds,
-            times = TIMES,
-            start = {},
-            pause = {},
-            resume = {},
-            stop = {}
+            TimerScreenState(
+                timerState = TimerState.STOP,
+                times = TIMES
+            )
         )
     }
 }
@@ -194,13 +188,10 @@ private fun TimerPreviewStop() {
 private fun TimerPreviewPause() {
     TurnBackTheme {
         TimerContent(
-            timerState = TimerState.PAUSE,
-            timerDuration = 10.seconds,
-            times = TIMES,
-            start = {},
-            pause = {},
-            resume = {},
-            stop = {}
+            TimerScreenState(
+                timerState = TimerState.PAUSE,
+                timerDuration = 10.seconds
+            )
         )
     }
 }
