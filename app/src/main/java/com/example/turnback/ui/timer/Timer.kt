@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -43,24 +44,23 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
-    val timerDuration = viewModel.timeFlow.collectAsState()
-    val timerState = viewModel.timerState.collectAsState()
+    with(viewModel) {
+        val state = screenState.collectAsState()
 
-    val times = TIMES
+        val actions = remember {
+            TimerScreenActions(
+                start = ::start,
+                pause = ::pause,
+                resume = ::resume,
+                stop = ::stop
+            )
+        }
 
-    TimerContent(
-        state = TimerScreenState(
-            timerState = timerState.value,
-            timerDuration = timerDuration.value,
-            times = times
-        ),
-        actions = TimerScreenActions(
-            start = viewModel::start,
-            pause = viewModel::pause,
-            resume = viewModel::resume,
-            stop = viewModel::stop
+        TimerContent(
+            state = state.value.copy(times = TIMES),
+            actions = actions
         )
-    )
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)

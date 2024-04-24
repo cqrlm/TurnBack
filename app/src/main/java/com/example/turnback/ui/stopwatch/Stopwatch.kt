@@ -41,23 +41,23 @@ import com.example.turnback.utils.formatTime
 @Composable
 fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
     with(viewModel) {
-        val time = timeFlow.collectAsState()
-        val stopwatchState = stopwatchState.collectAsState()
+        val state = screenState.collectAsState()
 
-        LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-            saveTime(time.value)
-        }
-
-        StopwatchContent(
-            state = StopwatchScreenState(
-                time = time.value,
-                stopwatchState = stopwatchState.value
-            ),
-            actions = StopwatchScreenActions(
+        val actions = remember {
+            StopwatchScreenActions(
                 start = ::start,
                 pause = ::pause,
                 stop = ::stop
             )
+        }
+
+        LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+            saveTime(state.value.time)
+        }
+
+        StopwatchContent(
+            state = state.value,
+            actions = actions
         )
     }
 }
