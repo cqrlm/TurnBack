@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import com.example.turnback.ui.stopwatch.state.StopwatchButtonData
+import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
+import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatTime
@@ -46,14 +49,14 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
         }
 
         StopwatchContent(
-            screenState = StopwatchScreenState(
+            state = StopwatchScreenState(
                 time = time.value,
-                stopwatchState = stopwatchState.value,
-                actions = StopwatchScreenActions(
-                    start = ::start,
-                    pause = ::pause,
-                    stop = ::stop,
-                )
+                stopwatchState = stopwatchState.value
+            ),
+            actions = StopwatchScreenActions(
+                start = ::start,
+                pause = ::pause,
+                stop = ::stop
             )
         )
     }
@@ -61,8 +64,8 @@ fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StopwatchContent(screenState: StopwatchScreenState) {
-    with(screenState) {
+private fun StopwatchContent(state: StopwatchScreenState, actions: StopwatchScreenActions) {
+    with(state) {
         Surface {
             Box(
                 contentAlignment = Alignment.Center,
@@ -132,6 +135,9 @@ private fun StopwatchContent(screenState: StopwatchScreenState) {
 @Composable
 private fun StopwatchPreview() {
     TurnBackTheme {
-        StopwatchContent(screenState = StopwatchScreenState())
+        StopwatchContent(
+            state = StopwatchScreenState(),
+            actions = StopwatchScreenActions()
+        )
     }
 }

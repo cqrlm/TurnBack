@@ -34,6 +34,8 @@ import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
+import com.example.turnback.ui.timer.state.TimerScreenActions
+import com.example.turnback.ui.timer.state.TimerScreenState
 import com.example.turnback.utils.formatElapsedTime
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -47,24 +49,24 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
     val times = TIMES
 
     TimerContent(
-        screenState = TimerScreenState(
+        state = TimerScreenState(
             timerState = timerState.value,
             timerDuration = timerDuration.value,
-            times = times,
-            actions = TimerScreenActions(
-                start = viewModel::start,
-                pause = viewModel::pause,
-                resume = viewModel::resume,
-                stop = viewModel::stop
-            ),
+            times = times
+        ),
+        actions = TimerScreenActions(
+            start = viewModel::start,
+            pause = viewModel::pause,
+            resume = viewModel::resume,
+            stop = viewModel::stop
         )
     )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TimerContent(screenState: TimerScreenState) {
-    with(screenState) {
+private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
+    with(state) {
         Surface {
             Box(
                 contentAlignment = Alignment.Center,
@@ -174,10 +176,11 @@ private val TIMES = listOf(
 private fun TimerPreviewStop() {
     TurnBackTheme {
         TimerContent(
-            TimerScreenState(
+            state = TimerScreenState(
                 timerState = TimerState.STOP,
                 times = TIMES
-            )
+            ),
+            actions = TimerScreenActions()
         )
     }
 }
@@ -188,10 +191,11 @@ private fun TimerPreviewStop() {
 private fun TimerPreviewPause() {
     TurnBackTheme {
         TimerContent(
-            TimerScreenState(
+            state = TimerScreenState(
                 timerState = TimerState.PAUSE,
                 timerDuration = 10.seconds
-            )
+            ),
+            actions = TimerScreenActions()
         )
     }
 }
