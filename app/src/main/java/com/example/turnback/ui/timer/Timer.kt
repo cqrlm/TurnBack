@@ -52,12 +52,14 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
                 start = ::start,
                 pause = ::pause,
                 resume = ::resume,
-                stop = ::stop
+                stop = ::stop,
+                save = ::save,
+                delete = ::delete
             )
         }
 
         TimerContent(
-            state = state.value.copy(times = TIMES),
+            state = state.value,
             actions = actions
         )
     }
@@ -99,7 +101,6 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     }
                 }
 
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                     modifier = Modifier.align(Alignment.BottomCenter)
@@ -113,8 +114,17 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     ) {
                         when (timerState) {
                             TimerState.START -> actions.pause()
+
                             TimerState.PAUSE -> actions.resume()
-                            TimerState.STOP -> Unit
+
+                            TimerState.STOP ->
+                                // TODO: Add implementation of timer preset addition
+                                actions.save(
+                                    TimerPreset(
+                                        order = times.size,
+                                        duration = 30.seconds + times.size.seconds
+                                    )
+                                )
                         }
                     }
 
@@ -128,7 +138,8 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     ) {
                         when (timerState) {
                             TimerState.START, TimerState.PAUSE -> actions.stop()
-                            TimerState.STOP -> Unit
+                            // TODO : Add implementation of timer presets deletion
+                            TimerState.STOP -> actions.delete(times)
                         }
                     }
                 }
@@ -158,18 +169,6 @@ private fun ActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
     }
 }
 
-private val TIMES = listOf(
-    TimerPreset(0, 30.seconds),
-    TimerPreset(1, 2.minutes),
-    TimerPreset(2, 3.minutes),
-    TimerPreset(3, 5.minutes),
-    TimerPreset(4, 10.minutes),
-    TimerPreset(5, 15.minutes),
-    TimerPreset(6, 20.minutes),
-    TimerPreset(7, 30.minutes),
-    TimerPreset(8, 1.hours)
-)
-
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -178,7 +177,12 @@ private fun TimerPreviewStop() {
         TimerContent(
             state = TimerScreenState(
                 timerState = TimerState.STOP,
-                times = TIMES
+                times = listOf(
+                    TimerPreset(0, 30.seconds),
+                    TimerPreset(1, 2.minutes),
+                    TimerPreset(2, 15.minutes),
+                    TimerPreset(3, 1.hours)
+                )
             ),
             actions = TimerScreenActions()
         )
