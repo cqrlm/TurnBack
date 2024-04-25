@@ -2,31 +2,28 @@ package com.example.turnback.database.repositories
 
 import com.example.turnback.database.dao.TimerPresetDao
 import com.example.turnback.database.entities.TimerPresetDBO
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TimerPresetRepository @Inject constructor(
     private val timerPresetDao: TimerPresetDao
 ) {
 
-    fun getAll(): List<TimerPresetDBO> =
+    fun getAll(): Flow<List<TimerPresetDBO>> =
         timerPresetDao.getAll()
 
-    fun findByDuration(duration: Long): TimerPresetDBO =
+    fun findByDuration(duration: Long): Flow<TimerPresetDBO> =
         timerPresetDao.findByDuration(duration)
 
-    fun insert(timerPresetDBO: TimerPresetDBO) {
+    suspend fun insert(timerPresetDBO: TimerPresetDBO) {
         timerPresetDao.insert(timerPresetDBO)
     }
 
-    fun update(timerPresetDBO: TimerPresetDBO) {
-        timerPresetDao.update(timerPresetDBO)
+    suspend fun update(vararg timerPresetDBOS: TimerPresetDBO) {
+        timerPresetDao.update(*timerPresetDBOS)
     }
 
-    fun updateAll(vararg timerPresetDBOS: TimerPresetDBO) {
-        timerPresetDao.updateAll(*timerPresetDBOS)
-    }
-
-    fun delete(vararg timerPresetDBOS: TimerPresetDBO) {
+    suspend fun delete(vararg timerPresetDBOS: TimerPresetDBO) {
         timerPresetDao.delete(*timerPresetDBOS)
     }
 }
