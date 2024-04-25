@@ -44,6 +44,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
