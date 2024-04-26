@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -15,17 +17,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +45,8 @@ import com.example.turnback.ui.theme.Typography
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.ui.timer.state.TimerScreenState
 import com.example.turnback.utils.formatElapsedTime
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -92,11 +101,37 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     enter = fadeIn(),
                     exit = fadeOut(),
                 ) {
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    val selectedTimes = remember {
+                        mutableStateListOf<TimerPreset>()
+                    }
+
+                    val isEditMode by remember {
+                        derivedStateOf { selectedTimes.isNotEmpty() }
+                    }
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
                         times.forEach { time ->
-                            Chip(time.duration.formatElapsedTime()) {
-                                actions.start(time.duration)
+                            val selected by remember {
+                                derivedStateOf { time in selectedTimes }
                             }
+
+                            TimeChip(
+                                selected = selected,
+                                text = time.duration.formatElapsedTime(),
+                                onClick = {
+                                    when {
+                                        !isEditMode -> actions.start(time.duration)
+                                        time in selectedTimes -> selectedTimes.remove(time)
+                                        else -> selectedTimes.add(time)
+                                    }
+                                },
+                                onLongClick = if (!isEditMode) {
+                                    { selectedTimes.add(time) }
+                                } else null
+                            )
                         }
                     }
                 }
@@ -149,10 +184,41 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
 }
 
 @Composable
-private fun Chip(text: String, onClick: () -> Unit) {
-    SuggestionChip(
+private fun TimeChip(
+    selected: Boolean,
+    text: String,
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)?
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val viewConfiguration = LocalViewConfiguration.current
+
+    LaunchedEffect(interactionSource) {
+        var isLongClick = false
+
+        interactionSource.interactions.collectLatest { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> {
+                    isLongClick = false
+                    delay(viewConfiguration.longPressTimeoutMillis)
+                    isLongClick = true
+                    onLongClick?.invoke()
+                }
+
+                is PressInteraction.Release -> {
+                    if (isLongClick.not()) {
+                        onClick()
+                    }
+                }
+            }
+        }
+    }
+
+    FilterChip(
+        selected = selected,
+        onClick = {},
         label = { Text(text) },
-        onClick = onClick
+        interactionSource = interactionSource
     )
 }
 
