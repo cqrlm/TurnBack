@@ -2,6 +2,7 @@ package com.example.turnback.services
 
 import android.content.Context
 import com.example.turnback.services.stopwatch.StopwatchState
+import com.example.turnback.ui.theme.ThemeState
 import com.example.turnback.utils.enumValueOrDefault
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -45,10 +46,27 @@ class SharedPreferencesService @Inject constructor(
             .getInt(PREFERENCES_STOPWATCH_STATE_KEY, StopwatchState.STOP.ordinal)
             .run { enumValueOrDefault(this, StopwatchState.STOP) }
 
+    fun getThemeState(): ThemeState =
+        context
+            .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
+            .getInt(PREFERENCES_THEME_KEY, ThemeState.SYSTEM.ordinal)
+            .run { enumValueOrDefault(this, ThemeState.SYSTEM) }
+
+    fun setThemeState(themeState: ThemeState) {
+        context
+            .getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE)
+            .edit()
+            .run {
+                putInt(PREFERENCES_THEME_KEY, themeState.ordinal)
+                apply()
+            }
+    }
+
     companion object {
 
         private const val PREFERENCES_FILENAME = "preferences"
         private const val PREFERENCES_TIME_KEY = "time"
         private const val PREFERENCES_STOPWATCH_STATE_KEY = "stopwatch_state"
+        private const val PREFERENCES_THEME_KEY = "theme"
     }
 }
