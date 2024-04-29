@@ -20,36 +20,50 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.turnback.navigaiton.Screen
+import com.example.turnback.services.SharedPreferencesService
 import com.example.turnback.ui.bars.AppBar
 import com.example.turnback.ui.bars.BottomNavBar
 import com.example.turnback.ui.stopwatch.StopwatchScreen
+import com.example.turnback.ui.theme.ThemeState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.timer.TimerScreen
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var sharedPreferencesService: SharedPreferencesService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            TurnBackTheme {
-                MainScreen()
+            var themeState by remember { mutableStateOf(sharedPreferencesService.getThemeState()) }
+
+            TurnBackTheme(themeState.isDarkTheme()) {
+                MainScreen(themeState) { state ->
+                    themeState = state
+                    sharedPreferencesService.setThemeState(themeState)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun MainScreen() {
+private fun MainScreen(
+    themeState: ThemeState,
+    changeTheme: (ThemeState) -> Unit
+) {
     val navController = rememberNavController()
     var currentScreen: Screen by remember {
         mutableStateOf(Screen.BottomBarItem.Timer)
     }
 
     Scaffold(
-        topBar = { AppBar(currentScreen) },
+        topBar = { AppBar(currentScreen, themeState, changeTheme) },
         bottomBar = { BottomNavBar(navController) { screen -> currentScreen = screen } }
     ) { paddingValues ->
         NavHost(
@@ -72,6 +86,6 @@ private fun MainScreen() {
 @Composable
 private fun MainScreenPreview() {
     TurnBackTheme {
-        MainScreen()
+        MainScreen(themeState = ThemeState.SYSTEM) {}
     }
 }
