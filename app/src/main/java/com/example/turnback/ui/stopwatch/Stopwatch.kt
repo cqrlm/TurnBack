@@ -137,7 +137,7 @@ private fun StopwatchPreview() {
     TurnBackTheme {
         StopwatchContent(
             state = StopwatchScreenState(),
-            actions = StopwatchScreenActions()
+            actions = StopwatchScreenActions.Default
         )
     }
 }

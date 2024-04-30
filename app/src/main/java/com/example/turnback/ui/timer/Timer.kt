@@ -251,7 +251,7 @@ private fun TimerPreviewStop() {
                     TimerPreset(3, 1.hours)
                 ).toMutableStateList()
             ),
-            actions = TimerScreenActions()
+            actions = TimerScreenActions.Default
         )
     }
 }
@@ -266,7 +266,7 @@ private fun TimerPreviewPause() {
                 timerState = TimerState.PAUSE,
                 timerDuration = 10.seconds
             ),
-            actions = TimerScreenActions()
+            actions = TimerScreenActions.Default
         )
     }
 }
