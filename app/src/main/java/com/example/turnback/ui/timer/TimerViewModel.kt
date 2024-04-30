@@ -1,5 +1,6 @@
 package com.example.turnback.ui.timer
 
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.turnback.database.entities.TimerPresetDBO
@@ -33,9 +34,10 @@ class TimerViewModel @Inject constructor(
         TimerScreenState(
             timerState = timerState,
             timerDuration = time,
-            times = timerPresets
+            timerPresets = timerPresets
                 .map(TimerPresetDBO::toTimerPreset)
                 .sortedBy(TimerPreset::order)
+                .toMutableStateList()
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TimerScreenState())
 

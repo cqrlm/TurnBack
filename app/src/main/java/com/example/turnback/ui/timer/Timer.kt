@@ -29,6 +29,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -113,23 +114,23 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        times.forEach { time ->
+                        timerPresets.forEach { timerPreset ->
                             val selected by remember {
-                                derivedStateOf { time in selectedTimes }
+                                derivedStateOf { timerPreset in selectedTimes }
                             }
 
                             TimeChip(
                                 selected = selected,
-                                text = time.duration.formatElapsedTime(),
+                                text = timerPreset.duration.formatElapsedTime(),
                                 onClick = {
                                     when {
-                                        !isEditMode -> actions.start(time.duration)
-                                        time in selectedTimes -> selectedTimes.remove(time)
-                                        else -> selectedTimes.add(time)
+                                        !isEditMode -> actions.start(timerPreset.duration)
+                                        timerPreset in selectedTimes -> selectedTimes.remove(timerPreset)
+                                        else -> selectedTimes.add(timerPreset)
                                     }
                                 },
                                 onLongClick = if (!isEditMode) {
-                                    { selectedTimes.add(time) }
+                                    { selectedTimes.add(timerPreset) }
                                 } else null
                             )
                         }
@@ -156,8 +157,8 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                                 // TODO: Add implementation of timer preset addition
                                 actions.save(
                                     TimerPreset(
-                                        order = times.size,
-                                        duration = 30.seconds + times.size.seconds
+                                        order = timerPresets.size,
+                                        duration = 30.seconds + timerPresets.size.seconds
                                     )
                                 )
                         }
@@ -174,7 +175,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                         when (timerState) {
                             TimerState.START, TimerState.PAUSE -> actions.stop()
                             // TODO : Add implementation of timer presets deletion
-                            TimerState.STOP -> actions.delete(times)
+                            TimerState.STOP -> actions.delete(timerPresets)
                         }
                     }
                 }
@@ -243,12 +244,12 @@ private fun TimerPreviewStop() {
         TimerContent(
             state = TimerScreenState(
                 timerState = TimerState.STOP,
-                times = listOf(
+                timerPresets = listOf(
                     TimerPreset(0, 30.seconds),
                     TimerPreset(1, 2.minutes),
                     TimerPreset(2, 15.minutes),
                     TimerPreset(3, 1.hours)
-                )
+                ).toMutableStateList()
             ),
             actions = TimerScreenActions()
         )
