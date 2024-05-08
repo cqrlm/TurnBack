@@ -55,7 +55,7 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
     with(viewModel) {
-        val state = screenState.collectAsState()
+        val state by screenState.collectAsState()
 
         val actions = remember {
             TimerScreenActions(
@@ -69,7 +69,7 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
         }
 
         TimerContent(
-            state = state.value,
+            state = state,
             actions = actions
         )
     }
