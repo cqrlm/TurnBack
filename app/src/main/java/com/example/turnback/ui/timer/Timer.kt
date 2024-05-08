@@ -25,10 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +64,9 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
                 pause = ::pause,
                 resume = ::resume,
                 stop = ::stop,
-                save = ::save
+                save = ::save,
+                select = ::select,
+                unselect = ::unselect
             )
         }
 
@@ -78,6 +81,10 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
 @Composable
 private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
     with(state) {
+        val isEditMode by remember(timerPresets) {
+            mutableStateOf(timerPresets.any(TimerPreset::selected))
+        }
+
         Surface {
             Box(
                 contentAlignment = Alignment.Center,
@@ -101,37 +108,27 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    val selectedTimes = remember {
-                        mutableStateListOf<TimerPreset>()
-                    }
-
-                    val isEditMode by remember {
-                        derivedStateOf { selectedTimes.isNotEmpty() }
-                    }
-
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         timerPresets.forEach { timerPreset ->
-                            val selected by remember {
-                                derivedStateOf { timerPreset in selectedTimes }
+                            with(timerPreset) {
+                                key(order, selected) {
+                                    TimeChip(
+                                        selected = selected,
+                                        text = duration.formatElapsedTime(),
+                                        onClick = {
+                                            when {
+                                                !isEditMode -> actions.start(duration)
+                                                selected -> actions.unselect(this)
+                                                else -> actions.select(this)
+                                            }
+                                        },
+                                        onLongClick = { actions.select(this) }
+                                    )
+                                }
                             }
-
-                            TimeChip(
-                                selected = selected,
-                                text = timerPreset.duration.formatElapsedTime(),
-                                onClick = {
-                                    when {
-                                        !isEditMode -> actions.start(timerPreset.duration)
-                                        selected -> selectedTimes.remove(timerPreset)
-                                        else -> selectedTimes.add(timerPreset)
-                                    }
-                                },
-                                onLongClick = if (!isEditMode) {
-                                    { selectedTimes.add(timerPreset) }
-                                } else null
-                            )
                         }
                     }
                 }
@@ -192,10 +189,9 @@ private fun TimeChip(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val viewConfiguration = LocalViewConfiguration.current
+    var isLongClick by remember { mutableStateOf(false) }
 
     LaunchedEffect(interactionSource) {
-        var isLongClick = false
-
         interactionSource.interactions.collectLatest { interaction ->
             when (interaction) {
                 is PressInteraction.Press -> {
@@ -204,19 +200,17 @@ private fun TimeChip(
                     isLongClick = true
                     onLongClick?.invoke()
                 }
-
-                is PressInteraction.Release -> {
-                    if (isLongClick.not()) {
-                        onClick()
-                    }
-                }
             }
         }
     }
 
     FilterChip(
         selected = selected,
-        onClick = {},
+        onClick = {
+            if (!isLongClick) {
+                onClick()
+            }
+        },
         label = { Text(text) },
         interactionSource = interactionSource
     )
