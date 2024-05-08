@@ -8,8 +8,7 @@ data class TimerScreenActions(
     val pause: () -> Unit,
     val resume: () -> Unit,
     val stop: () -> Unit,
-    val save: (TimerPreset) -> Unit,
-    val delete: (List<TimerPreset>) -> Unit
+    val save: (TimerPreset) -> Unit
 ) {
 
     companion object {
@@ -19,8 +18,7 @@ data class TimerScreenActions(
             pause = {},
             resume = {},
             stop = {},
-            save = {},
-            delete = {}
+            save = {}
         )
     }
 }

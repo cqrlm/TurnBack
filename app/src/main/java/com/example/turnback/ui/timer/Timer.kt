@@ -63,8 +63,7 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
                 pause = ::pause,
                 resume = ::resume,
                 stop = ::stop,
-                save = ::save,
-                delete = ::delete
+                save = ::save
             )
         }
 
@@ -89,7 +88,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                 AnimatedVisibility(
                     visible = timerState != TimerState.STOP,
                     enter = fadeIn(),
-                    exit = fadeOut(),
+                    exit = fadeOut()
                 ) {
                     Text(
                         text = timerDuration.formatElapsedTime(),
@@ -100,7 +99,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                 AnimatedVisibility(
                     visible = timerState == TimerState.STOP,
                     enter = fadeIn(),
-                    exit = fadeOut(),
+                    exit = fadeOut()
                 ) {
                     val selectedTimes = remember {
                         mutableStateListOf<TimerPreset>()
@@ -125,7 +124,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                                 onClick = {
                                     when {
                                         !isEditMode -> actions.start(timerPreset.duration)
-                                        timerPreset in selectedTimes -> selectedTimes.remove(timerPreset)
+                                        selected -> selectedTimes.remove(timerPreset)
                                         else -> selectedTimes.add(timerPreset)
                                     }
                                 },
@@ -174,8 +173,8 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     ) {
                         when (timerState) {
                             TimerState.START, TimerState.PAUSE -> actions.stop()
-                            // TODO : Add implementation of timer presets deletion
-                            TimerState.STOP -> actions.delete(timerPresets)
+                            // TODO : Add implementation of timer presets edit
+                            TimerState.STOP -> Unit
                         }
                     }
                 }
