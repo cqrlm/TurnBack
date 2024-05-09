@@ -14,7 +14,7 @@
         android:theme="@style/Theme.TurnBack"
         tools:targetApi="34">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TurnBack">
             <intent-filter>
