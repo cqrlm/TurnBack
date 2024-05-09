@@ -10,4 +10,6 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="delete_dialog_text">Are you sure you want to delete these timer presets?</string>
 </resources>
