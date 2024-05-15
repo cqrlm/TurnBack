@@ -113,7 +113,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                 }
 
                 AnimatedVisibility(
-                    visible = timerState == TimerState.STOP,
+                    visible = timerState == TimerState.STOP && !isEditMode,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.TopCenter)
@@ -155,38 +155,40 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                     }
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                AnimatedVisibility(
+                    visible = !isEditMode,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
                     modifier = Modifier.align(Alignment.BottomCenter)
                 ) {
-                    ActionButton(
-                        icon = when (timerState) {
-                            TimerState.START -> ImageVector.vectorResource(R.drawable.ic_pause)
-                            TimerState.PAUSE -> ImageVector.vectorResource(R.drawable.ic_start)
-                            TimerState.STOP -> Icons.Outlined.Add
+                    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                        ActionButton(
+                            icon = when (timerState) {
+                                TimerState.START -> ImageVector.vectorResource(R.drawable.ic_pause)
+                                TimerState.PAUSE -> ImageVector.vectorResource(R.drawable.ic_start)
+                                TimerState.STOP -> Icons.Outlined.Add
+                            }
+                        ) {
+                            when (timerState) {
+                                TimerState.START -> actions.pause()
+                                TimerState.PAUSE -> actions.resume()
+                                TimerState.STOP -> showDialog = true
+                            }
                         }
-                    ) {
-                        when (timerState) {
-                            TimerState.START -> actions.pause()
 
-                            TimerState.PAUSE -> actions.resume()
+                        ActionButton(
+                            icon = when (timerState) {
+                                TimerState.START, TimerState.PAUSE ->
+                                    ImageVector.vectorResource(R.drawable.ic_stop)
 
-                            TimerState.STOP -> showDialog = true
-                        }
-                    }
-
-                    ActionButton(
-                        icon = when (timerState) {
-                            TimerState.START, TimerState.PAUSE ->
-                                ImageVector.vectorResource(R.drawable.ic_stop)
-
-                            TimerState.STOP -> Icons.Outlined.Edit
-                        }
-                    ) {
-                        when (timerState) {
-                            TimerState.START, TimerState.PAUSE -> actions.stop()
-                            // TODO : Add implementation of timer presets edit
-                            TimerState.STOP -> Unit
+                                TimerState.STOP -> Icons.Outlined.Edit
+                            }
+                        ) {
+                            when (timerState) {
+                                TimerState.START, TimerState.PAUSE -> actions.stop()
+                                // TODO : Add implementation of timer presets edit
+                                TimerState.STOP -> Unit
+                            }
                         }
                     }
                 }
