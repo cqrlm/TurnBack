@@ -15,10 +15,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -86,6 +91,8 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
         val isEditMode by remember(timerPresets) {
             mutableStateOf(timerPresets.any(TimerPreset::selected))
         }
+
+        var showDialog by remember { mutableStateOf(false) }
 
         Surface {
             Box(
@@ -164,14 +171,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
 
                             TimerState.PAUSE -> actions.resume()
 
-                            TimerState.STOP ->
-                                // TODO: Add implementation of timer preset addition
-                                actions.save(
-                                    TimerPreset(
-                                        order = timerPresets.size,
-                                        duration = 30.seconds + timerPresets.size.seconds
-                                    )
-                                )
+                            TimerState.STOP -> showDialog = true
                         }
                     }
 
@@ -190,6 +190,24 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                         }
                     }
                 }
+            }
+
+            if (showDialog) {
+                TimerPresetCreationDialog(
+                    save = { duration ->
+                        showDialog = false
+
+                        if (duration != Duration.ZERO) {
+                            actions.save(
+                                TimerPreset(
+                                    order = timerPresets.size,
+                                    duration = duration
+                                )
+                            )
+                        }
+                    },
+                    dismiss = { showDialog = false }
+                )
             }
         }
     }
@@ -242,6 +260,38 @@ private fun ActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
             contentDescription = icon.name
         )
     }
+}
+
+@Composable
+private fun TimerPresetCreationDialog(save: (Duration) -> Unit, dismiss: () -> Unit) {
+    var duration by remember { mutableStateOf(Duration.ZERO) }
+
+    AlertDialog(
+        title = { Text(text = stringResource(id = R.string.new_timer_preset)) },
+        onDismissRequest = dismiss,
+        dismissButton = {
+            IconButton(onClick = dismiss) {
+                Icon(
+                    imageVector = Icons.Filled.Clear,
+                    contentDescription = Icons.Filled.Clear.name
+                )
+            }
+        },
+        confirmButton = {
+            IconButton(onClick = { save(duration) }) {
+                Icon(
+                    imageVector = Icons.Filled.Done,
+                    contentDescription = Icons.Filled.Done.name
+                )
+            }
+        },
+        text = {
+            TimePicker(
+                onDone = { timeDuration -> duration = timeDuration },
+                onValueChange = { timeDuration -> duration = timeDuration }
+            )
+        }
+    )
 }
 
 @Preview
