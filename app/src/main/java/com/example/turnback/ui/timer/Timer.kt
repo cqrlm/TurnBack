@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.turnback.R
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
+import com.example.turnback.ui.common.TimePicker
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.ui.timer.state.TimerScreenActions
@@ -49,6 +50,7 @@ import com.example.turnback.ui.timer.state.TimerScreenState
 import com.example.turnback.utils.formatElapsedTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -101,6 +103,19 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                         text = timerDuration.formatElapsedTime(),
                         style = Typography.displayLarge
                     )
+                }
+
+                AnimatedVisibility(
+                    visible = timerState == TimerState.STOP,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                    modifier = Modifier.align(Alignment.TopCenter)
+                ) {
+                    TimePicker(modifier = Modifier.padding(top = 30.dp)) { time ->
+                        if (time != Duration.ZERO) {
+                            actions.start(time)
+                        }
+                    }
                 }
 
                 AnimatedVisibility(
