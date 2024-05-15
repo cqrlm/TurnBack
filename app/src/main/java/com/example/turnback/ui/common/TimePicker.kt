@@ -41,7 +41,8 @@ import kotlin.time.Duration.Companion.seconds
 fun TimePicker(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = Typography.displayMedium,
-    onDone: (Duration) -> Unit
+    onValueChange: ((Duration) -> Unit)? = null,
+    onDone: (Duration) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -83,10 +84,14 @@ fun TimePicker(
 
                         if (char.isDigit() && textValue.first() == '0') {
                             time = (textValue.drop(1) + char).toTime()
+                            onValueChange?.invoke(time.toDuration())
                         }
                     }
 
-                    newValue.text != textValue -> time = ('0' + textValue.dropLast(1)).toTime()
+                    newValue.text != textValue -> {
+                        time = ('0' + textValue.dropLast(1)).toTime()
+                        onValueChange?.invoke(time.toDuration())
+                    }
                 }
             },
             modifier = modifier
