@@ -13,4 +13,6 @@
     <string name="confirm">Confirm</string>
     <string name="delete_dialog_text">Are you sure you want to delete these timer presets?</string>
     <string name="new_timer_preset">New timer preset</string>
+    <string name="edit">Edit</string>
+    <string name="edit_timer_preset">Edit timer preset</string>
 </resources>
