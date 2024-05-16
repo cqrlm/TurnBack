@@ -14,14 +14,11 @@ interface TimerPresetDao {
     @Query("SELECT * FROM timer_presets")
     fun getAll(): Flow<List<TimerPresetDBO>>
 
-    @Query("SELECT * FROM timer_presets WHERE duration = :duration")
-    fun findByDuration(duration: Long) : Flow<TimerPresetDBO>
-
     @Insert
     suspend fun insert(timerPresetDBO: TimerPresetDBO)
 
     @Update
-    suspend fun update(vararg timerPresetDBOS: TimerPresetDBO)
+    suspend fun update(timerPresetDBO: TimerPresetDBO)
 
     @Delete
     suspend fun delete(vararg timerPresetDBOS: TimerPresetDBO)

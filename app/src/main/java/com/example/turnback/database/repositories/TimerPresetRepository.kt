@@ -12,15 +12,12 @@ class TimerPresetRepository @Inject constructor(
     fun getAll(): Flow<List<TimerPresetDBO>> =
         timerPresetDao.getAll()
 
-    fun findByDuration(duration: Long): Flow<TimerPresetDBO> =
-        timerPresetDao.findByDuration(duration)
-
     suspend fun insert(timerPresetDBO: TimerPresetDBO) {
         timerPresetDao.insert(timerPresetDBO)
     }
 
-    suspend fun update(vararg timerPresetDBOS: TimerPresetDBO) {
-        timerPresetDao.update(*timerPresetDBOS)
+    suspend fun update(timerPresetDBO: TimerPresetDBO) {
+        timerPresetDao.update(timerPresetDBO)
     }
 
     suspend fun delete(vararg timerPresetDBOS: TimerPresetDBO) {
