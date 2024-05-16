@@ -65,10 +65,9 @@ private fun MainScreen(
     changeTheme: (ThemeState) -> Unit
 ) {
     with(viewModel) {
-        var currentScreen: Screen by remember {
-            mutableStateOf(Screen.BottomBarItem.Timer)
-        }
+        var currentScreen: Screen by remember { mutableStateOf(Screen.BottomBarItem.Timer) }
         val selectedTimerPresetsCount by selectedTimerPresetsCount.collectAsState(0)
+        val isEditingMode = remember { mutableStateOf(false) }
 
         val navController = rememberNavController()
 
@@ -77,7 +76,8 @@ private fun MainScreen(
             state = MainScreenState(
                 currentScreen = currentScreen,
                 themeState = themeState,
-                selectedTimerPresetsCount = selectedTimerPresetsCount
+                selectedTimerPresetsCount = selectedTimerPresetsCount,
+                isEditingMode = isEditingMode
             ),
             actions = MainScreenActions(
                 changeScreen = { screen -> currentScreen = screen },
@@ -95,7 +95,7 @@ private fun MainScreen(
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                composable(Screen.BottomBarItem.Timer.route) { TimerScreen() }
+                composable(Screen.BottomBarItem.Timer.route) { TimerScreen(isEditingMode) }
                 composable(Screen.BottomBarItem.Stopwatch.route) { StopwatchScreen() }
             }
         }
@@ -118,7 +118,8 @@ private fun MainContent(
                     changeTheme = actions.changeTheme,
                     selectedTimerPresetsCount = selectedTimerPresetsCount,
                     clearSelection = actions.clearSelection,
-                    deleteTimerPresets = actions.deleteTimerPresets
+                    deleteTimerPresets = actions.deleteTimerPresets,
+                    isEditingMode = isEditingMode
                 )
             },
             bottomBar = {
