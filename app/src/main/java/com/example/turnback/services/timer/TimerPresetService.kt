@@ -50,6 +50,12 @@ class TimerPresetService @Inject constructor(
         }
     }
 
+    suspend fun updateInDB(timerPreset: TimerPreset) {
+        withContext(Dispatchers.IO) {
+            timerPresetRepository.update(timerPreset.toTimerPresetDBO())
+        }
+    }
+
     fun selectTimerPreset(timerPreset: TimerPreset) {
         timerPresetSelectorService.select(timerPreset)
     }
