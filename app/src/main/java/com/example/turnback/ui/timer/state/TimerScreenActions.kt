@@ -9,6 +9,7 @@ data class TimerScreenActions(
     val resume: () -> Unit,
     val stop: () -> Unit,
     val save: (TimerPreset) -> Unit,
+    val update: (TimerPreset) -> Unit,
     val select: (TimerPreset) -> Unit,
     val unselect: (TimerPreset) -> Unit
 ) {
@@ -21,6 +22,7 @@ data class TimerScreenActions(
             resume = {},
             stop = {},
             save = {},
+            update = {},
             select = {},
             unselect = {}
         )
