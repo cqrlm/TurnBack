@@ -55,6 +55,12 @@ class TimerViewModel @Inject constructor(
         }
     }
 
+    fun update(timerPreset: TimerPreset) {
+        viewModelScope.launch {
+            timerPresetService.updateInDB(timerPreset)
+        }
+    }
+
     fun select(timerPreset: TimerPreset) {
         timerPresetService.selectTimerPreset(timerPreset)
     }
