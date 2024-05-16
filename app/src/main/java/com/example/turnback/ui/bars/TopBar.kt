@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +37,8 @@ fun AppBar(
     changeTheme: (ThemeState) -> Unit,
     selectedTimerPresetsCount: Int,
     clearSelection: () -> Unit,
-    deleteTimerPresets: () -> Unit
+    deleteTimerPresets: () -> Unit,
+    isEditingMode: MutableState<Boolean>
 ) {
     val titleId = currentScreen.titleId
     var showMenu by remember { mutableStateOf(false) }
@@ -52,6 +54,13 @@ fun AppBar(
             when {
                 isTimerPresetSelected -> Text(text = selectedTimerPresetsCount.toString())
 
+                isEditingMode.value ->
+                    Text(
+                        text = stringResource(id = R.string.edit),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
                 titleId != null ->
                     Text(
                         text = stringResource(id = titleId),
@@ -61,8 +70,14 @@ fun AppBar(
             }
         },
         navigationIcon = {
-            if (isTimerPresetSelected) {
-                IconButton(onClick = clearSelection) {
+            if (isTimerPresetSelected || isEditingMode.value) {
+                IconButton(
+                    onClick = {
+                        if (isTimerPresetSelected) {
+                            clearSelection()
+                        } else isEditingMode.value = false
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Clear,
                         contentDescription = Icons.Filled.Clear.name
@@ -171,7 +186,8 @@ private fun TopBarPreview() {
             changeTheme = {},
             selectedTimerPresetsCount = 0,
             clearSelection = {},
-            deleteTimerPresets = {}
+            deleteTimerPresets = {},
+            isEditingMode = remember { mutableStateOf(false) }
         )
     }
 }
@@ -187,7 +203,25 @@ private fun TopBarPresetTimerSelectedPreview() {
             changeTheme = {},
             selectedTimerPresetsCount = 10,
             clearSelection = {},
-            deleteTimerPresets = {}
+            deleteTimerPresets = {},
+            isEditingMode = remember { mutableStateOf(false) }
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun TopBarPresetEditingModePreview() {
+    TurnBackTheme {
+        AppBar(
+            currentScreen = Screen.BottomBarItem.Timer,
+            themeState = ThemeState.SYSTEM,
+            changeTheme = {},
+            selectedTimerPresetsCount = 0,
+            clearSelection = {},
+            deleteTimerPresets = {},
+            isEditingMode = remember { mutableStateOf(true) }
         )
     }
 }
