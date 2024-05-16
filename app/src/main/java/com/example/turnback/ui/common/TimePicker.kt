@@ -40,13 +40,14 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun TimePicker(
     modifier: Modifier = Modifier,
+    initialValue: Duration = Duration.ZERO,
     textStyle: TextStyle = Typography.displayMedium,
     onValueChange: ((Duration) -> Unit)? = null,
     onDone: (Duration) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
-    var time by remember { mutableStateOf(Time(0, 0, 0)) }
+    var time: Time by remember { mutableStateOf(initialValue.toTime()) }
 
     val textValue by remember(time) { mutableStateOf(time.toString()) }
 
@@ -112,6 +113,11 @@ private data class Time(val hours: Int, val minutes: Int, val seconds: Int) {
     companion object {
 
         private const val TIME_PATTERN = "%02d:%02d:%02d"
+
+        fun Duration.toTime(): Time =
+            toComponents { hours, minutes, seconds, _ ->
+                Time(hours.toInt(), minutes, seconds)
+            }
 
         fun String.toTime(): Time =
             filterNot { it == ':' }
