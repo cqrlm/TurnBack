@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -61,7 +62,10 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
+fun TimerScreen(
+    isEditingMode: MutableState<Boolean>,
+    viewModel: TimerViewModel = hiltViewModel()
+) {
     with(viewModel) {
         val state by screenState.collectAsState()
 
@@ -72,13 +76,14 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
                 resume = ::resume,
                 stop = ::stop,
                 save = ::save,
+                update = ::update,
                 select = ::select,
                 unselect = ::unselect
             )
         }
 
         TimerContent(
-            state = state,
+            state = state.copy(isEditingMode = isEditingMode),
             actions = actions
         )
     }
@@ -86,13 +91,18 @@ fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
+private fun TimerContent(
+    state: TimerScreenState,
+    actions: TimerScreenActions
+) {
     with(state) {
-        val isEditMode by remember(timerPresets) {
+        val isDeletionMode by remember(timerPresets) {
             mutableStateOf(timerPresets.any(TimerPreset::selected))
         }
 
-        var showDialog by remember { mutableStateOf(false) }
+        var showCreationDialog by remember { mutableStateOf(false) }
+
+        var editingTimerPreset: TimerPreset? by remember { mutableStateOf(null) }
 
         Surface {
             Box(
@@ -113,7 +123,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                 }
 
                 AnimatedVisibility(
-                    visible = timerState == TimerState.STOP && !isEditMode,
+                    visible = timerState == TimerState.STOP && !isDeletionMode && !isEditingMode.value,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.TopCenter)
@@ -142,7 +152,8 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                                         text = duration.formatElapsedTime(),
                                         onClick = {
                                             when {
-                                                !isEditMode -> actions.start(duration)
+                                                isEditingMode.value -> editingTimerPreset = this
+                                                !isDeletionMode -> actions.start(duration)
                                                 selected -> actions.unselect(this)
                                                 else -> actions.select(this)
                                             }
@@ -156,7 +167,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                 }
 
                 AnimatedVisibility(
-                    visible = !isEditMode,
+                    visible = !isDeletionMode && !isEditingMode.value,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.BottomCenter)
@@ -172,7 +183,7 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                             when (timerState) {
                                 TimerState.START -> actions.pause()
                                 TimerState.PAUSE -> actions.resume()
-                                TimerState.STOP -> showDialog = true
+                                TimerState.STOP -> showCreationDialog = true
                             }
                         }
 
@@ -186,18 +197,18 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                         ) {
                             when (timerState) {
                                 TimerState.START, TimerState.PAUSE -> actions.stop()
-                                // TODO : Add implementation of timer presets edit
-                                TimerState.STOP -> Unit
+                                TimerState.STOP -> isEditingMode.value = true
                             }
                         }
                     }
                 }
             }
 
-            if (showDialog) {
-                TimerPresetCreationDialog(
-                    save = { duration ->
-                        showDialog = false
+            if (showCreationDialog) {
+                TimerPresetDialog(
+                    title = stringResource(id = R.string.new_timer_preset),
+                    update = { duration ->
+                        showCreationDialog = false
 
                         if (duration != Duration.ZERO) {
                             actions.save(
@@ -208,7 +219,23 @@ private fun TimerContent(state: TimerScreenState, actions: TimerScreenActions) {
                             )
                         }
                     },
-                    dismiss = { showDialog = false }
+                    dismiss = { showCreationDialog = false }
+                )
+            }
+
+            if (editingTimerPreset != null) {
+                TimerPresetDialog(
+                    title = stringResource(id = R.string.edit_timer_preset),
+                    initialValue = editingTimerPreset?.duration,
+                    update = { duration ->
+                        if (duration != Duration.ZERO) {
+                            editingTimerPreset?.run {
+                                actions.update(copy(duration = duration))
+                            }
+                            editingTimerPreset = null
+                        }
+                    },
+                    dismiss = { editingTimerPreset = null }
                 )
             }
         }
@@ -252,7 +279,7 @@ private fun TimeChip(
 }
 
 @Composable
-private fun ActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
+private fun ActionButton(icon: ImageVector, onClick: () -> Unit) {
     OutlinedIconButton(
         onClick = onClick,
         modifier = Modifier.size(48.dp)
@@ -265,11 +292,16 @@ private fun ActionButton(icon: ImageVector, onClick: () -> Unit = {}) {
 }
 
 @Composable
-private fun TimerPresetCreationDialog(save: (Duration) -> Unit, dismiss: () -> Unit) {
+private fun TimerPresetDialog(
+    title: String,
+    initialValue: Duration? = null,
+    update: (Duration) -> Unit,
+    dismiss: () -> Unit
+) {
     var duration by remember { mutableStateOf(Duration.ZERO) }
 
     AlertDialog(
-        title = { Text(text = stringResource(id = R.string.new_timer_preset)) },
+        title = { Text(text = title) },
         onDismissRequest = dismiss,
         dismissButton = {
             IconButton(onClick = dismiss) {
@@ -280,7 +312,7 @@ private fun TimerPresetCreationDialog(save: (Duration) -> Unit, dismiss: () -> U
             }
         },
         confirmButton = {
-            IconButton(onClick = { save(duration) }) {
+            IconButton(onClick = { update(duration) }) {
                 Icon(
                     imageVector = Icons.Filled.Done,
                     contentDescription = Icons.Filled.Done.name
@@ -289,8 +321,9 @@ private fun TimerPresetCreationDialog(save: (Duration) -> Unit, dismiss: () -> U
         },
         text = {
             TimePicker(
-                onDone = { timeDuration -> duration = timeDuration },
-                onValueChange = { timeDuration -> duration = timeDuration }
+                initialValue = initialValue ?: Duration.ZERO,
+                onDone = { timerDuration -> duration = timerDuration },
+                onValueChange = { timerDuration -> duration = timerDuration }
             )
         }
     )
