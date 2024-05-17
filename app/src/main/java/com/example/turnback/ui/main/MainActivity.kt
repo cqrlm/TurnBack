@@ -13,9 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,7 +27,6 @@ import com.example.turnback.ui.bars.BottomNavBar
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.stopwatch.StopwatchScreen
-import com.example.turnback.ui.theme.ThemeState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.timer.TimerScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,51 +37,31 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            val viewModel = hiltViewModel<MainViewModel>()
-            var themeState by remember { mutableStateOf(viewModel.themeState) }
-
-            TurnBackTheme(themeState.isDarkTheme()) {
-                MainScreen(
-                    viewModel = viewModel,
-                    themeState = themeState,
-                    changeTheme = { state ->
-                        themeState = state
-                        viewModel.setThemeState(themeState)
-                    }
-                )
-            }
-        }
+        setContent { MainScreen() }
     }
 }
 
 @Composable
-private fun MainScreen(
-    viewModel: MainViewModel = hiltViewModel(),
-    themeState: ThemeState,
-    changeTheme: (ThemeState) -> Unit
-) {
+private fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     with(viewModel) {
-        var currentScreen: Screen by remember { mutableStateOf(Screen.BottomBarItem.Timer) }
-        val selectedTimerPresetsCount by selectedTimerPresetsCount.collectAsState(0)
-        val isEditingMode = remember { mutableStateOf(false) }
-
         val navController = rememberNavController()
+
+        val state by screenState.collectAsState()
+
+        val actions = remember {
+            MainScreenActions(
+                changeScreen = ::changeScreen,
+                changeTheme = ::setThemeState,
+                clearSelection = ::clearSelection,
+                deleteTimerPresets = ::deleteTimerPresets,
+                finishEditing = ::finishEditing
+            )
+        }
 
         MainContent(
             navController = navController,
-            state = MainScreenState(
-                currentScreen = currentScreen,
-                themeState = themeState,
-                selectedTimerPresetsCount = selectedTimerPresetsCount,
-                isEditingMode = isEditingMode
-            ),
-            actions = MainScreenActions(
-                changeScreen = { screen -> currentScreen = screen },
-                changeTheme = changeTheme,
-                clearSelection = ::clearSelection,
-                deleteTimerPresets = ::deleteTimerPresets
-            )
+            state = state,
+            actions = actions
         ) { paddingValues ->
             NavHost(
                 navController = navController,
@@ -95,7 +72,7 @@ private fun MainScreen(
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                composable(Screen.BottomBarItem.Timer.route) { TimerScreen(isEditingMode) }
+                composable(Screen.BottomBarItem.Timer.route) { TimerScreen() }
                 composable(Screen.BottomBarItem.Stopwatch.route) { StopwatchScreen() }
             }
         }
@@ -110,25 +87,26 @@ private fun MainContent(
     content: @Composable (PaddingValues) -> Unit
 ) {
     with(state) {
-        Scaffold(
-            topBar = {
-                AppBar(
-                    currentScreen = currentScreen,
-                    themeState = themeState,
-                    changeTheme = actions.changeTheme,
-                    selectedTimerPresetsCount = selectedTimerPresetsCount,
-                    clearSelection = actions.clearSelection,
-                    deleteTimerPresets = actions.deleteTimerPresets,
-                    isEditingMode = isEditingMode
-                )
-            },
-            bottomBar = {
-                BottomNavBar(
-                    navController = navController,
-                    changeScreen = actions.changeScreen
-                )
-            }
-        ) { paddingValues -> content(paddingValues) }
+        TurnBackTheme(themeState.isDarkTheme()) {
+            Scaffold(
+                topBar = {
+                    AppBar(
+                        appState = appState,
+                        themeState = themeState,
+                        changeTheme = actions.changeTheme,
+                        clearSelection = actions.clearSelection,
+                        deleteTimerPresets = actions.deleteTimerPresets,
+                        finishEditing = actions.finishEditing
+                    )
+                },
+                bottomBar = {
+                    BottomNavBar(
+                        navController = navController,
+                        changeScreen = actions.changeScreen
+                    )
+                }
+            ) { paddingValues -> content(paddingValues) }
+        }
     }
 }
 
@@ -136,10 +114,8 @@ private fun MainContent(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun MainScreenPreview() {
-    TurnBackTheme {
-        MainContent(
-            state = MainScreenState(),
-            actions = MainScreenActions.Default
-        ) {}
-    }
+    MainContent(
+        state = MainScreenState(),
+        actions = MainScreenActions.Default
+    ) {}
 }
