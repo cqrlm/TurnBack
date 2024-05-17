@@ -6,7 +6,7 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 fun TimerPresetDBO.toTimerPreset(): TimerPreset =
-    TimerPreset(order, duration.toDuration(DurationUnit.MILLISECONDS))
+    TimerPreset(order, duration.toDuration(DurationUnit.MILLISECONDS), id)
 
 fun TimerPreset.toTimerPresetDBO(): TimerPresetDBO =
-    TimerPresetDBO(order, duration.inWholeMilliseconds)
+    TimerPresetDBO(id, order, duration.inWholeMilliseconds)

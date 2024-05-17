@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "timer_presets")
 data class TimerPresetDBO(
-    @PrimaryKey val order: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val order: Int,
     val duration: Long
 )
