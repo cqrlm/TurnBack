@@ -10,7 +10,7 @@ class TimerPresetRepository @Inject constructor(
 ) {
 
     fun getAll(): Flow<List<TimerPresetDBO>> =
-        timerPresetDao.getAll()
+        timerPresetDao.getAllFlow()
 
     suspend fun insert(timerPresetDBO: TimerPresetDBO) {
         timerPresetDao.insert(timerPresetDBO)
