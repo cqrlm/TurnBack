@@ -3,7 +3,9 @@ package com.example.turnback.ui.timer
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.turnback.AppState
 import com.example.turnback.model.TimerPreset
+import com.example.turnback.services.AppStateService
 import com.example.turnback.services.timer.TimerPresetService
 import com.example.turnback.services.timer.TimerService
 import com.example.turnback.ui.timer.state.TimerScreenState
@@ -18,18 +20,21 @@ import kotlin.time.Duration
 @HiltViewModel
 class TimerViewModel @Inject constructor(
     private val timerService: TimerService,
-    private val timerPresetService: TimerPresetService
+    private val timerPresetService: TimerPresetService,
+    private val appStateService: AppStateService
 ) : ViewModel() {
 
     val screenState = combine(
         timerService.timeFlow,
         timerService.timerState,
-        timerPresetService.timerPresetsFlow
-    ) { time, timerState, timerPresets ->
+        timerPresetService.timerPresetsFlow,
+        appStateService.appStateFlow
+    ) { time, timerState, timerPresets, appState ->
         TimerScreenState(
             timerState = timerState,
             timerDuration = time,
-            timerPresets = timerPresets.toMutableStateList()
+            timerPresets = timerPresets.toMutableStateList(),
+            appState = appState
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TimerScreenState())
 
@@ -58,6 +63,7 @@ class TimerViewModel @Inject constructor(
     fun update(timerPreset: TimerPreset) {
         viewModelScope.launch {
             timerPresetService.updateInDB(timerPreset)
+            appStateService.setAppState(AppState.Idle())
         }
     }
 
@@ -67,5 +73,17 @@ class TimerViewModel @Inject constructor(
 
     fun unselect(timerPreset: TimerPreset) {
         timerPresetService.unselectTimerPreset(timerPreset)
+    }
+
+    fun edit(timerPreset: TimerPreset) {
+        viewModelScope.launch {
+            appStateService.setAppState(AppState.Editing(timerPreset))
+        }
+    }
+
+    fun finishEditing() {
+        viewModelScope.launch {
+            appStateService.setAppState(AppState.Idle())
+        }
     }
 }
