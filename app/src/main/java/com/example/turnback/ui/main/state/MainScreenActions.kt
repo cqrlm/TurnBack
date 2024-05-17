@@ -7,7 +7,8 @@ data class MainScreenActions(
     val changeScreen: (Screen) -> Unit,
     val changeTheme: (ThemeState) -> Unit,
     val clearSelection: () -> Unit,
-    val deleteTimerPresets: () -> Unit
+    val deleteTimerPresets: () -> Unit,
+    val finishEditing: () -> Unit
 ) {
 
     companion object {
@@ -16,7 +17,8 @@ data class MainScreenActions(
             changeScreen = {},
             changeTheme = {},
             clearSelection = {},
-            deleteTimerPresets = {}
+            deleteTimerPresets = {},
+            finishEditing = {}
         )
     }
 }
