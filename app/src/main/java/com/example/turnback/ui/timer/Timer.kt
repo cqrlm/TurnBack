@@ -28,7 +28,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -45,6 +44,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.turnback.AppState
 import com.example.turnback.R
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
@@ -62,10 +62,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun TimerScreen(
-    isEditingMode: MutableState<Boolean>,
-    viewModel: TimerViewModel = hiltViewModel()
-) {
+fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
     with(viewModel) {
         val state by screenState.collectAsState()
 
@@ -78,12 +75,14 @@ fun TimerScreen(
                 save = ::save,
                 update = ::update,
                 select = ::select,
-                unselect = ::unselect
+                unselect = ::unselect,
+                edit = ::edit,
+                finishEditing = ::finishEditing
             )
         }
 
         TimerContent(
-            state = state.copy(isEditingMode = isEditingMode),
+            state = state,
             actions = actions
         )
     }
@@ -96,13 +95,7 @@ private fun TimerContent(
     actions: TimerScreenActions
 ) {
     with(state) {
-        val isDeletionMode by remember(timerPresets) {
-            mutableStateOf(timerPresets.any(TimerPreset::selected))
-        }
-
         var showCreationDialog by remember { mutableStateOf(false) }
-
-        var editingTimerPreset: TimerPreset? by remember { mutableStateOf(null) }
 
         Surface {
             Box(
@@ -123,7 +116,7 @@ private fun TimerContent(
                 }
 
                 AnimatedVisibility(
-                    visible = timerState == TimerState.STOP && !isDeletionMode && !isEditingMode.value,
+                    visible = timerState == TimerState.STOP && appState is AppState.Idle,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.TopCenter)
@@ -151,11 +144,15 @@ private fun TimerContent(
                                         selected = selected,
                                         text = duration.formatElapsedTime(),
                                         onClick = {
-                                            when {
-                                                isEditingMode.value -> editingTimerPreset = this
-                                                !isDeletionMode -> actions.start(duration)
-                                                selected -> actions.unselect(this)
-                                                else -> actions.select(this)
+                                            when (appState) {
+                                                is AppState.Editing -> actions.edit(this)
+
+                                                is AppState.Idle -> actions.start(duration)
+
+                                                else ->
+                                                    if (selected) {
+                                                        actions.unselect(this)
+                                                    } else actions.select(this)
                                             }
                                         },
                                         onLongClick = { actions.select(this) }
@@ -167,7 +164,7 @@ private fun TimerContent(
                 }
 
                 AnimatedVisibility(
-                    visible = !isDeletionMode && !isEditingMode.value,
+                    visible = appState is AppState.Idle,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.BottomCenter)
@@ -187,17 +184,19 @@ private fun TimerContent(
                             }
                         }
 
-                        ActionButton(
-                            icon = when (timerState) {
-                                TimerState.START, TimerState.PAUSE ->
-                                    ImageVector.vectorResource(R.drawable.ic_stop)
+                        if (timerState != TimerState.STOP || timerPresets.isNotEmpty()) {
+                            ActionButton(
+                                icon = when (timerState) {
+                                    TimerState.START, TimerState.PAUSE ->
+                                        ImageVector.vectorResource(R.drawable.ic_stop)
 
-                                TimerState.STOP -> Icons.Outlined.Edit
-                            }
-                        ) {
-                            when (timerState) {
-                                TimerState.START, TimerState.PAUSE -> actions.stop()
-                                TimerState.STOP -> isEditingMode.value = true
+                                    TimerState.STOP -> Icons.Outlined.Edit
+                                }
+                            ) {
+                                when (timerState) {
+                                    TimerState.START, TimerState.PAUSE -> actions.stop()
+                                    TimerState.STOP -> actions.edit(TimerPreset.Undefined)
+                                }
                             }
                         }
                     }
@@ -223,20 +222,24 @@ private fun TimerContent(
                 )
             }
 
-            if (editingTimerPreset != null) {
-                TimerPresetDialog(
-                    title = stringResource(id = R.string.edit_timer_preset),
-                    initialValue = editingTimerPreset?.duration,
-                    update = { duration ->
-                        if (duration != Duration.ZERO) {
-                            editingTimerPreset?.run {
+            if (
+                appState is AppState.Editing &&
+                appState.editingTimerPreset != TimerPreset.Undefined
+            ) {
+                with(appState.editingTimerPreset) {
+                    TimerPresetDialog(
+                        title = stringResource(id = R.string.edit_timer_preset),
+                        initialValue = duration,
+                        update = { duration ->
+                            if (duration != Duration.ZERO) {
                                 actions.update(copy(duration = duration))
                             }
-                            editingTimerPreset = null
-                        }
-                    },
-                    dismiss = { editingTimerPreset = null }
-                )
+
+                            actions.finishEditing()
+                        },
+                        dismiss = actions.finishEditing
+                    )
+                }
             }
         }
     }
