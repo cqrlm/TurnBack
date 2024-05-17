@@ -22,5 +22,12 @@ class TimerPresetRepository @Inject constructor(
 
     suspend fun delete(vararg timerPresetDBOS: TimerPresetDBO) {
         timerPresetDao.delete(*timerPresetDBOS)
+
+        val reorderedTimerPresets = timerPresetDao
+            .getAll()
+            .mapIndexed { index, timerPreset -> timerPreset.copy(order = index) }
+            .toTypedArray()
+
+        timerPresetDao.update(*reorderedTimerPresets)
     }
 }
