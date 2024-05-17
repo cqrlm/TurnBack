@@ -25,13 +25,7 @@ class TimerPresetService @Inject constructor(
     private val databaseTimerPresetsFlow = timerPresetRepository
         .getAll()
         .flowOn(Dispatchers.IO)
-        .flatMapConcat { timerPresetsDBOs ->
-            flowOf(
-                timerPresetsDBOs
-                    .map(TimerPresetDBO::toTimerPreset)
-                    .sortedBy(TimerPreset::order)
-            )
-        }
+        .flatMapConcat { flowOf(it.map(TimerPresetDBO::toTimerPreset)) }
 
     val timerPresetsFlow = combine(
         databaseTimerPresetsFlow,
