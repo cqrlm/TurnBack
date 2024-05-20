@@ -20,6 +20,8 @@ class DatabaseModule {
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase =
         Room
             .databaseBuilder(appContext, AppDatabase::class.java, "app_database")
+            .createFromAsset("database/timer_presets.db")
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides
