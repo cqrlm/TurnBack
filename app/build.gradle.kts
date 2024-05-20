@@ -50,6 +50,9 @@ android {
     room {
         schemaDirectory("$projectDir/schemas")
     }
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {
