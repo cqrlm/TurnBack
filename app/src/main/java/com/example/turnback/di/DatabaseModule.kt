@@ -21,7 +21,6 @@ class DatabaseModule {
         Room
             .databaseBuilder(appContext, AppDatabase::class.java, "app_database")
             .createFromAsset("database/timer_presets.db")
-            .fallbackToDestructiveMigration()
             .build()
 
     @Provides
