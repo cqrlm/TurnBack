@@ -7,26 +7,35 @@ import com.example.turnback.AppState
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.timer.TimerPresetService
-import com.example.turnback.services.timer.TimerService
+import com.example.turnback.services.timer.TimerState
 import com.example.turnback.ui.timer.state.TimerScreenState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import kotlin.time.Duration
 
-@HiltViewModel
-class TimerViewModel @Inject constructor(
-    private val timerService: TimerService,
+@HiltViewModel(assistedFactory = TimerViewModel.Factory::class)
+class TimerViewModel @AssistedInject constructor(
     private val timerPresetService: TimerPresetService,
-    private val appStateService: AppStateService
+    private val appStateService: AppStateService,
+    @Assisted val timeFlow: Flow<Duration>,
+    @Assisted val timerStateFlow: Flow<TimerState>
 ) : ViewModel() {
 
+    @AssistedFactory
+    interface Factory {
+        fun create(timeFlow: Flow<Duration>, timerStateFlow: Flow<TimerState>): TimerViewModel
+    }
+
     val screenState = combine(
-        timerService.timeFlow,
-        timerService.timerState,
+        timeFlow,
+        timerStateFlow,
         timerPresetService.timerPresetsFlow,
         appStateService.appStateFlow
     ) { time, timerState, timerPresets, appState ->
@@ -37,22 +46,6 @@ class TimerViewModel @Inject constructor(
             appState = appState
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TimerScreenState())
-
-    fun start(duration: Duration) {
-        timerService.start(duration)
-    }
-
-    fun pause() {
-        timerService.pause()
-    }
-
-    fun resume() {
-        timerService.resume()
-    }
-
-    fun stop() {
-        timerService.stop()
-    }
 
     fun save(timerPreset: TimerPreset) {
         viewModelScope.launch {
