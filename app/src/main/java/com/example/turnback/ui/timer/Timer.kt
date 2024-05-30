@@ -244,9 +244,7 @@ private fun TimerContent(
                         update = { duration ->
                             if (duration != Duration.ZERO) {
                                 actions.update(copy(duration = duration))
-                            }
-
-                            actions.finishEditing()
+                            } else actions.finishEditing()
                         },
                         dismiss = actions.finishEditing
                     )

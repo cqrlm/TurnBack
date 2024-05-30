@@ -76,7 +76,7 @@ class TimerViewModel @AssistedInject constructor(
 
     fun finishEditing() {
         viewModelScope.launch {
-            appStateService.setAppState(AppState.Idle())
+            appStateService.setAppState(AppState.Editing())
         }
     }
 }
