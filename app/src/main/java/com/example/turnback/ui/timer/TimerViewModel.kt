@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.turnback.AppState
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.AppStateService
-import com.example.turnback.services.timer.TimerPresetService
 import com.example.turnback.services.timer.TimerState
+import com.example.turnback.services.timer.preset.TimerPresetService
 import com.example.turnback.ui.timer.state.TimerScreenState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

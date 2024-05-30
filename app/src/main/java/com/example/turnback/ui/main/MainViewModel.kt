@@ -6,8 +6,8 @@ import com.example.turnback.AppState
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.SharedPreferencesService
-import com.example.turnback.services.timer.TimerPresetSelectorService
-import com.example.turnback.services.timer.TimerPresetService
+import com.example.turnback.services.timer.preset.TimerPresetSelectorService
+import com.example.turnback.services.timer.preset.TimerPresetService
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.theme.ThemeState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,4 +1,4 @@
-package com.example.turnback.services.timer
+package com.example.turnback.services.timer.preset
 
 import com.example.turnback.database.entities.TimerPresetDBO
 import com.example.turnback.database.repositories.TimerPresetRepository
