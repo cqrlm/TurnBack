@@ -1,56 +1,98 @@
 package com.example.turnback.services.timer
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import java.util.Timer
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
+import androidx.core.content.ContextCompat
+import com.example.turnback.services.timer.notification.NotificationAction
+import com.example.turnback.services.timer.notification.NotificationConstants
+import com.example.turnback.services.timer.notification.NotificationManager
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.ZERO
-import kotlin.time.Duration.Companion.milliseconds
 
-class TimerService @Inject constructor() {
+@AndroidEntryPoint
+class TimerService : Service() {
 
-    private val _timeFlow = MutableStateFlow(ZERO)
-    val timeFlow = _timeFlow.asStateFlow()
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
-    private var _timerStateFlow = MutableStateFlow(TimerState.STOP)
-    val timerState = _timerStateFlow.asStateFlow()
+    @Inject
+    lateinit var timerManager: TimerManager
 
-    private var timer: Timer? = null
+    val timeFlow by lazy { timerManager.timeFlow }
 
-    fun start(duration: Duration) {
-        stop()
+    val timerState by lazy { timerManager.timerState }
 
-        var time = duration
+    private val binder by lazy { TimerBinder() }
 
-        _timerStateFlow.tryEmit(TimerState.START)
+    override fun onBind(intent: Intent?): IBinder = binder
 
-        timer = fixedRateTimer(period = TIME_INTERVAL) {
-            _timeFlow.tryEmit(time)
-
-            if (time != ZERO) {
-                time -= TIME_INTERVAL_DURATION
-            } else stop()
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.action?.let { action ->
+            when (action) {
+                NotificationAction.PAUSE.name -> pause()
+                NotificationAction.RESUME.name -> resume()
+                NotificationAction.STOP.name -> stop()
+            }
         }
+
+        return super.onStartCommand(intent, flags, startId)
     }
 
-    fun pause() {
-        timer?.cancel()
-        _timerStateFlow.tryEmit(TimerState.PAUSE)
+    fun start(duration: Duration, context: Context) {
+        startService(context)
+        start(duration)
+    }
+
+    private fun start(duration: Duration) {
+        startForegroundService()
+        timerManager.start(duration)
     }
 
     fun resume() {
-        start(_timeFlow.value)
+        timerManager.resume()
+    }
+
+    fun pause() {
+        timerManager.pause()
     }
 
     fun stop() {
-        timer?.cancel()
-        _timerStateFlow.tryEmit(TimerState.STOP)
+        timerManager.stop()
+        stopService()
     }
 
-    companion object {
-        private const val TIME_INTERVAL = 1000L
-        private val TIME_INTERVAL_DURATION = TIME_INTERVAL.milliseconds
+    private fun startService(context: Context) {
+        ContextCompat.startForegroundService(context, Intent(context, TimerService::class.java))
+    }
+
+    private fun startForegroundService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(
+                NotificationConstants.NOTIFICATION_ID,
+                notificationManager.notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+            )
+        } else {
+            startForeground(
+                NotificationConstants.NOTIFICATION_ID,
+                notificationManager.notification
+            )
+        }
+    }
+
+    private fun stopService() {
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
+    inner class TimerBinder : Binder() {
+
+        fun getService(): TimerService = this@TimerService
     }
 }
