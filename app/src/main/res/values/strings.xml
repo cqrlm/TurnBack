@@ -15,4 +15,7 @@
     <string name="new_timer_preset">New timer preset</string>
     <string name="edit">Edit</string>
     <string name="edit_timer_preset">Edit timer preset</string>
+    <string name="time_is_up">Time is up</string>
+    <string name="timer_notifications">Timer notifications</string>
+    <string name="timer_service_explanation">The service is necessary for the timer to work correctly, even if the application is closed</string>
 </resources>
