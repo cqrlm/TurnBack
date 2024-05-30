@@ -38,6 +38,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -47,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.turnback.AppState
 import com.example.turnback.R
 import com.example.turnback.model.TimerPreset
+import com.example.turnback.services.timer.TimerService
 import com.example.turnback.services.timer.TimerState
 import com.example.turnback.ui.common.TimePicker
 import com.example.turnback.ui.theme.TurnBackTheme
@@ -62,29 +64,38 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun TimerScreen(viewModel: TimerViewModel = hiltViewModel()) {
-    with(viewModel) {
-        val state by screenState.collectAsState()
+fun TimerScreen(
+    timerService: TimerService,
+    viewModel: TimerViewModel = hiltViewModel<TimerViewModel, TimerViewModel.Factory>(
+        creationCallback = { it.create(timerService.timeFlow, timerService.timerState) }
+    )
+) {
+    val context = LocalContext.current
 
-        val actions = remember {
-            TimerScreenActions(
-                start = ::start,
-                pause = ::pause,
-                resume = ::resume,
-                stop = ::stop,
-                save = ::save,
-                update = ::update,
-                select = ::select,
-                unselect = ::unselect,
-                edit = ::edit,
-                finishEditing = ::finishEditing
+    with(viewModel) {
+        with(timerService) {
+            val state by screenState.collectAsState()
+
+            val actions = remember {
+                TimerScreenActions(
+                    start = { duration -> start(duration, context) },
+                    pause = ::pause,
+                    resume = ::resume,
+                    stop = ::stop,
+                    save = ::save,
+                    update = ::update,
+                    select = ::select,
+                    unselect = ::unselect,
+                    edit = ::edit,
+                    finishEditing = ::finishEditing
+                )
+            }
+
+            TimerContent(
+                state = state,
+                actions = actions
             )
         }
-
-        TimerContent(
-            state = state,
-            actions = actions
-        )
     }
 }
 
