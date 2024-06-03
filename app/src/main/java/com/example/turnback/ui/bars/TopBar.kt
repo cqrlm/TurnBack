@@ -33,10 +33,10 @@ import com.example.turnback.ui.theme.TurnBackTheme
 fun AppBar(
     appState: AppState,
     themeState: ThemeState,
-    changeTheme: (ThemeState) -> Unit,
-    cancelDeletion: () -> Unit,
-    deleteTimerPresets: () -> Unit,
-    finishEditing: () -> Unit
+    changeTheme: (ThemeState) -> Unit = {},
+    cancelDeletion: () -> Unit = {},
+    deleteTimerPresets: () -> Unit = {},
+    finishEditing: () -> Unit = {}
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
@@ -76,33 +76,40 @@ fun AppBar(
             }
         },
         actions = {
-            if (appState is AppState.Deletion) {
-                IconButton(onClick = { showDeleteDialog = true }) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = Icons.Filled.Delete.name
-                    )
-                }
-            } else {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = Icons.Filled.MoreVert.name
-                    )
+            when (appState) {
+                is AppState.Deletion ->
+                    if (appState.selectedTimerPresetsCount != 0) {
+                        IconButton(onClick = { showDeleteDialog = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = Icons.Filled.Delete.name
+                            )
+                        }
+                    }
+
+                is AppState.Idle -> {
+                    IconButton(onClick = { showMenu = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = Icons.Filled.MoreVert.name
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.select_theme)) },
+                            onClick = {
+                                showMenu = false
+                                showThemeDialog = true
+                            }
+                        )
+                    }
                 }
 
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(text = stringResource(id = R.string.select_theme)) },
-                        onClick = {
-                            showMenu = false
-                            showThemeDialog = true
-                        }
-                    )
-                }
+                is AppState.Editing -> Unit
             }
         },
     )
@@ -172,11 +179,7 @@ private fun TopBarIdlePreview() {
     TurnBackTheme {
         AppBar(
             appState = AppState.Idle(),
-            themeState = ThemeState.SYSTEM,
-            changeTheme = {},
-            cancelDeletion = {},
-            deleteTimerPresets = {},
-            finishEditing = {}
+            themeState = ThemeState.SYSTEM
         )
     }
 }
@@ -188,11 +191,7 @@ private fun TopBarPresetTimerDeletionPreview() {
     TurnBackTheme {
         AppBar(
             appState = AppState.Deletion(selectedTimerPresetsCount = 10),
-            themeState = ThemeState.SYSTEM,
-            changeTheme = {},
-            cancelDeletion = {},
-            deleteTimerPresets = {},
-            finishEditing = {}
+            themeState = ThemeState.SYSTEM
         )
     }
 }
@@ -204,11 +203,7 @@ private fun TopBarPresetEditingPreview() {
     TurnBackTheme {
         AppBar(
             appState = AppState.Editing(),
-            themeState = ThemeState.SYSTEM,
-            changeTheme = {},
-            cancelDeletion = {},
-            deleteTimerPresets = {},
-            finishEditing = {}
+            themeState = ThemeState.SYSTEM
         )
     }
 }
