@@ -106,6 +106,7 @@ private fun MainScreen(
                 changeTheme = ::setThemeState,
                 cancelDeletion = ::cancelDeletion,
                 deleteTimerPresets = ::deleteTimerPresets,
+                cancelEditing = ::cancelEditing,
                 finishEditing = ::finishEditing
             )
         }

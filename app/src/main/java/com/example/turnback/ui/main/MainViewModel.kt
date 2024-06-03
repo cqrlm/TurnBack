@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.SharedPreferencesService
-import com.example.turnback.services.TimerEditModeService
 import com.example.turnback.services.timer.TimerEditMode
-import com.example.turnback.services.timer.preset.TimerPresetService
+import com.example.turnback.services.timer.preset.TimerPresetManager
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.theme.ThemeState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val timerPresetService: TimerPresetService,
     private val sharedPreferencesService: SharedPreferencesService,
-    private val timerEditModeService: TimerEditModeService
+    private val timerPresetManager: TimerPresetManager
 ) : ViewModel() {
 
     private val themeStateFlow = MutableStateFlow(sharedPreferencesService.getThemeState())
@@ -29,7 +27,7 @@ class MainViewModel @Inject constructor(
 
     val screenState = combine(
         themeStateFlow,
-        timerEditModeService.timerEditModeFlow,
+        timerPresetManager.timerEditModeFlow,
         currentScreenFlow
     ) { themeState, timerEditMode, currentScreen ->
         MainScreenState(
@@ -40,15 +38,13 @@ class MainViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainScreenState())
 
     fun cancelDeletion() {
-        timerPresetService.clearSelectedTimerPresets()
-        timerEditModeService.setTimerEditMode(TimerEditMode.Idle)
+        timerPresetManager.cancelDeletion()
     }
 
     fun deleteTimerPresets() {
         viewModelScope.launch {
-            timerPresetService.deleteSelectedTimerPresets()
+            timerPresetManager.deleteSelectedTimerPresets()
         }
-        timerEditModeService.setTimerEditMode(TimerEditMode.Idle)
     }
 
     fun setThemeState(themeState: ThemeState) {
@@ -58,15 +54,22 @@ class MainViewModel @Inject constructor(
     }
 
     fun changeScreen(newScreen: Screen) {
-        if (screenState.value.timerEditMode is TimerEditMode.Deletion) {
-            timerPresetService.clearSelectedTimerPresets()
+        when (screenState.value.timerEditMode) {
+            is TimerEditMode.Deletion -> timerPresetManager.cancelDeletion()
+            is TimerEditMode.Editing -> timerPresetManager.cancelEditing()
+            is TimerEditMode.Idle -> Unit
         }
 
         currentScreenFlow.value = newScreen
-        timerEditModeService.setTimerEditMode(TimerEditMode.Idle)
+    }
+
+    fun cancelEditing() {
+        timerPresetManager.cancelEditing()
     }
 
     fun finishEditing() {
-        timerEditModeService.setTimerEditMode(TimerEditMode.Idle)
+        viewModelScope.launch {
+            timerPresetManager.saveEditingChanges()
+        }
     }
 }
