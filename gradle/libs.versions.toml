@@ -5,7 +5,7 @@ core-ktx = "1.13.1"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-lifecycle = "2.7.0"
+lifecycle = "2.8.1"
 activity-compose = "1.9.0"
 compose-bom = "2024.05.00"
 ksp = "2.0.0-1.0.21"
@@ -13,6 +13,8 @@ hilt = "2.51"
 hilt-navigation-compose = "1.2.0"
 navigation-compose = "2.7.7"
 room = "2.6.1"
+# TODO: Remove after stable release of the new Compose BOM
+compose-bom-alpha="2024.05.00-alpha03"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -27,6 +29,7 @@ lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-view
 
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-bom-alpha = { group = "dev.chrisbanes.compose", name = "compose-bom", version.ref = "compose-bom-alpha" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
