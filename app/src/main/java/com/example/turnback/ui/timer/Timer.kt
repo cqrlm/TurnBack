@@ -87,7 +87,8 @@ fun TimerScreen(
                     select = ::select,
                     unselect = ::unselect,
                     edit = ::edit,
-                    startEditing = ::startEditing
+                    startEditing = ::startEditing,
+                    startDeletion = ::startDeletion
                 )
             }
 

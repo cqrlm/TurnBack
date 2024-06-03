@@ -76,4 +76,8 @@ class TimerViewModel @AssistedInject constructor(
     fun startEditing() {
         appStateService.setAppState(AppState.Editing())
     }
+
+    fun startDeletion() {
+        appStateService.setAppState(AppState.Deletion())
+    }
 }
