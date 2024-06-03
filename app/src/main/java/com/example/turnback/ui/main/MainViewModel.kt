@@ -2,7 +2,7 @@ package com.example.turnback.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.AppState
+import com.example.turnback.TimerEditMode
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.SharedPreferencesService
@@ -32,20 +32,20 @@ class MainViewModel @Inject constructor(
     ) { themeState, appState ->
         MainScreenState(
             themeState = themeState,
-            appState = appState
+            timerEditMode = appState
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainScreenState())
 
     fun cancelDeletion() {
         timerPresetService.clearSelectedTimerPresets()
-        appStateService.setAppState(AppState.Idle())
+        appStateService.setAppState(TimerEditMode.Idle)
     }
 
     fun deleteTimerPresets() {
         viewModelScope.launch {
             timerPresetService.deleteSelectedTimerPresets()
         }
-        appStateService.setAppState(AppState.Idle())
+        appStateService.setAppState(TimerEditMode.Idle)
     }
 
     fun setThemeState(themeState: ThemeState) {
@@ -55,18 +55,16 @@ class MainViewModel @Inject constructor(
     }
 
     fun changeScreen(newScreen: Screen) {
-        val currentAppState = screenState.value.appState
+        val currentAppState = screenState.value.timerEditMode
 
-        if (currentAppState.screen != newScreen) {
-            if (currentAppState is AppState.Deletion) {
-                timerPresetService.clearSelectedTimerPresets()
-            }
-
-            appStateService.setAppState(AppState.Idle(newScreen))
+        if (currentAppState is TimerEditMode.Deletion) {
+            timerPresetService.clearSelectedTimerPresets()
         }
+
+        appStateService.setAppState(TimerEditMode.Idle)
     }
 
     fun finishEditing() {
-        appStateService.setAppState(AppState.Idle())
+        appStateService.setAppState(TimerEditMode.Idle)
     }
 }

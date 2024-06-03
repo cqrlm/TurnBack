@@ -1,6 +1,6 @@
 package com.example.turnback.services
 
-import com.example.turnback.AppState
+import com.example.turnback.TimerEditMode
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,13 +9,13 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class AppStateService @Inject constructor() {
 
-    private val _appStateFlow = MutableStateFlow<AppState>(AppState.Idle())
-    val appStateFlow = _appStateFlow.asStateFlow()
+    private val _timerEditModeFlow = MutableStateFlow<TimerEditMode>(TimerEditMode.Idle)
+    val appStateFlow = _timerEditModeFlow.asStateFlow()
 
     val isDeletionState: Boolean
-        get() = _appStateFlow.value is AppState.Deletion
+        get() = _timerEditModeFlow.value is TimerEditMode.Deletion
 
-    fun setAppState(appState: AppState) {
-        _appStateFlow.value = appState
+    fun setAppState(timerEditMode: TimerEditMode) {
+        _timerEditModeFlow.value = timerEditMode
     }
 }

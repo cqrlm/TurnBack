@@ -3,7 +3,7 @@ package com.example.turnback.ui.timer
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.AppState
+import com.example.turnback.TimerEditMode
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.timer.TimerState
@@ -43,7 +43,7 @@ class TimerViewModel @AssistedInject constructor(
             timerState = timerState,
             timerDuration = time,
             timerPresets = timerPresets.toMutableStateList(),
-            appState = appState
+            timerEditMode = appState
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TimerScreenState())
 
@@ -58,7 +58,7 @@ class TimerViewModel @AssistedInject constructor(
             timerPresetService.updateInDB(timerPreset)
         }
 
-        appStateService.setAppState(AppState.Idle())
+        appStateService.setAppState(TimerEditMode.Idle)
     }
 
     fun select(timerPreset: TimerPreset) {
@@ -70,14 +70,14 @@ class TimerViewModel @AssistedInject constructor(
     }
 
     fun edit(timerPreset: TimerPreset) {
-        appStateService.setAppState(AppState.Editing(timerPreset))
+        appStateService.setAppState(TimerEditMode.Editing(timerPreset))
     }
 
     fun startEditing() {
-        appStateService.setAppState(AppState.Editing())
+        appStateService.setAppState(TimerEditMode.Editing())
     }
 
     fun startDeletion() {
-        appStateService.setAppState(AppState.Deletion())
+        appStateService.setAppState(TimerEditMode.Deletion())
     }
 }

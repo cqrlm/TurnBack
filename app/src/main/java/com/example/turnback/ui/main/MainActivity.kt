@@ -146,7 +146,7 @@ private fun MainContent(
             Scaffold(
                 topBar = {
                     AppBar(
-                        appState = appState,
+                        timerEditMode = timerEditMode,
                         themeState = themeState,
                         changeTheme = actions.changeTheme,
                         cancelDeletion = actions.cancelDeletion,

@@ -46,8 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.turnback.AppState
 import com.example.turnback.R
+import com.example.turnback.TimerEditMode
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerService
 import com.example.turnback.services.timer.TimerState
@@ -125,7 +125,7 @@ private fun TimerContent(
                 }
 
                 AnimatedVisibility(
-                    visible = timerState == TimerState.STOP && appState is AppState.Idle,
+                    visible = timerState == TimerState.STOP && timerEditMode is TimerEditMode.Idle,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.TopCenter)
@@ -149,12 +149,12 @@ private fun TimerContent(
                         TimerPresetsGrid(
                             timerPresets = timerPresets,
                             onClick = { timerPreset ->
-                                when (appState) {
-                                    is AppState.Editing -> actions.edit(timerPreset)
+                                when (timerEditMode) {
+                                    is TimerEditMode.Editing -> actions.edit(timerPreset)
 
-                                    is AppState.Idle -> actions.start(timerPreset.duration)
+                                    is TimerEditMode.Idle -> actions.start(timerPreset.duration)
 
-                                    is AppState.Deletion ->
+                                    is TimerEditMode.Deletion ->
                                         if (timerPreset.selected) {
                                             actions.unselect(timerPreset)
                                         } else actions.select(timerPreset)
@@ -165,7 +165,7 @@ private fun TimerContent(
                 }
 
                 AnimatedVisibility(
-                    visible = appState is AppState.Idle,
+                    visible = timerEditMode is TimerEditMode.Idle,
                     enter = fadeIn(),
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.BottomCenter)
@@ -231,10 +231,10 @@ private fun TimerContent(
             }
 
             if (
-                appState is AppState.Editing &&
-                appState.editingTimerPreset != null
+                timerEditMode is TimerEditMode.Editing &&
+                timerEditMode.editingTimerPreset != null
             ) {
-                with(appState.editingTimerPreset) {
+                with(timerEditMode.editingTimerPreset) {
                     TimerPresetDialog(
                         title = stringResource(id = R.string.edit_timer_preset),
                         initialValue = duration,

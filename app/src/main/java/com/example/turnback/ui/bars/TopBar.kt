@@ -22,8 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.turnback.AppState
 import com.example.turnback.R
+import com.example.turnback.TimerEditMode
 import com.example.turnback.ui.common.SingleChoiceDialog
 import com.example.turnback.ui.theme.ThemeState
 import com.example.turnback.ui.theme.TurnBackTheme
@@ -31,7 +31,7 @@ import com.example.turnback.ui.theme.TurnBackTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    appState: AppState,
+    timerEditMode: TimerEditMode,
     themeState: ThemeState,
     changeTheme: (ThemeState) -> Unit = {},
     cancelDeletion: () -> Unit = {},
@@ -45,25 +45,24 @@ fun AppBar(
     TopAppBar(
         title = {
             Text(
-                text = when (appState) {
-                    is AppState.Deletion -> appState.selectedTimerPresetsCount.toString()
+                text = when (timerEditMode) {
+                    is TimerEditMode.Deletion -> timerEditMode.selectedTimerPresetsCount.toString()
 
-                    is AppState.Editing -> stringResource(id = R.string.edit)
+                    is TimerEditMode.Editing -> stringResource(id = R.string.edit)
 
-                    is AppState.Idle ->
-                        appState.screen.titleId?.let { stringResource(id = it) }.orEmpty()
+                    is TimerEditMode.Idle -> TODO()
                 },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         },
         navigationIcon = {
-            if (appState !is AppState.Idle) {
+            if (timerEditMode !is TimerEditMode.Idle) {
                 IconButton(
                     onClick = {
-                        when (appState) {
-                            is AppState.Deletion -> cancelDeletion()
-                            is AppState.Editing -> finishEditing()
+                        when (timerEditMode) {
+                            is TimerEditMode.Deletion -> cancelDeletion()
+                            is TimerEditMode.Editing -> finishEditing()
                             else -> Unit
                         }
                     }
@@ -76,9 +75,9 @@ fun AppBar(
             }
         },
         actions = {
-            when (appState) {
-                is AppState.Deletion ->
-                    if (appState.selectedTimerPresetsCount != 0) {
+            when (timerEditMode) {
+                is TimerEditMode.Deletion ->
+                    if (timerEditMode.selectedTimerPresetsCount != 0) {
                         IconButton(onClick = { showDeleteDialog = true }) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
@@ -87,7 +86,7 @@ fun AppBar(
                         }
                     }
 
-                is AppState.Idle -> {
+                is TimerEditMode.Idle -> {
                     IconButton(onClick = { showMenu = true }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
@@ -109,7 +108,7 @@ fun AppBar(
                     }
                 }
 
-                is AppState.Editing -> Unit
+                is TimerEditMode.Editing -> Unit
             }
         },
     )
@@ -178,7 +177,7 @@ private fun DeleteDialog(
 private fun TopBarIdlePreview() {
     TurnBackTheme {
         AppBar(
-            appState = AppState.Idle(),
+            timerEditMode = TimerEditMode.Idle,
             themeState = ThemeState.SYSTEM
         )
     }
@@ -190,7 +189,7 @@ private fun TopBarIdlePreview() {
 private fun TopBarPresetTimerDeletionPreview() {
     TurnBackTheme {
         AppBar(
-            appState = AppState.Deletion(selectedTimerPresetsCount = 10),
+            timerEditMode = TimerEditMode.Deletion(selectedTimerPresetsCount = 10),
             themeState = ThemeState.SYSTEM
         )
     }
@@ -202,7 +201,7 @@ private fun TopBarPresetTimerDeletionPreview() {
 private fun TopBarPresetEditingPreview() {
     TurnBackTheme {
         AppBar(
-            appState = AppState.Editing(),
+            timerEditMode = TimerEditMode.Editing(),
             themeState = ThemeState.SYSTEM
         )
     }

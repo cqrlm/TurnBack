@@ -2,7 +2,7 @@ package com.example.turnback.ui.timer.state
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.example.turnback.AppState
+import com.example.turnback.TimerEditMode
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
 import kotlin.time.Duration
@@ -12,5 +12,5 @@ data class TimerScreenState(
     val timerState: TimerState = TimerState.STOP,
     val timerDuration: Duration = 0.seconds,
     val timerPresets: SnapshotStateList<TimerPreset> = mutableStateListOf(),
-    val appState: AppState = AppState.Idle()
+    val timerEditMode: TimerEditMode = TimerEditMode.Idle
 )
