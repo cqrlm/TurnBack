@@ -73,7 +73,7 @@ class TimerViewModel @AssistedInject constructor(
         appStateService.setAppState(AppState.Editing(timerPreset))
     }
 
-    fun finishEditing() {
+    fun startEditing() {
         appStateService.setAppState(AppState.Editing())
     }
 }

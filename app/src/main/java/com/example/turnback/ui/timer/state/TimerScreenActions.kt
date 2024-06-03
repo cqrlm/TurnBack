@@ -13,7 +13,7 @@ data class TimerScreenActions(
     val select: (TimerPreset) -> Unit,
     val unselect: (TimerPreset) -> Unit,
     val edit: (TimerPreset) -> Unit,
-    val finishEditing: () -> Unit
+    val startEditing: () -> Unit
 ) {
 
     companion object {
@@ -28,7 +28,7 @@ data class TimerScreenActions(
             select = {},
             unselect = {},
             edit = {},
-            finishEditing = {}
+            startEditing = {}
         )
     }
 }

@@ -87,7 +87,7 @@ fun TimerScreen(
                     select = ::select,
                     unselect = ::unselect,
                     edit = ::edit,
-                    finishEditing = ::finishEditing
+                    startEditing = ::startEditing
                 )
             }
 
@@ -206,7 +206,7 @@ private fun TimerContent(
                             ) {
                                 when (timerState) {
                                     TimerState.START, TimerState.PAUSE -> actions.stop()
-                                    TimerState.STOP -> actions.edit(TimerPreset.Undefined)
+                                    TimerState.STOP -> actions.startEditing()
                                 }
                             }
                         }
@@ -244,9 +244,9 @@ private fun TimerContent(
                         update = { duration ->
                             if (duration != Duration.ZERO) {
                                 actions.update(copy(duration = duration))
-                            } else actions.finishEditing()
+                            } else actions.startEditing()
                         },
-                        dismiss = actions.finishEditing
+                        dismiss = actions.startEditing
                     )
                 }
             }
