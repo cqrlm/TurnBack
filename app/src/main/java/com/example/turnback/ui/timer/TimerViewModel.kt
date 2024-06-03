@@ -1,13 +1,10 @@
 package com.example.turnback.ui.timer
 
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.turnback.model.TimerPreset
-import com.example.turnback.services.TimerEditModeService
-import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.services.timer.TimerState
-import com.example.turnback.services.timer.preset.TimerPresetService
+import com.example.turnback.services.timer.preset.TimerPresetManager
 import com.example.turnback.ui.timer.state.TimerScreenState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -22,8 +19,7 @@ import kotlin.time.Duration
 
 @HiltViewModel(assistedFactory = TimerViewModel.Factory::class)
 class TimerViewModel @AssistedInject constructor(
-    private val timerPresetService: TimerPresetService,
-    private val timerEditModeService: TimerEditModeService,
+    private val timerPresetManager: TimerPresetManager,
     @Assisted val timeFlow: Flow<Duration>,
     @Assisted val timerStateFlow: Flow<TimerState>
 ) : ViewModel() {
@@ -36,48 +32,48 @@ class TimerViewModel @AssistedInject constructor(
     val screenState = combine(
         timeFlow,
         timerStateFlow,
-        timerPresetService.timerPresetsFlow,
-        timerEditModeService.timerEditModeFlow
+        timerPresetManager.timerPresetsFlow,
+        timerPresetManager.timerEditModeFlow
     ) { time, timerState, timerPresets, timerEditMode ->
         TimerScreenState(
             timerState = timerState,
             timerDuration = time,
-            timerPresets = timerPresets.toMutableStateList(),
+            timerPresets = timerPresets,
             timerEditMode = timerEditMode
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TimerScreenState())
 
     fun save(timerPreset: TimerPreset) {
         viewModelScope.launch {
-            timerPresetService.saveToDB(timerPreset)
+            timerPresetManager.saveToDB(timerPreset)
         }
     }
 
     fun update(timerPreset: TimerPreset) {
-        viewModelScope.launch {
-            timerPresetService.updateInDB(timerPreset)
-        }
-
-        timerEditModeService.setTimerEditMode(TimerEditMode.Idle)
+        timerPresetManager.update(timerPreset)
     }
 
     fun select(timerPreset: TimerPreset) {
-        timerPresetService.selectTimerPreset(timerPreset)
+        timerPresetManager.select(timerPreset)
     }
 
     fun unselect(timerPreset: TimerPreset) {
-        timerPresetService.unselectTimerPreset(timerPreset)
+        timerPresetManager.select(timerPreset)
     }
 
     fun edit(timerPreset: TimerPreset) {
-        timerEditModeService.setTimerEditMode(TimerEditMode.Editing(timerPreset))
+        timerPresetManager.edit(timerPreset)
     }
 
     fun startEditing() {
-        timerEditModeService.setTimerEditMode(TimerEditMode.Editing())
+        timerPresetManager.startEditing()
     }
 
     fun startDeletion() {
-        timerEditModeService.setTimerEditMode(TimerEditMode.Deletion())
+        timerPresetManager.startDeletion()
+    }
+
+    fun swap(fromIndex: Int, toIndex: Int) {
+        timerPresetManager.swap(fromIndex, toIndex)
     }
 }
