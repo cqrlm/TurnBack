@@ -104,7 +104,7 @@ private fun MainScreen(
             MainScreenActions(
                 changeScreen = ::changeScreen,
                 changeTheme = ::setThemeState,
-                clearSelection = ::clearSelection,
+                cancelDeletion = ::cancelDeletion,
                 deleteTimerPresets = ::deleteTimerPresets,
                 finishEditing = ::finishEditing
             )
@@ -149,7 +149,7 @@ private fun MainContent(
                         appState = appState,
                         themeState = themeState,
                         changeTheme = actions.changeTheme,
-                        clearSelection = actions.clearSelection,
+                        cancelDeletion = actions.cancelDeletion,
                         deleteTimerPresets = actions.deleteTimerPresets,
                         finishEditing = actions.finishEditing
                     )

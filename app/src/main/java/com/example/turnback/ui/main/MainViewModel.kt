@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainScreenState())
 
-    fun clearSelection() {
+    fun cancelDeletion() {
         timerPresetService.clearSelectedTimerPresets()
     }
 
@@ -57,7 +57,7 @@ class MainViewModel @Inject constructor(
 
         if (currentAppState.screen != newScreen) {
             if (currentAppState is AppState.Deletion) {
-                clearSelection()
+                cancelDeletion()
             }
 
             appStateService.setAppState(AppState.Idle(newScreen))

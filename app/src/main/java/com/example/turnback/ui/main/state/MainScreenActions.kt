@@ -6,7 +6,7 @@ import com.example.turnback.ui.theme.ThemeState
 data class MainScreenActions(
     val changeScreen: (Screen) -> Unit = {},
     val changeTheme: (ThemeState) -> Unit = {},
-    val clearSelection: () -> Unit = {},
+    val cancelDeletion: () -> Unit = {},
     val deleteTimerPresets: () -> Unit = {},
     val finishEditing: () -> Unit = {}
 )

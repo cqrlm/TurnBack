@@ -34,7 +34,7 @@ fun AppBar(
     appState: AppState,
     themeState: ThemeState,
     changeTheme: (ThemeState) -> Unit,
-    clearSelection: () -> Unit,
+    cancelDeletion: () -> Unit,
     deleteTimerPresets: () -> Unit,
     finishEditing: () -> Unit
 ) {
@@ -62,7 +62,7 @@ fun AppBar(
                 IconButton(
                     onClick = {
                         when (appState) {
-                            is AppState.Deletion -> clearSelection()
+                            is AppState.Deletion -> cancelDeletion()
                             is AppState.Editing -> finishEditing()
                             else -> Unit
                         }
@@ -174,7 +174,7 @@ private fun TopBarIdlePreview() {
             appState = AppState.Idle(),
             themeState = ThemeState.SYSTEM,
             changeTheme = {},
-            clearSelection = {},
+            cancelDeletion = {},
             deleteTimerPresets = {},
             finishEditing = {}
         )
@@ -190,7 +190,7 @@ private fun TopBarPresetTimerDeletionPreview() {
             appState = AppState.Deletion(selectedTimerPresetsCount = 10),
             themeState = ThemeState.SYSTEM,
             changeTheme = {},
-            clearSelection = {},
+            cancelDeletion = {},
             deleteTimerPresets = {},
             finishEditing = {}
         )
@@ -206,7 +206,7 @@ private fun TopBarPresetEditingPreview() {
             appState = AppState.Editing(),
             themeState = ThemeState.SYSTEM,
             changeTheme = {},
-            clearSelection = {},
+            cancelDeletion = {},
             deleteTimerPresets = {},
             finishEditing = {}
         )
