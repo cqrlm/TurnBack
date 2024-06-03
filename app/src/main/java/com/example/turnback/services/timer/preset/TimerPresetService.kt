@@ -68,4 +68,7 @@ class TimerPresetService @Inject constructor(
         }
     }
 
+    fun clearSelectedTimerPresets() {
+        timerPresetSelectorService.clear()
+    }
 }

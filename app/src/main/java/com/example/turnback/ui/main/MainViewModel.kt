@@ -6,7 +6,6 @@ import com.example.turnback.AppState
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.SharedPreferencesService
-import com.example.turnback.services.timer.preset.TimerPresetSelectorService
 import com.example.turnback.services.timer.preset.TimerPresetService
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.theme.ThemeState
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val timerPresetSelectorService: TimerPresetSelectorService,
     private val timerPresetService: TimerPresetService,
     private val sharedPreferencesService: SharedPreferencesService,
     private val appStateService: AppStateService
@@ -39,7 +37,7 @@ class MainViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainScreenState())
 
     fun clearSelection() {
-        timerPresetSelectorService.clear()
+        timerPresetService.clearSelectedTimerPresets()
     }
 
     fun deleteTimerPresets() {
