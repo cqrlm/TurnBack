@@ -34,21 +34,15 @@ class StopwatchViewModel @Inject constructor(
     }
 
     fun start() {
-        viewModelScope.launch {
-            stopwatchService.start()
-        }
+        stopwatchService.start()
     }
 
     fun pause() {
-        viewModelScope.launch {
-            stopwatchService.pause()
-        }
+        stopwatchService.pause()
     }
 
     fun stop() {
-        viewModelScope.launch {
-            stopwatchService.stop()
-        }
+        stopwatchService.stop()
     }
 
     fun saveTime(time: Duration) {

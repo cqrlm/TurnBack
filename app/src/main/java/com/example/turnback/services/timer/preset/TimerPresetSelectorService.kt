@@ -32,8 +32,8 @@ class TimerPresetSelectorService @Inject constructor(private val appStateService
         }
     }
 
-    suspend fun clear() {
-        _selectedTimerPresetsFlow.emit(emptySet())
+    fun clear() {
+        _selectedTimerPresetsFlow.value = emptySet()
     }
 
     fun convertSelectedTimerPresetsToDBOS(): List<TimerPresetDBO> =

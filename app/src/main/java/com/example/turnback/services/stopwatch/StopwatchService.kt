@@ -29,14 +29,14 @@ class StopwatchService @Inject constructor(
                 StopwatchState.START -> {
                     timer = fixedRateTimer(period = TIME_INTERVAL) {
                         time += TIME_INTERVAL_DURATION
-                        _timeFlow.tryEmit(time)
+                        _timeFlow.value = time
                     }
                 }
 
                 StopwatchState.STOP -> {
                     timer?.cancel()
                     time = Duration.ZERO
-                    _timeFlow.emit(time)
+                    _timeFlow.value = time
                 }
 
                 StopwatchState.PAUSE -> timer?.cancel()
@@ -49,16 +49,16 @@ class StopwatchService @Inject constructor(
         sharedPreferencesService.saveStopwatchState(stopwatchStateFlow.value)
     }
 
-    suspend fun start() {
-        stopwatchStateFlow.emit(StopwatchState.START)
+    fun start() {
+        stopwatchStateFlow.value = StopwatchState.START
     }
 
-    suspend fun pause() {
-        stopwatchStateFlow.emit(StopwatchState.PAUSE)
+    fun pause() {
+        stopwatchStateFlow.value = StopwatchState.PAUSE
     }
 
-    suspend fun stop() {
-        stopwatchStateFlow.emit(StopwatchState.STOP)
+    fun stop() {
+        stopwatchStateFlow.value = StopwatchState.STOP
     }
 
     companion object {

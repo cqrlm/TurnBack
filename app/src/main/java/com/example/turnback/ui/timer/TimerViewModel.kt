@@ -56,8 +56,9 @@ class TimerViewModel @AssistedInject constructor(
     fun update(timerPreset: TimerPreset) {
         viewModelScope.launch {
             timerPresetService.updateInDB(timerPreset)
-            appStateService.setAppState(AppState.Idle())
         }
+
+        appStateService.setAppState(AppState.Idle())
     }
 
     fun select(timerPreset: TimerPreset) {
@@ -69,14 +70,10 @@ class TimerViewModel @AssistedInject constructor(
     }
 
     fun edit(timerPreset: TimerPreset) {
-        viewModelScope.launch {
-            appStateService.setAppState(AppState.Editing(timerPreset))
-        }
+        appStateService.setAppState(AppState.Editing(timerPreset))
     }
 
     fun finishEditing() {
-        viewModelScope.launch {
-            appStateService.setAppState(AppState.Editing())
-        }
+        appStateService.setAppState(AppState.Editing())
     }
 }

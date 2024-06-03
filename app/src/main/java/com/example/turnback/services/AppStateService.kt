@@ -12,13 +12,13 @@ class AppStateService @Inject constructor() {
     private val _appStateFlow = MutableStateFlow<AppState>(AppState.Idle())
     val appStateFlow = _appStateFlow.asStateFlow()
 
-    suspend fun setAppState(appState: AppState) {
-        _appStateFlow.emit(appState)
+    fun setAppState(appState: AppState) {
+        _appStateFlow.value = appState
     }
 
-    suspend fun updateDeletionAppState(selectedTimerPresetsCount: Int) {
+    fun updateDeletionAppState(selectedTimerPresetsCount: Int) {
         if (selectedTimerPresetsCount == 0) {
-            _appStateFlow.emit(AppState.Idle(_appStateFlow.value.screen))
-        } else _appStateFlow.emit(AppState.Deletion(selectedTimerPresetsCount))
+            _appStateFlow.value = AppState.Idle(_appStateFlow.value.screen)
+        } else _appStateFlow.value = AppState.Deletion(selectedTimerPresetsCount)
     }
 }

@@ -24,10 +24,10 @@ class TimerManager @Inject constructor(private val notificationManager: Notifica
     fun start(duration: Duration) {
         var time = duration
 
-        _timerStateFlow.tryEmit(TimerState.START)
+        _timerStateFlow.value = TimerState.START
 
         timer = fixedRateTimer(period = TIME_INTERVAL) {
-            _timeFlow.tryEmit(time)
+            _timeFlow.value = time
             notificationManager.notifyTimerTick(time)
 
             if (time == Duration.ZERO) {
@@ -40,7 +40,7 @@ class TimerManager @Inject constructor(private val notificationManager: Notifica
     fun pause() {
         timer?.cancel()
         notificationManager.notifyTimerPause(_timeFlow.value)
-        _timerStateFlow.tryEmit(TimerState.PAUSE)
+        _timerStateFlow.value = TimerState.PAUSE
     }
 
     fun resume() {
@@ -50,7 +50,7 @@ class TimerManager @Inject constructor(private val notificationManager: Notifica
     fun stop() {
         timer?.cancel()
         notificationManager.cancelNotification()
-        _timerStateFlow.tryEmit(TimerState.STOP)
+        _timerStateFlow.value = TimerState.STOP
     }
 
     companion object {

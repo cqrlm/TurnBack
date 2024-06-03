@@ -39,9 +39,7 @@ class MainViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainScreenState())
 
     fun clearSelection() {
-        viewModelScope.launch {
-            timerPresetSelectorService.clear()
-        }
+        timerPresetSelectorService.clear()
     }
 
     fun deleteTimerPresets() {
@@ -51,9 +49,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun setThemeState(themeState: ThemeState) {
-        viewModelScope.launch {
-            themeStateFlow.emit(themeState)
-        }
+        themeStateFlow.value = themeState
 
         sharedPreferencesService.setThemeState(themeState)
     }
@@ -66,15 +62,11 @@ class MainViewModel @Inject constructor(
                 clearSelection()
             }
 
-            viewModelScope.launch {
-                appStateService.setAppState(AppState.Idle(newScreen))
-            }
+            appStateService.setAppState(AppState.Idle(newScreen))
         }
     }
 
     fun finishEditing() {
-        viewModelScope.launch {
-            appStateService.setAppState(AppState.Idle())
-        }
+        appStateService.setAppState(AppState.Idle())
     }
 }
