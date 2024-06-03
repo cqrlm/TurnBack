@@ -235,7 +235,7 @@ private fun TimerContent(
 
             if (
                 appState is AppState.Editing &&
-                appState.editingTimerPreset != TimerPreset.Undefined
+                appState.editingTimerPreset != null
             ) {
                 with(appState.editingTimerPreset) {
                     TimerPresetDialog(

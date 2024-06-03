@@ -7,10 +7,4 @@ data class TimerPreset(
     val duration: Duration,
     val id: Int = 0,
     val selected: Boolean = false
-) {
-
-    companion object {
-
-        val Undefined: TimerPreset = TimerPreset(-1, Duration.ZERO)
-    }
-}
+)

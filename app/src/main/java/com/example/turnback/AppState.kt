@@ -9,5 +9,5 @@ sealed class AppState(open val screen: Screen = Screen.BottomBarItem.Timer) {
 
     class Deletion(val selectedTimerPresetsCount: Int) : AppState()
 
-    class Editing(val editingTimerPreset: TimerPreset = TimerPreset.Undefined) : AppState()
+    class Editing(val editingTimerPreset: TimerPreset? = null) : AppState()
 }
