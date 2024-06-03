@@ -4,20 +4,22 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
@@ -27,21 +29,20 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,10 +57,7 @@ import com.example.turnback.ui.theme.Typography
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.ui.timer.state.TimerScreenState
 import com.example.turnback.utils.formatElapsedTime
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -100,7 +98,6 @@ fun TimerScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun TimerContent(
     state: TimerScreenState,
@@ -133,7 +130,7 @@ private fun TimerContent(
                     exit = fadeOut(),
                     modifier = Modifier.align(Alignment.TopCenter)
                 ) {
-                    TimePicker(modifier = Modifier.padding(top = 30.dp)) { time ->
+                    TimePicker { time ->
                         if (time != Duration.ZERO) {
                             actions.start(time)
                         }
@@ -145,33 +142,25 @@ private fun TimerContent(
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxHeight(fraction = 0.7f)
                     ) {
-                        timerPresets.forEach { timerPreset ->
-                            with(timerPreset) {
-                                key(order, selected) {
-                                    TimeChip(
-                                        selected = selected,
-                                        text = duration.formatElapsedTime(),
-                                        onClick = {
-                                            when (appState) {
-                                                is AppState.Editing -> actions.edit(this)
+                        TimerPresetsGrid(
+                            timerPresets = timerPresets,
+                            onClick = { timerPreset ->
+                                when (appState) {
+                                    is AppState.Editing -> actions.edit(timerPreset)
 
-                                                is AppState.Idle -> actions.start(duration)
+                                    is AppState.Idle -> actions.start(timerPreset.duration)
 
-                                                else ->
-                                                    if (selected) {
-                                                        actions.unselect(this)
-                                                    } else actions.select(this)
-                                            }
-                                        },
-                                        onLongClick = { actions.select(this) }
-                                    )
+                                    is AppState.Deletion ->
+                                        if (timerPreset.selected) {
+                                            actions.unselect(timerPreset)
+                                        } else actions.select(timerPreset)
                                 }
                             }
-                        }
+                        )
                     }
                 }
 
@@ -211,6 +200,13 @@ private fun TimerContent(
                                 }
                             }
                         }
+
+                        if (timerState == TimerState.STOP) {
+                            ActionButton(
+                                icon = Icons.Outlined.Delete,
+                                onClick = actions.startDeletion
+                            )
+                        }
                     }
                 }
             }
@@ -245,7 +241,9 @@ private fun TimerContent(
                         update = { duration ->
                             if (duration != Duration.ZERO) {
                                 actions.update(copy(duration = duration))
-                            } else actions.startEditing()
+                            }
+
+                            actions.startEditing()
                         },
                         dismiss = actions.startEditing
                     )
@@ -256,39 +254,46 @@ private fun TimerContent(
 }
 
 @Composable
-private fun TimeChip(
-    selected: Boolean,
-    text: String,
-    onClick: () -> Unit,
-    onLongClick: (() -> Unit)?
+private fun TimerPresetsGrid(
+    timerPresets: SnapshotStateList<TimerPreset>,
+    onClick: (TimerPreset) -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val viewConfiguration = LocalViewConfiguration.current
-    var isLongClick by remember { mutableStateOf(false) }
-
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collectLatest { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> {
-                    isLongClick = false
-                    delay(viewConfiguration.longPressTimeoutMillis)
-                    isLongClick = true
-                    onLongClick?.invoke()
-                }
-            }
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 90.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(
+            items = timerPresets,
+            key = { timerPreset -> timerPreset.hashCode() }
+        ) { timerPreset ->
+            TimeChip(
+                timerPreset = timerPreset,
+                onClick = { onClick(timerPreset) }
+            )
         }
     }
+}
 
-    FilterChip(
-        selected = selected,
-        onClick = {
-            if (!isLongClick) {
-                onClick()
+@Composable
+private fun TimeChip(
+    timerPreset: TimerPreset,
+    onClick: () -> Unit
+) {
+    with(timerPreset) {
+        FilterChip(
+            selected = selected,
+            onClick = onClick,
+            label = {
+                Text(
+                    text = duration.formatElapsedTime(),
+                    maxLines = 1,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
-        },
-        label = { Text(text) },
-        interactionSource = interactionSource
-    )
+        )
+    }
 }
 
 @Composable
@@ -350,12 +355,11 @@ private fun TimerPreviewStop() {
         TimerContent(
             state = TimerScreenState(
                 timerState = TimerState.STOP,
-                timerPresets = listOf(
-                    TimerPreset(0, 30.seconds),
-                    TimerPreset(1, 2.minutes),
-                    TimerPreset(2, 15.minutes),
-                    TimerPreset(3, 1.hours)
-                ).toMutableStateList()
+                timerPresets = buildList {
+                    repeat(30) { index ->
+                        add(TimerPreset(index, (30 + index * 2).minutes))
+                    }
+                }.toMutableStateList()
             ),
             actions = TimerScreenActions()
         )
