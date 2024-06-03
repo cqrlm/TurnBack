@@ -1,11 +1,10 @@
 package com.example.turnback.ui.bars
 
 import android.content.res.Configuration
-import com.example.turnback.ui.main.state.MainScreenActions
-import com.example.turnback.ui.main.state.MainScreenState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
@@ -27,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.turnback.R
 import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.ui.common.SingleChoiceDialog
+import com.example.turnback.ui.main.state.MainScreenActions
+import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.theme.ThemeState
 import com.example.turnback.ui.theme.TurnBackTheme
 
@@ -63,7 +64,7 @@ fun AppBar(
                         onClick = {
                             when (timerEditMode) {
                                 is TimerEditMode.Deletion -> actions.cancelDeletion()
-                                is TimerEditMode.Editing -> actions.finishEditing()
+                                is TimerEditMode.Editing -> actions.cancelEditing()
                                 else -> Unit
                             }
                         }
@@ -109,7 +110,13 @@ fun AppBar(
                         }
                     }
 
-                    is TimerEditMode.Editing -> Unit
+                    is TimerEditMode.Editing ->
+                        IconButton(onClick = { actions.finishEditing() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Done,
+                                contentDescription = Icons.Filled.Done.name
+                            )
+                        }
                 }
             },
         )
