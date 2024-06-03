@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.SharedPreferencesService
-import com.example.turnback.services.timer.TimerEditMode
+import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.services.timer.preset.TimerPresetManager
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.theme.ThemeState

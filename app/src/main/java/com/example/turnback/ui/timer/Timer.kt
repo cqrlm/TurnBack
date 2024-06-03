@@ -51,9 +51,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.turnback.R
 import com.example.turnback.model.TimerPreset
-import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.services.timer.TimerService
 import com.example.turnback.services.timer.TimerState
+import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.common.DraggableItem
 import com.example.turnback.ui.common.TimePicker
 import com.example.turnback.ui.common.dragContainer

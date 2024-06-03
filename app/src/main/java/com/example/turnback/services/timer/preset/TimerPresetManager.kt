@@ -6,7 +6,6 @@ import com.example.turnback.database.repositories.TimerPresetRepository
 import com.example.turnback.mappers.toTimerPreset
 import com.example.turnback.mappers.toTimerPresetDBO
 import com.example.turnback.model.TimerPreset
-import com.example.turnback.services.timer.TimerEditMode
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
