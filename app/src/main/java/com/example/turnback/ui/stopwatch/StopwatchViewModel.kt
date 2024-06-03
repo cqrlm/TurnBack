@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration
 
@@ -19,19 +18,13 @@ class StopwatchViewModel @Inject constructor(
 
     val screenState = combine(
         stopwatchService.timeFlow,
-        stopwatchService.stopwatchState
+        stopwatchService.stopwatchStateFlow
     ) { time, stopwatchState ->
         StopwatchScreenState(
             time = time,
             stopwatchState = stopwatchState
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, StopwatchScreenState())
-
-    init {
-        viewModelScope.launch {
-            stopwatchService.observeStopwatchState()
-        }
-    }
 
     fun start() {
         stopwatchService.start()
