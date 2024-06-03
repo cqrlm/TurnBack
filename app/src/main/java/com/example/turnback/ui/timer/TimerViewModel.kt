@@ -3,9 +3,9 @@ package com.example.turnback.ui.timer
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.model.TimerPreset
-import com.example.turnback.services.AppStateService
+import com.example.turnback.services.TimerEditModeService
+import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.services.timer.TimerState
 import com.example.turnback.services.timer.preset.TimerPresetService
 import com.example.turnback.ui.timer.state.TimerScreenState
@@ -23,7 +23,7 @@ import kotlin.time.Duration
 @HiltViewModel(assistedFactory = TimerViewModel.Factory::class)
 class TimerViewModel @AssistedInject constructor(
     private val timerPresetService: TimerPresetService,
-    private val appStateService: AppStateService,
+    private val timerEditModeService: TimerEditModeService,
     @Assisted val timeFlow: Flow<Duration>,
     @Assisted val timerStateFlow: Flow<TimerState>
 ) : ViewModel() {
@@ -37,13 +37,13 @@ class TimerViewModel @AssistedInject constructor(
         timeFlow,
         timerStateFlow,
         timerPresetService.timerPresetsFlow,
-        appStateService.appStateFlow
-    ) { time, timerState, timerPresets, appState ->
+        timerEditModeService.timerEditModeFlow
+    ) { time, timerState, timerPresets, timerEditMode ->
         TimerScreenState(
             timerState = timerState,
             timerDuration = time,
             timerPresets = timerPresets.toMutableStateList(),
-            timerEditMode = appState
+            timerEditMode = timerEditMode
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TimerScreenState())
 
@@ -58,7 +58,7 @@ class TimerViewModel @AssistedInject constructor(
             timerPresetService.updateInDB(timerPreset)
         }
 
-        appStateService.setAppState(TimerEditMode.Idle)
+        timerEditModeService.setTimerEditMode(TimerEditMode.Idle)
     }
 
     fun select(timerPreset: TimerPreset) {
@@ -70,14 +70,14 @@ class TimerViewModel @AssistedInject constructor(
     }
 
     fun edit(timerPreset: TimerPreset) {
-        appStateService.setAppState(TimerEditMode.Editing(timerPreset))
+        timerEditModeService.setTimerEditMode(TimerEditMode.Editing(timerPreset))
     }
 
     fun startEditing() {
-        appStateService.setAppState(TimerEditMode.Editing())
+        timerEditModeService.setTimerEditMode(TimerEditMode.Editing())
     }
 
     fun startDeletion() {
-        appStateService.setAppState(TimerEditMode.Deletion())
+        timerEditModeService.setTimerEditMode(TimerEditMode.Deletion())
     }
 }

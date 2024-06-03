@@ -7,15 +7,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class AppStateService @Inject constructor() {
+class TimerEditModeService @Inject constructor() {
 
     private val _timerEditModeFlow = MutableStateFlow<TimerEditMode>(TimerEditMode.Idle)
-    val appStateFlow = _timerEditModeFlow.asStateFlow()
+    val timerEditModeFlow = _timerEditModeFlow.asStateFlow()
 
-    val isDeletionState: Boolean
-        get() = _timerEditModeFlow.value is TimerEditMode.Deletion
-
-    fun setAppState(timerEditMode: TimerEditMode) {
+    fun setTimerEditMode(timerEditMode: TimerEditMode) {
         _timerEditModeFlow.value = timerEditMode
     }
 }
