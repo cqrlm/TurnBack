@@ -8,5 +8,6 @@ data class MainScreenActions(
     val changeTheme: (ThemeState) -> Unit = {},
     val cancelDeletion: () -> Unit = {},
     val deleteTimerPresets: () -> Unit = {},
+    val cancelEditing: () -> Unit = {},
     val finishEditing: () -> Unit = {}
 )
