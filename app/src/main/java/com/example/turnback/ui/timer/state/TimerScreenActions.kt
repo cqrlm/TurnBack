@@ -11,7 +11,6 @@ data class TimerScreenActions(
     val save: (TimerPreset) -> Unit = {},
     val update: (TimerPreset) -> Unit = {},
     val select: (TimerPreset) -> Unit = {},
-    val unselect: (TimerPreset) -> Unit = {},
     val edit: (TimerPreset) -> Unit = {},
     val startEditing: () -> Unit = {},
     val startDeletion: () -> Unit = {},

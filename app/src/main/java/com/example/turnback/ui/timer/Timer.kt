@@ -89,7 +89,6 @@ fun TimerScreen(
                     save = ::save,
                     update = ::update,
                     select = ::select,
-                    unselect = ::unselect,
                     edit = ::edit,
                     startEditing = ::startEditing,
                     startDeletion = ::startDeletion,
@@ -159,13 +158,8 @@ private fun TimerContent(
                             onClick = { timerPreset ->
                                 when (timerEditMode) {
                                     is TimerEditMode.Editing -> actions.edit(timerPreset)
-
                                     is TimerEditMode.Idle -> actions.start(timerPreset.duration)
-
-                                    is TimerEditMode.Deletion ->
-                                        if (timerPreset.selected) {
-                                            actions.unselect(timerPreset)
-                                        } else actions.select(timerPreset)
+                                    is TimerEditMode.Deletion -> actions.select(timerPreset)
                                 }
                             },
                             swap = actions.swap

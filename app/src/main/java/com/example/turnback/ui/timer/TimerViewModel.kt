@@ -57,10 +57,6 @@ class TimerViewModel @AssistedInject constructor(
         timerPresetManager.select(timerPreset)
     }
 
-    fun unselect(timerPreset: TimerPreset) {
-        timerPresetManager.select(timerPreset)
-    }
-
     fun edit(timerPreset: TimerPreset) {
         timerPresetManager.edit(timerPreset)
     }
