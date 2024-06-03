@@ -200,6 +200,6 @@ private fun NotificationCheck() {
 private fun MainScreenPreview() {
     MainContent(
         state = MainScreenState(),
-        actions = MainScreenActions.Default
+        actions = MainScreenActions()
     ) {}
 }
