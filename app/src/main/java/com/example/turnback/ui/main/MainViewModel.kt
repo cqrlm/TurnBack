@@ -38,12 +38,14 @@ class MainViewModel @Inject constructor(
 
     fun cancelDeletion() {
         timerPresetService.clearSelectedTimerPresets()
+        appStateService.setAppState(AppState.Idle())
     }
 
     fun deleteTimerPresets() {
         viewModelScope.launch {
             timerPresetService.deleteSelectedTimerPresets()
         }
+        appStateService.setAppState(AppState.Idle())
     }
 
     fun setThemeState(themeState: ThemeState) {
@@ -57,7 +59,7 @@ class MainViewModel @Inject constructor(
 
         if (currentAppState.screen != newScreen) {
             if (currentAppState is AppState.Deletion) {
-                cancelDeletion()
+                timerPresetService.clearSelectedTimerPresets()
             }
 
             appStateService.setAppState(AppState.Idle(newScreen))
