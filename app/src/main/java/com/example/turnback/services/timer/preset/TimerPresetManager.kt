@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -26,7 +27,7 @@ class TimerPresetManager @Inject constructor(
     private val _timerEditModeFlow = MutableStateFlow<TimerEditMode>(TimerEditMode.Idle)
     val timerEditModeFlow = _timerEditModeFlow.asStateFlow()
 
-    private val notUpdatedTimerPresets = mutableMapOf<Int, TimerPreset>()
+    private val notUpdatedTimerPresets = mutableListOf<TimerPreset>()
     private val timerPresets = mutableStateListOf<TimerPreset>()
 
     val timerPresetsFlow = timerPresetRepository
@@ -62,9 +63,20 @@ class TimerPresetManager @Inject constructor(
 
     fun select(timerPreset: TimerPreset) {
         val index = timerPresets.indexOf(timerPreset)
-        timerPresets[index] = timerPreset.copy(selected = !timerPreset.selected)
+        val selected = !timerPreset.selected
+        timerPresets[index] = timerPreset.copy(selected = selected)
 
-        _timerEditModeFlow.value = TimerEditMode.Deletion(timerPresets.count(TimerPreset::selected))
+        _timerEditModeFlow.update { timerEditMode ->
+            when {
+                timerEditMode is TimerEditMode.Deletion && selected ->
+                    timerEditMode.copy(timerEditMode.selectedTimerPresetsCount.inc())
+
+                timerEditMode is TimerEditMode.Deletion && !selected ->
+                    timerEditMode.copy(timerEditMode.selectedTimerPresetsCount.dec())
+
+                else -> timerEditMode
+            }
+        }
     }
 
     suspend fun deleteSelectedTimerPresets() {
@@ -88,8 +100,8 @@ class TimerPresetManager @Inject constructor(
     }
 
     fun cancelEditing() {
-        for((id, timerPreset) in notUpdatedTimerPresets) {
-            val index = timerPresets.indexOfFirst { it.id == id }
+        for (timerPreset in notUpdatedTimerPresets) {
+            val index = timerPresets.indexOfFirst { it.id == timerPreset.id }
             timerPresets[index] = timerPreset
         }
 
@@ -107,7 +119,9 @@ class TimerPresetManager @Inject constructor(
     fun update(timerPreset: TimerPreset) {
         val index = timerPresets.indexOfFirst { it.id == timerPreset.id }
 
-        notUpdatedTimerPresets.putIfAbsent(timerPreset.id, timerPresets[index])
+        if (notUpdatedTimerPresets.all { it.id != timerPreset.id }) {
+            notUpdatedTimerPresets += timerPresets[index]
+        }
 
         timerPresets[index] = timerPreset
     }
