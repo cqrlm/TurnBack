@@ -1,6 +1,9 @@
 package com.example.turnback.ui.bars
 
 import android.content.res.Configuration
+import com.example.turnback.TimerEditMode
+import com.example.turnback.ui.main.state.MainScreenActions
+import com.example.turnback.ui.main.state.MainScreenState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
@@ -31,104 +34,104 @@ import com.example.turnback.ui.theme.TurnBackTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    timerEditMode: TimerEditMode,
-    themeState: ThemeState,
-    changeTheme: (ThemeState) -> Unit = {},
-    cancelDeletion: () -> Unit = {},
-    deleteTimerPresets: () -> Unit = {},
-    finishEditing: () -> Unit = {}
+    state: MainScreenState,
+    actions: MainScreenActions
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    TopAppBar(
-        title = {
-            Text(
-                text = when (timerEditMode) {
-                    is TimerEditMode.Deletion -> timerEditMode.selectedTimerPresetsCount.toString()
+    with(state) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = when (timerEditMode) {
+                        is TimerEditMode.Deletion ->
+                            timerEditMode.selectedTimerPresetsCount.toString()
 
-                    is TimerEditMode.Editing -> stringResource(id = R.string.edit)
+                        is TimerEditMode.Editing -> stringResource(id = R.string.edit)
 
-                    is TimerEditMode.Idle -> TODO()
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        },
-        navigationIcon = {
-            if (timerEditMode !is TimerEditMode.Idle) {
-                IconButton(
-                    onClick = {
-                        when (timerEditMode) {
-                            is TimerEditMode.Deletion -> cancelDeletion()
-                            is TimerEditMode.Editing -> finishEditing()
-                            else -> Unit
+                        is TimerEditMode.Idle ->
+                            currentScreen.titleId?.let { stringResource(id = it) }.orEmpty()
+                    },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            navigationIcon = {
+                if (timerEditMode !is TimerEditMode.Idle) {
+                    IconButton(
+                        onClick = {
+                            when (timerEditMode) {
+                                is TimerEditMode.Deletion -> actions.cancelDeletion()
+                                is TimerEditMode.Editing -> actions.finishEditing()
+                                else -> Unit
+                            }
                         }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = Icons.Filled.Clear.name
+                        )
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = Icons.Filled.Clear.name
-                    )
                 }
-            }
-        },
-        actions = {
-            when (timerEditMode) {
-                is TimerEditMode.Deletion ->
-                    if (timerEditMode.selectedTimerPresetsCount != 0) {
-                        IconButton(onClick = { showDeleteDialog = true }) {
+            },
+            actions = {
+                when (timerEditMode) {
+                    is TimerEditMode.Deletion ->
+                        if (timerEditMode.selectedTimerPresetsCount != 0) {
+                            IconButton(onClick = { showDeleteDialog = true }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = Icons.Filled.Delete.name
+                                )
+                            }
+                        }
+
+                    is TimerEditMode.Idle -> {
+                        IconButton(onClick = { showMenu = true }) {
                             Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = Icons.Filled.Delete.name
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = Icons.Filled.MoreVert.name
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.select_theme)) },
+                                onClick = {
+                                    showMenu = false
+                                    showThemeDialog = true
+                                }
                             )
                         }
                     }
 
-                is TimerEditMode.Idle -> {
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = Icons.Filled.MoreVert.name
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(text = stringResource(id = R.string.select_theme)) },
-                            onClick = {
-                                showMenu = false
-                                showThemeDialog = true
-                            }
-                        )
-                    }
+                    is TimerEditMode.Editing -> Unit
                 }
-
-                is TimerEditMode.Editing -> Unit
-            }
-        },
-    )
-
-    if (showThemeDialog) {
-        ThemeDialog(
-            themeState = themeState,
-            changeTheme = changeTheme,
-            dismiss = { showThemeDialog = false }
+            },
         )
-    }
 
-    if (showDeleteDialog) {
-        DeleteDialog(
-            dismiss = { showDeleteDialog = false },
-            confirm = {
-                deleteTimerPresets()
-                showDeleteDialog = false
-            }
-        )
+        if (showThemeDialog) {
+            ThemeDialog(
+                themeState = themeState,
+                changeTheme = actions.changeTheme,
+                dismiss = { showThemeDialog = false }
+            )
+        }
+
+        if (showDeleteDialog) {
+            DeleteDialog(
+                dismiss = { showDeleteDialog = false },
+                confirm = {
+                    actions.deleteTimerPresets()
+                    showDeleteDialog = false
+                }
+            )
+        }
     }
 }
 
@@ -177,8 +180,8 @@ private fun DeleteDialog(
 private fun TopBarIdlePreview() {
     TurnBackTheme {
         AppBar(
-            timerEditMode = TimerEditMode.Idle,
-            themeState = ThemeState.SYSTEM
+            state = MainScreenState(),
+            actions = MainScreenActions()
         )
     }
 }
@@ -189,8 +192,8 @@ private fun TopBarIdlePreview() {
 private fun TopBarPresetTimerDeletionPreview() {
     TurnBackTheme {
         AppBar(
-            timerEditMode = TimerEditMode.Deletion(selectedTimerPresetsCount = 10),
-            themeState = ThemeState.SYSTEM
+            state = MainScreenState(timerEditMode = TimerEditMode.Deletion(10)),
+            actions = MainScreenActions()
         )
     }
 }
@@ -201,8 +204,8 @@ private fun TopBarPresetTimerDeletionPreview() {
 private fun TopBarPresetEditingPreview() {
     TurnBackTheme {
         AppBar(
-            timerEditMode = TimerEditMode.Editing(),
-            themeState = ThemeState.SYSTEM
+            state = MainScreenState(timerEditMode = TimerEditMode.Editing()),
+            actions = MainScreenActions()
         )
     }
 }

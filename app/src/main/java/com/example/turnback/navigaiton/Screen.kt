@@ -18,4 +18,9 @@ sealed class Screen(open val route: String, open val titleId: Int? = null) {
 
         data object Stopwatch : BottomBarItem("stopwatch", R.string.stopwatch, R.drawable.ic_timer)
     }
+
+    companion object {
+
+        val START_DESTINATION: Screen = BottomBarItem.Timer
+    }
 }

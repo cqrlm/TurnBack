@@ -117,7 +117,7 @@ private fun MainScreen(
         ) { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.BottomBarItem.Timer.route,
+                startDestination = Screen.START_DESTINATION.route,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None },
                 modifier = Modifier
@@ -146,12 +146,8 @@ private fun MainContent(
             Scaffold(
                 topBar = {
                     AppBar(
-                        timerEditMode = timerEditMode,
-                        themeState = themeState,
-                        changeTheme = actions.changeTheme,
-                        cancelDeletion = actions.cancelDeletion,
-                        deleteTimerPresets = actions.deleteTimerPresets,
-                        finishEditing = actions.finishEditing
+                        state = state,
+                        actions = actions
                     )
                 },
                 bottomBar = {

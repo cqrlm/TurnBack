@@ -25,14 +25,17 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val themeStateFlow = MutableStateFlow(sharedPreferencesService.getThemeState())
+    private val currentScreenFlow = MutableStateFlow(Screen.START_DESTINATION)
 
     val screenState = combine(
         themeStateFlow,
-        appStateService.appStateFlow
-    ) { themeState, appState ->
+        appStateService.appStateFlow,
+        currentScreenFlow
+    ) { themeState, appState, currentScreen ->
         MainScreenState(
             themeState = themeState,
-            timerEditMode = appState
+            timerEditMode = appState,
+            currentScreen = currentScreen
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, MainScreenState())
 
@@ -55,12 +58,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun changeScreen(newScreen: Screen) {
-        val currentAppState = screenState.value.timerEditMode
-
-        if (currentAppState is TimerEditMode.Deletion) {
+        if (screenState.value.timerEditMode is TimerEditMode.Deletion) {
             timerPresetService.clearSelectedTimerPresets()
         }
 
+        currentScreenFlow.value = newScreen
         appStateService.setAppState(TimerEditMode.Idle)
     }
 
