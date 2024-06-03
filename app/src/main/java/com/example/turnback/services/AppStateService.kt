@@ -1,6 +1,6 @@
 package com.example.turnback.services
 
-import com.example.turnback.TimerEditMode
+import com.example.turnback.services.timer.TimerEditMode
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

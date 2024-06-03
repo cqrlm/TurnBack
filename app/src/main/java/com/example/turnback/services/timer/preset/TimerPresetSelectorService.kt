@@ -1,10 +1,10 @@
 package com.example.turnback.services.timer.preset
 
-import com.example.turnback.TimerEditMode
 import com.example.turnback.database.entities.TimerPresetDBO
 import com.example.turnback.mappers.toTimerPresetDBO
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.AppStateService
+import com.example.turnback.services.timer.TimerEditMode
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

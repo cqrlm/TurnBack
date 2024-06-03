@@ -2,10 +2,10 @@ package com.example.turnback.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.TimerEditMode
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.SharedPreferencesService
+import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.services.timer.preset.TimerPresetService
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.theme.ThemeState

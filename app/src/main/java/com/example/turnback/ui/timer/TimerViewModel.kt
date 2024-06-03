@@ -3,7 +3,7 @@ package com.example.turnback.ui.timer
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.TimerEditMode
+import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.AppStateService
 import com.example.turnback.services.timer.TimerState

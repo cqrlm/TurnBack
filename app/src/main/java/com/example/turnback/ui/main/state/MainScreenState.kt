@@ -1,6 +1,6 @@
 package com.example.turnback.ui.main.state
 
-import com.example.turnback.TimerEditMode
+import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.ui.theme.ThemeState
 
