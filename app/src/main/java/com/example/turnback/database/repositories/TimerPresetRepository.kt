@@ -16,8 +16,8 @@ class TimerPresetRepository @Inject constructor(
         timerPresetDao.insert(timerPresetDBO)
     }
 
-    suspend fun update(timerPresetDBO: TimerPresetDBO) {
-        timerPresetDao.update(timerPresetDBO)
+    suspend fun update(vararg timerPresetDBOS: TimerPresetDBO) {
+        timerPresetDao.update(*timerPresetDBOS)
     }
 
     suspend fun delete(vararg timerPresetDBOS: TimerPresetDBO) {
