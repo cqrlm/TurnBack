@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Done
@@ -51,7 +54,10 @@ import com.example.turnback.model.TimerPreset
 import com.example.turnback.services.timer.TimerEditMode
 import com.example.turnback.services.timer.TimerService
 import com.example.turnback.services.timer.TimerState
+import com.example.turnback.ui.common.DraggableItem
 import com.example.turnback.ui.common.TimePicker
+import com.example.turnback.ui.common.dragContainer
+import com.example.turnback.ui.common.rememberGridDragDropState
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.ui.timer.state.TimerScreenActions
@@ -86,7 +92,8 @@ fun TimerScreen(
                     unselect = ::unselect,
                     edit = ::edit,
                     startEditing = ::startEditing,
-                    startDeletion = ::startDeletion
+                    startDeletion = ::startDeletion,
+                    swap = ::swap
                 )
             }
 
@@ -148,6 +155,7 @@ private fun TimerContent(
                     ) {
                         TimerPresetsGrid(
                             timerPresets = timerPresets,
+                            isDraggable = timerEditMode is TimerEditMode.Editing,
                             onClick = { timerPreset ->
                                 when (timerEditMode) {
                                     is TimerEditMode.Editing -> actions.edit(timerPreset)
@@ -159,7 +167,8 @@ private fun TimerContent(
                                             actions.unselect(timerPreset)
                                         } else actions.select(timerPreset)
                                 }
-                            }
+                            },
+                            swap = actions.swap
                         )
                     }
                 }
@@ -256,9 +265,68 @@ private fun TimerContent(
 @Composable
 private fun TimerPresetsGrid(
     timerPresets: SnapshotStateList<TimerPreset>,
+    isDraggable: Boolean,
+    onClick: (TimerPreset) -> Unit,
+    swap: (Int, Int) -> Unit
+) {
+    val gridState = rememberLazyGridState()
+
+    if (isDraggable) {
+        DraggableTimerPresetsGrid(
+            gridState = gridState,
+            timerPresets = timerPresets,
+            onClick = onClick,
+            swap = swap
+        )
+    } else {
+        NonDraggableTimerPresetsGrid(
+            gridState = gridState,
+            timerPresets = timerPresets,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
+private fun DraggableTimerPresetsGrid(
+    gridState: LazyGridState,
+    timerPresets: SnapshotStateList<TimerPreset>,
+    onClick: (TimerPreset) -> Unit,
+    swap: (Int, Int) -> Unit
+) {
+    val dragDropState = rememberGridDragDropState(gridState) { fromIndex, toIndex ->
+        swap(fromIndex, toIndex)
+    }
+
+    LazyVerticalGrid(
+        state = gridState,
+        columns = GridCells.Adaptive(minSize = 90.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.dragContainer(dragDropState)
+    ) {
+        itemsIndexed(
+            items = timerPresets,
+            key = { _, timerPreset -> timerPreset.hashCode() }
+        ) { index, timerPreset ->
+            DraggableItem(dragDropState, index) { _ ->
+                TimeChip(
+                    timerPreset = timerPreset,
+                    onClick = { onClick(timerPreset) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NonDraggableTimerPresetsGrid(
+    gridState: LazyGridState,
+    timerPresets: SnapshotStateList<TimerPreset>,
     onClick: (TimerPreset) -> Unit
 ) {
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Adaptive(minSize = 90.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -355,10 +423,8 @@ private fun TimerPreviewStop() {
         TimerContent(
             state = TimerScreenState(
                 timerState = TimerState.STOP,
-                timerPresets = buildList {
-                    repeat(30) { index ->
-                        add(TimerPreset(index, (30 + index * 2).minutes))
-                    }
+                timerPresets = List(30) { index ->
+                    TimerPreset(index, (30 + index * 2).minutes)
                 }.toMutableStateList()
             ),
             actions = TimerScreenActions()
