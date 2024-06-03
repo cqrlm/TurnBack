@@ -1,5 +1,6 @@
 package com.example.turnback.services.timer.preset
 
+import com.example.turnback.AppState
 import com.example.turnback.database.entities.TimerPresetDBO
 import com.example.turnback.mappers.toTimerPresetDBO
 import com.example.turnback.model.TimerPreset
@@ -18,7 +19,11 @@ class TimerPresetSelectorService @Inject constructor(private val appStateService
 
     val selectedTimerPresetsFlow = _selectedTimerPresetsFlow
         .asStateFlow()
-        .onEach { timerPresets -> appStateService.updateDeletionAppState(timerPresets.size) }
+        .onEach { timerPresets ->
+            if (appStateService.isDeletionState) {
+                appStateService.setAppState(AppState.Deletion(timerPresets.size))
+            }
+        }
 
     fun select(timerPreset: TimerPreset) {
         _selectedTimerPresetsFlow.update { timerPresets ->

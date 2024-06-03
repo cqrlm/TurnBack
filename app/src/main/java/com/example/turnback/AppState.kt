@@ -7,7 +7,7 @@ sealed class AppState(open val screen: Screen = Screen.BottomBarItem.Timer) {
 
     class Idle(override val screen: Screen = Screen.BottomBarItem.Timer) : AppState(screen)
 
-    class Deletion(val selectedTimerPresetsCount: Int) : AppState()
+    class Deletion(val selectedTimerPresetsCount: Int = 0) : AppState()
 
     class Editing(val editingTimerPreset: TimerPreset? = null) : AppState()
 }
