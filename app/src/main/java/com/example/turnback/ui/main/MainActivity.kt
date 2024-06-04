@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -95,42 +94,29 @@ private fun MainScreen(
     timerService: TimerService?,
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    with(viewModel) {
-        val navController = rememberNavController()
+    val navController = rememberNavController()
 
-        val state by screenState.collectAsState()
+    val state by viewModel.collectState()
 
-        val actions = remember {
-            MainScreenActions(
-                changeScreen = ::changeScreen,
-                changeTheme = ::setThemeState,
-                cancelDeletion = ::cancelDeletion,
-                deleteTimerPresets = ::deleteTimerPresets,
-                cancelEditing = ::cancelEditing,
-                finishEditing = ::finishEditing
-            )
-        }
-
-        MainContent(
+    MainContent(
+        navController = navController,
+        state = state,
+        actions = viewModel.screenActions
+    ) { paddingValues ->
+        NavHost(
             navController = navController,
-            state = state,
-            actions = actions
-        ) { paddingValues ->
-            NavHost(
-                navController = navController,
-                startDestination = Screen.START_DESTINATION.route,
-                enterTransition = { EnterTransition.None },
-                exitTransition = { ExitTransition.None },
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-            ) {
-                composable(Screen.BottomBarItem.Timer.route) {
-                    timerService?.let { TimerScreen(timerService) }
-                }
-
-                composable(Screen.BottomBarItem.Stopwatch.route) { StopwatchScreen() }
+            startDestination = Screen.START_DESTINATION.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            composable(Screen.BottomBarItem.Timer.route) {
+                timerService?.let { TimerScreen(timerService) }
             }
+
+            composable(Screen.BottomBarItem.Stopwatch.route) { StopwatchScreen() }
         }
     }
 }
@@ -142,23 +128,21 @@ private fun MainContent(
     actions: MainScreenActions,
     content: @Composable (PaddingValues) -> Unit
 ) {
-    with(state) {
-        TurnBackTheme(themeState.isDarkTheme()) {
-            Scaffold(
-                topBar = {
-                    AppBar(
-                        state = state,
-                        actions = actions
-                    )
-                },
-                bottomBar = {
-                    BottomNavBar(
-                        navController = navController,
-                        changeScreen = actions.changeScreen
-                    )
-                }
-            ) { paddingValues -> content(paddingValues) }
-        }
+    TurnBackTheme(state.themeState.isDarkTheme()) {
+        Scaffold(
+            topBar = {
+                AppBar(
+                    state = state,
+                    actions = actions
+                )
+            },
+            bottomBar = {
+                BottomNavBar(
+                    navController = navController,
+                    changeScreen = actions.changeScreen
+                )
+            }
+        ) { paddingValues -> content(paddingValues) }
     }
 }
 

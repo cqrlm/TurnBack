@@ -32,7 +32,6 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,31 +75,18 @@ fun TimerScreen(
 ) {
     val context = LocalContext.current
 
-    with(viewModel) {
-        with(timerService) {
-            val state by screenState.collectAsState()
+    with(timerService) {
+        val state by viewModel.collectState()
 
-            val actions = remember {
-                TimerScreenActions(
-                    start = { duration -> start(duration, context) },
-                    pause = ::pause,
-                    resume = ::resume,
-                    stop = ::stop,
-                    save = ::save,
-                    update = ::update,
-                    select = ::select,
-                    edit = ::edit,
-                    startEditing = ::startEditing,
-                    startDeletion = ::startDeletion,
-                    swap = ::swap
-                )
-            }
-
-            TimerContent(
-                state = state,
-                actions = actions
+        TimerContent(
+            state = state,
+            actions = viewModel.screenActions.copy(
+                start = { duration -> start(duration, context) },
+                pause = ::pause,
+                resume = ::resume,
+                stop = ::stop,
             )
-        }
+        )
     }
 }
 

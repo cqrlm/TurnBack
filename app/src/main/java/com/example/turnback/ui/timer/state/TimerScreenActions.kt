@@ -1,6 +1,7 @@
 package com.example.turnback.ui.timer.state
 
 import com.example.turnback.model.TimerPreset
+import com.example.turnback.ui.base.ScreenActions
 import kotlin.time.Duration
 
 data class TimerScreenActions(
@@ -15,4 +16,4 @@ data class TimerScreenActions(
     val startEditing: () -> Unit = {},
     val startDeletion: () -> Unit = {},
     val swap: (Int, Int) -> Unit = { _, _ -> }
-)
+): ScreenActions

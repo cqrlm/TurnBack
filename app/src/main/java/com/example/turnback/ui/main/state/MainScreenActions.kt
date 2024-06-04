@@ -1,6 +1,7 @@
 package com.example.turnback.ui.main.state
 
 import com.example.turnback.navigaiton.Screen
+import com.example.turnback.ui.base.ScreenActions
 import com.example.turnback.ui.theme.ThemeState
 
 data class MainScreenActions(
@@ -10,4 +11,4 @@ data class MainScreenActions(
     val deleteTimerPresets: () -> Unit = {},
     val cancelEditing: () -> Unit = {},
     val finishEditing: () -> Unit = {}
-)
+): ScreenActions

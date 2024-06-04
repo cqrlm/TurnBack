@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -16,7 +15,6 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,31 +38,23 @@ import com.example.turnback.utils.formatTime
 
 @Composable
 fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
-    with(viewModel) {
-        val state by screenState.collectAsState()
+    val state by viewModel.collectState()
 
-        val actions = remember {
-            StopwatchScreenActions(
-                start = ::start,
-                pause = ::pause,
-                stop = ::stop
-            )
-        }
-
-        LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
-            saveTime(state.time)
-        }
-
-        StopwatchContent(
-            state = state,
-            actions = actions
-        )
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+        viewModel.saveTime(state.time)
     }
+
+    StopwatchContent(
+        state = state,
+        actions = viewModel.screenActions
+    )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StopwatchContent(state: StopwatchScreenState, actions: StopwatchScreenActions) {
+private fun StopwatchContent(
+    state: StopwatchScreenState,
+    actions: StopwatchScreenActions
+) {
     with(state) {
         Surface {
             Box(
