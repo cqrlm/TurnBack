@@ -6,7 +6,7 @@ import com.example.turnback.database.dao.TimerPresetDao
 import com.example.turnback.database.entities.TimerPresetDBO
 
 @Database(entities = [TimerPresetDBO::class], version = 1)
-abstract class AppDatabase: RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun timerPresetDao() : TimerPresetDao
+    abstract fun timerPresetDao(): TimerPresetDao
 }

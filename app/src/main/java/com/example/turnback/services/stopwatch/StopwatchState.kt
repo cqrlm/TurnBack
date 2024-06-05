@@ -4,5 +4,5 @@ enum class StopwatchState {
 
     START,
     PAUSE,
-    STOP;
+    STOP
 }

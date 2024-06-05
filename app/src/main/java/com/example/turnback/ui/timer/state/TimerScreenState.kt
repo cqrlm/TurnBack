@@ -14,4 +14,4 @@ data class TimerScreenState(
     val timerDuration: Duration = 0.seconds,
     val timerPresets: SnapshotStateList<TimerPreset> = mutableStateListOf(),
     val timerEditMode: TimerEditMode = TimerEditMode.Idle
-): ScreenState
+) : ScreenState

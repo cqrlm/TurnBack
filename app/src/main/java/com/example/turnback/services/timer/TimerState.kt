@@ -4,5 +4,5 @@ enum class TimerState {
 
     START,
     PAUSE,
-    STOP;
+    STOP
 }

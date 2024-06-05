@@ -9,7 +9,7 @@ fun Duration.formatTime(): String =
 
 fun Duration.formatElapsedTime(): String =
     toComponents { hours, minutes, seconds, _ ->
-        if (hours > 0)  {
+        if (hours > 0) {
             TIME_PATTERN.format(hours, minutes, seconds)
         } else ELAPSED_TIME_PATTERN.format(minutes, seconds)
     }

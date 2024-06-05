@@ -130,7 +130,7 @@ class GridDragDropState(
         state.layoutInfo.visibleItemsInfo
             .firstOrNull { item ->
                 offset.x.toInt() in item.offset.x..item.offsetEnd.x &&
-                        offset.y.toInt() in item.offset.y..item.offsetEnd.y
+                    offset.y.toInt() in item.offset.y..item.offsetEnd.y
             }?.also {
                 draggingItemIndex = it.index
                 draggingItemInitialOffset = it.offset.toOffset()
@@ -168,8 +168,8 @@ class GridDragDropState(
 
         val targetItem = state.layoutInfo.visibleItemsInfo.find { item ->
             middleOffset.x.toInt() in item.offset.x..item.offsetEnd.x &&
-                    middleOffset.y.toInt() in item.offset.y..item.offsetEnd.y &&
-                    draggingItem.index != item.index
+                middleOffset.y.toInt() in item.offset.y..item.offsetEnd.y &&
+                draggingItem.index != item.index
         }
         if (targetItem != null) {
             if (draggingItem.index == state.firstVisibleItemIndex ||

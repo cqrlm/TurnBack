@@ -6,4 +6,4 @@ data class StopwatchScreenActions(
     val start: () -> Unit = {},
     val pause: () -> Unit = {},
     val stop: () -> Unit = {}
-): ScreenActions
+) : ScreenActions

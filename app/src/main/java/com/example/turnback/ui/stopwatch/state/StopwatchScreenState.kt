@@ -7,4 +7,4 @@ import kotlin.time.Duration
 data class StopwatchScreenState(
     val time: Duration = Duration.ZERO,
     val stopwatchState: StopwatchState = StopwatchState.STOP
-): ScreenState
+) : ScreenState

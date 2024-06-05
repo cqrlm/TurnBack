@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.StateFlow
 
-abstract class ScreenViewModel<S: ScreenState, A: ScreenActions> : ViewModel() {
+abstract class ScreenViewModel<S : ScreenState, A : ScreenActions> : ViewModel() {
 
     abstract val screenState: StateFlow<S>
 

@@ -11,4 +11,4 @@ data class MainScreenActions(
     val deleteTimerPresets: () -> Unit = {},
     val cancelEditing: () -> Unit = {},
     val finishEditing: () -> Unit = {}
-): ScreenActions
+) : ScreenActions

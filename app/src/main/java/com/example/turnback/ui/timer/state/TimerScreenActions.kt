@@ -16,4 +16,4 @@ data class TimerScreenActions(
     val startEditing: () -> Unit = {},
     val startDeletion: () -> Unit = {},
     val swap: (Int, Int) -> Unit = { _, _ -> }
-): ScreenActions
+) : ScreenActions
