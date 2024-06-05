@@ -30,7 +30,7 @@ class NotificationManager @Inject constructor(
     val notification: Notification
         get() = notificationBuilderManager.defaultNotificationBuilder.build()
 
-    private val notificationManager = NotificationManagerCompat.from(context)
+    private val notificationManagerCompat = NotificationManagerCompat.from(context)
 
     fun notifyTimerTick(timeLeft: Duration) {
         notify(
@@ -53,7 +53,7 @@ class NotificationManager @Inject constructor(
     }
 
     fun cancelNotification() {
-        notificationManager.cancel(NotificationConstants.NOTIFICATION_ID)
+        notificationManagerCompat.cancel(NotificationConstants.NOTIFICATION_ID)
     }
 
     private fun notify(builder: NotificationCompat.Builder) {
@@ -66,7 +66,7 @@ class NotificationManager @Inject constructor(
             return
         }
 
-        notificationManager.notify(
+        notificationManagerCompat.notify(
             NotificationConstants.NOTIFICATION_ID,
             builder.build()
         )
