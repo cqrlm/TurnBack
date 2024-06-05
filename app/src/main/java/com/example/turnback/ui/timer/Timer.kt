@@ -78,79 +78,77 @@ private fun TimerContent(
     with(state) {
         var showCreationDialog by remember { mutableStateOf(false) }
 
-        Surface {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(30.dp)
-            ) {
-                FadeAnimatedVisibility(visible = timerState != TimerState.STOP) {
-                    Text(
-                        text = timerDuration.formatElapsedTime(),
-                        style = Typography.displayLarge
-                    )
-                }
-
-                FadeAnimatedVisibility(
-                    visible = timerState == TimerState.STOP && timerEditMode is TimerEditMode.Idle,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                ) {
-                    TimePicker { time ->
-                        if (time != Duration.ZERO) {
-                            actions.start(time)
-                        }
-                    }
-                }
-
-                FadeAnimatedVisibility(visible = timerState == TimerState.STOP) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxHeight(fraction = 0.7f)
-                    ) {
-                        TimerPresetsGrid(
-                            timerEditMode = timerEditMode,
-                            timerPresets = timerPresets,
-                            actions = actions
-                        )
-                    }
-                }
-
-                FadeAnimatedVisibility(
-                    visible = timerEditMode is TimerEditMode.Idle,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                ) {
-                    ActionButtons(
-                        timerState = timerState,
-                        actions = actions,
-                        isTimerPresetsNotEmpty = timerPresets.isNotEmpty(),
-                        showCreationDialog = { showCreationDialog = true }
-                    )
-                }
-            }
-
-            if (showCreationDialog) {
-                TimerPresetCreationDialog(
-                    dismiss = { showCreationDialog = false },
-                    save = { duration ->
-                        actions.save(
-                            TimerPreset(
-                                order = timerPresets.size,
-                                duration = duration
-                            )
-                        )
-                    }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(30.dp)
+        ) {
+            FadeAnimatedVisibility(visible = timerState != TimerState.STOP) {
+                Text(
+                    text = timerDuration.formatElapsedTime(),
+                    style = Typography.displayLarge
                 )
             }
 
-            if (timerEditMode is TimerEditMode.Editing) {
-                timerEditMode.editingTimerPreset?.let {
-                    TimerPresetEditingDialog(
-                        timerPreset = it,
-                        dismiss = actions.startEditing,
-                        update = actions.update
+            FadeAnimatedVisibility(
+                visible = timerState == TimerState.STOP && timerEditMode is TimerEditMode.Idle,
+                modifier = Modifier.align(Alignment.TopCenter)
+            ) {
+                TimePicker { time ->
+                    if (time != Duration.ZERO) {
+                        actions.start(time)
+                    }
+                }
+            }
+
+            FadeAnimatedVisibility(visible = timerState == TimerState.STOP) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxHeight(fraction = 0.7f)
+                ) {
+                    TimerPresetsGrid(
+                        timerEditMode = timerEditMode,
+                        timerPresets = timerPresets,
+                        actions = actions
                     )
                 }
+            }
+
+            FadeAnimatedVisibility(
+                visible = timerEditMode is TimerEditMode.Idle,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                ActionButtons(
+                    timerState = timerState,
+                    actions = actions,
+                    isTimerPresetsNotEmpty = timerPresets.isNotEmpty(),
+                    showCreationDialog = { showCreationDialog = true }
+                )
+            }
+        }
+
+        if (showCreationDialog) {
+            TimerPresetCreationDialog(
+                dismiss = { showCreationDialog = false },
+                save = { duration ->
+                    actions.save(
+                        TimerPreset(
+                            order = timerPresets.size,
+                            duration = duration
+                        )
+                    )
+                }
+            )
+        }
+
+        if (timerEditMode is TimerEditMode.Editing) {
+            timerEditMode.editingTimerPreset?.let {
+                TimerPresetEditingDialog(
+                    timerPreset = it,
+                    dismiss = actions.startEditing,
+                    update = actions.update
+                )
             }
         }
     }
@@ -221,15 +219,17 @@ private fun ActionButton(icon: ImageVector, onClick: () -> Unit) {
 @Composable
 private fun TimerPreviewStop() {
     TurnBackTheme {
-        TimerContent(
-            state = TimerScreenState(
-                timerState = TimerState.STOP,
-                timerPresets = List(30) { index ->
-                    TimerPreset(index, (30 + index * 2).minutes)
-                }.toMutableStateList()
-            ),
-            actions = TimerScreenActions()
-        )
+        Surface {
+            TimerContent(
+                state = TimerScreenState(
+                    timerState = TimerState.STOP,
+                    timerPresets = List(30) { index ->
+                        TimerPreset(index, (30 + index * 2).minutes)
+                    }.toMutableStateList()
+                ),
+                actions = TimerScreenActions()
+            )
+        }
     }
 }
 
@@ -238,12 +238,14 @@ private fun TimerPreviewStop() {
 @Composable
 private fun TimerPreviewPause() {
     TurnBackTheme {
-        TimerContent(
-            state = TimerScreenState(
-                timerState = TimerState.PAUSE,
-                timerDuration = 10.seconds
-            ),
-            actions = TimerScreenActions()
-        )
+        Surface {
+            TimerContent(
+                state = TimerScreenState(
+                    timerState = TimerState.PAUSE,
+                    timerDuration = 10.seconds
+                ),
+                actions = TimerScreenActions()
+            )
+        }
     }
 }

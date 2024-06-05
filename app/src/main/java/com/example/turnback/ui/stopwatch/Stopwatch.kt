@@ -56,61 +56,59 @@ private fun StopwatchContent(
     actions: StopwatchScreenActions
 ) {
     with(state) {
-        Surface {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(30.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = time.formatTime(),
-                        style = Typography.displayLarge
-                    )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(30.dp)
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = time.formatTime(),
+                    style = Typography.displayLarge
+                )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                        var selectedIndex by remember(stopwatchState) {
-                            mutableIntStateOf(stopwatchState.ordinal)
+                SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                    var selectedIndex by remember(stopwatchState) {
+                        mutableIntStateOf(stopwatchState.ordinal)
+                    }
+
+                    val buttonsData = remember {
+                        with(actions) {
+                            StopwatchButtonData.getAll(
+                                start = start,
+                                pause = pause,
+                                stop = stop
+                            )
                         }
+                    }
 
-                        val buttonsData = remember {
-                            with(actions) {
-                                StopwatchButtonData.getAll(
-                                    start = start,
-                                    pause = pause,
-                                    stop = stop
-                                )
+                    buttonsData.forEachIndexed { index, buttonData ->
+                        with(buttonData) {
+                            val selected by remember(selectedIndex) {
+                                mutableStateOf(index == selectedIndex)
                             }
-                        }
 
-                        buttonsData.forEachIndexed { index, buttonData ->
-                            with(buttonData) {
-                                val selected by remember(selectedIndex) {
-                                    mutableStateOf(index == selectedIndex)
-                                }
-
-                                SegmentedButton(
-                                    selected = selected,
-                                    shape = SegmentedButtonDefaults.itemShape(
-                                        index = index,
-                                        count = buttonsData.size
-                                    ),
-                                    icon = {},
-                                    onClick = {
-                                        if (!selected) {
-                                            selectedIndex = index
-                                            onClick()
-                                        }
+                            SegmentedButton(
+                                selected = selected,
+                                shape = SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = buttonsData.size
+                                ),
+                                icon = {},
+                                onClick = {
+                                    if (!selected) {
+                                        selectedIndex = index
+                                        onClick()
                                     }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(iconId),
-                                        contentDescription = stringResource(descriptionId)
-                                    )
                                 }
+                            ) {
+                                Icon(
+                                    painter = painterResource(iconId),
+                                    contentDescription = stringResource(descriptionId)
+                                )
                             }
                         }
                     }
@@ -125,9 +123,11 @@ private fun StopwatchContent(
 @Composable
 private fun StopwatchPreview() {
     TurnBackTheme {
-        StopwatchContent(
-            state = StopwatchScreenState(),
-            actions = StopwatchScreenActions()
-        )
+        Surface {
+            StopwatchContent(
+                state = StopwatchScreenState(),
+                actions = StopwatchScreenActions()
+            )
+        }
     }
 }
