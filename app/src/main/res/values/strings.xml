@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">TurnBack</string>
+    <string name="app_name" translatable="false">TurnBack</string>
+    <string name="timer_service_explanation" translatable="false">The service is necessary for the timer to work correctly, even if the application is closed</string>
+
     <string name="timer">Timer</string>
     <string name="stopwatch">Stopwatch</string>
     <string name="start">Start</string>
@@ -11,11 +13,10 @@
     <string name="dark">Dark</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="delete_dialog_text">Are you sure you want to delete these timer presets?</string>
+    <string name="delete_dialog_text">Are you sure you want to delete selected timer presets?</string>
     <string name="new_timer_preset">New timer preset</string>
     <string name="edit">Edit</string>
     <string name="edit_timer_preset">Edit timer preset</string>
     <string name="time_is_up">Time is up</string>
     <string name="timer_notifications">Timer notifications</string>
-    <string name="timer_service_explanation">The service is necessary for the timer to work correctly, even if the application is closed</string>
 </resources>
