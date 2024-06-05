@@ -37,8 +37,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.timer.TimerService
-import com.example.turnback.ui.bars.AppBar
 import com.example.turnback.ui.bars.BottomNavBar
+import com.example.turnback.ui.bars.TopBar
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.stopwatch.StopwatchScreen
@@ -131,7 +131,7 @@ private fun MainContent(
     TurnBackTheme(state.themeState.isDarkTheme()) {
         Scaffold(
             topBar = {
-                AppBar(
+                TopBar(
                     state = state,
                     actions = actions
                 )
