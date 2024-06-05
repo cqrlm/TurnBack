@@ -67,7 +67,6 @@ fun TimePicker(
             textStyle = textStyle.merge(TextStyle(LocalContentColor.current)),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                autoCorrect = false,
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
@@ -119,6 +118,7 @@ private data class Time(val hours: Int, val minutes: Int, val seconds: Int) {
                 Time(hours.toInt(), minutes, seconds)
             }
 
+        @Suppress("MagicNumber")
         fun String.toTime(): Time =
             filterNot { it == ':' }
                 .run {
