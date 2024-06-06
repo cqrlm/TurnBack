@@ -28,12 +28,13 @@ class TimerManager @Inject constructor(private val notificationManager: Notifica
 
         timer = fixedRateTimer(period = TIME_INTERVAL) {
             _timeFlow.value = time
-            notificationManager.notifyTimerTick(time)
 
-            if (time == Duration.ZERO) {
-                stop()
-                notificationManager.notifyTimerFinish()
-            } else time -= TIME_INTERVAL_DURATION
+            when {
+                time.isPositive() -> notificationManager.notifyTimerTick(time)
+                time == Duration.ZERO -> notificationManager.notifyTimerFinish()
+            }
+
+            time -= TIME_INTERVAL_DURATION
         }
     }
 
