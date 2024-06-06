@@ -4,11 +4,12 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.turnback.R
 import com.example.turnback.utils.formatElapsedTime
@@ -34,29 +35,36 @@ class NotificationManager @Inject constructor(
 
     fun notifyTimerTick(timeLeft: Duration) {
         notify(
-            builder = notificationBuilderManager
+            notification = notificationBuilderManager
                 .tickNotificationBuilder
                 .setContentTitle(timeLeft.formatElapsedTime())
+                .build()
         )
     }
 
     fun notifyTimerPause(timeLeft: Duration) {
         notify(
-            builder = notificationBuilderManager
+            notification = notificationBuilderManager
                 .pauseNotificationBuilder
                 .setContentTitle(timeLeft.formatElapsedTime())
+                .build()
         )
     }
 
     fun notifyTimerFinish() {
-        notify(builder = notificationBuilderManager.finishNotificationBuilder)
+        notify(
+            notification = notificationBuilderManager
+                .finishNotificationBuilder
+                .build()
+                .apply { flags = Notification.FLAG_INSISTENT }
+        )
     }
 
     fun cancelNotification() {
         notificationManagerCompat.cancel(NotificationConstants.NOTIFICATION_ID)
     }
 
-    private fun notify(builder: NotificationCompat.Builder) {
+    private fun notify(notification: Notification) {
         if (
             ActivityCompat.checkSelfPermission(
                 context,
@@ -68,16 +76,25 @@ class NotificationManager @Inject constructor(
 
         notificationManagerCompat.notify(
             NotificationConstants.NOTIFICATION_ID,
-            builder.build()
+            notification
         )
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = context.getString(R.string.timer_notifications)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(NotificationConstants.CHANNEL_ID, name, importance)
-                .apply { setShowBadge(false) }
+                .apply {
+                    setShowBadge(false)
+                    setSound(
+                        Uri.parse(
+                            "${ContentResolver.SCHEME_ANDROID_RESOURCE}://${context.packageName}/" +
+                                "${R.raw.sound_time_is_up}"
+                        ),
+                        Notification.AUDIO_ATTRIBUTES_DEFAULT
+                    )
+                }
 
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager)
                 ?.createNotificationChannel(channel)
