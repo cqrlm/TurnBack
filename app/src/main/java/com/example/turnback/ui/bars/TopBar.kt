@@ -82,7 +82,7 @@ fun TopBar(
                     isMenuExpanded = showMenu,
                     showMenu = { showMenu = it },
                     showDeleteDialog = { showDeleteDialog = true },
-                    showThemeDialog = { showDeleteDialog = true },
+                    showThemeDialog = { showThemeDialog = true },
                     finishEditing = actions.finishEditing
                 )
             },
