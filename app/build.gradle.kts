@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.room)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -81,6 +82,8 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.profileinstaller)
+    "baselineProfile"(project(":app:baselineprofile"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
