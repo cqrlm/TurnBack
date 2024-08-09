@@ -32,7 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.turnback.R
 import com.example.turnback.model.TimerPreset
-import com.example.turnback.services.timer.TimerService
+import com.example.turnback.services.timer.TimerServiceActions
+import com.example.turnback.services.timer.TimerServiceState
 import com.example.turnback.services.timer.TimerState
 import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.common.FadeAnimatedVisibility
@@ -49,23 +50,25 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TimerScreen(
-    timerService: TimerService,
-    viewModel: TimerViewModel = hiltViewModel<TimerViewModel, TimerViewModel.Factory>(
-        creationCallback = { it.create(timerService.timeFlow, timerService.timerState) }
-    )
+    timerServiceState: TimerServiceState,
+    timerServiceActions: TimerServiceActions,
+    viewModel: TimerViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
-    with(timerService) {
-        val state by viewModel.collectState()
+    val state by viewModel.collectState()
 
+    with(timerServiceActions) {
         TimerContent(
-            state = state,
+            state = state.copy(
+                timerDuration = timerServiceState.timerDuration,
+                timerState = timerServiceState.timerState
+            ),
             actions = viewModel.screenActions.copy(
-                start = { duration -> start(duration, context, MainActivity::class.java) },
-                pause = ::pause,
-                resume = ::resume,
-                stop = ::stop,
+                start = { start(it, context, MainActivity::class.java) },
+                pause = pause,
+                resume = resume,
+                stop = stop
             )
         )
     }

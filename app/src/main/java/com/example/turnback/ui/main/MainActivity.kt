@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -113,7 +114,14 @@ private fun MainScreen(
                 .fillMaxSize()
         ) {
             composable(Screen.BottomBarItem.Timer.route) {
-                timerService?.let { TimerScreen(timerService) }
+                timerService?.run {
+                    val timerServiceState by timerServiceState.collectAsState()
+
+                    TimerScreen(
+                        timerServiceState = timerServiceState,
+                        timerServiceActions = timerServiceActions
+                    )
+                }
             }
 
             composable(Screen.BottomBarItem.Stopwatch.route) { StopwatchScreen() }
