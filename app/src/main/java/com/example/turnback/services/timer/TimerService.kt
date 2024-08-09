@@ -13,11 +13,17 @@ import com.example.turnback.services.timer.notification.NotificationAction
 import com.example.turnback.services.timer.notification.NotificationConstants
 import com.example.turnback.services.timer.notification.NotificationManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import kotlin.time.Duration
 
 @AndroidEntryPoint
-class TimerService : Service() {
+class TimerService : Service(), CoroutineScope by MainScope() {
 
     @Inject
     lateinit var notificationManager: NotificationManager
@@ -25,9 +31,24 @@ class TimerService : Service() {
     @Inject
     lateinit var timerManager: TimerManager
 
-    val timeFlow by lazy { timerManager.timeFlow }
+    val timerServiceState by lazy {
+        combine(
+            timerManager.timeFlow,
+            timerManager.timerState
+        ) { time, timerState ->
+            TimerServiceState(
+                timerDuration = time,
+                timerState = timerState
+            )
+        }.stateIn(this, SharingStarted.Lazily, TimerServiceState())
+    }
 
-    val timerState by lazy { timerManager.timerState }
+    val timerServiceActions = TimerServiceActions(
+        start = ::start,
+        pause = ::pause,
+        resume = ::resume,
+        stop = ::stop
+    )
 
     private val binder by lazy { TimerBinder() }
 
@@ -45,25 +66,30 @@ class TimerService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    fun start(duration: Duration, context: Context, activityClassName: Class<out Activity>) {
-        startService(context)
-        start(duration, activityClassName)
+    override fun onDestroy() {
+        cancel()
+        super.onDestroy()
     }
 
-    private fun start(duration: Duration, activityClassName: Class<out Activity>) {
+    private fun start(
+        duration: Duration,
+        context: Context,
+        activityClassName: Class<out Activity>
+    ) {
+        startService(context)
         startForeground(activityClassName)
         timerManager.start(duration)
     }
 
-    fun resume() {
+    private fun resume() {
         timerManager.resume()
     }
 
-    fun pause() {
+    private fun pause() {
         timerManager.pause()
     }
 
-    fun stop() {
+    private fun stop() {
         timerManager.stop()
         stopService()
     }
