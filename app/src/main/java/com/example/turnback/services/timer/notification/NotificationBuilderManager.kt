@@ -1,5 +1,7 @@
 package com.example.turnback.services.timer.notification
 
+import android.app.Activity
+import android.app.Notification
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import com.example.turnback.R
@@ -13,7 +15,9 @@ class NotificationBuilderManager @Inject constructor(
     private val notificationIntentManager: NotificationIntentManager
 ) {
 
-    val defaultNotificationBuilder: NotificationCompat.Builder
+    private var activityClassName: Class<out Activity> = Activity::class.java
+
+    private val defaultNotificationBuilder: NotificationCompat.Builder
         get() = NotificationCompat.Builder(context, NotificationConstants.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_timer)
             .setContentText(context.getString(R.string.timer))
@@ -22,46 +26,54 @@ class NotificationBuilderManager @Inject constructor(
             .setAutoCancel(false)
             .setSilent(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
-            .setContentIntent(notificationIntentManager.clickIntent)
+            .setContentIntent(notificationIntentManager.clickIntent(activityClassName))
 
-    val tickNotificationBuilder = defaultNotificationBuilder
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .addAction(
-            NotificationCompat.Action(
-                null,
-                context.getString(R.string.pause),
-                notificationIntentManager.pauseIntent
+    val tickNotificationBuilder: NotificationCompat.Builder
+        get() = defaultNotificationBuilder
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .addAction(
+                NotificationCompat.Action(
+                    null,
+                    context.getString(R.string.pause),
+                    notificationIntentManager.pauseIntent
+                )
             )
-        )
-        .addAction(
-            NotificationCompat.Action(
-                null,
-                context.getString(R.string.stop),
-                notificationIntentManager.stopIntent
+            .addAction(
+                NotificationCompat.Action(
+                    null,
+                    context.getString(R.string.stop),
+                    notificationIntentManager.stopIntent
+                )
             )
-        )
 
-    val pauseNotificationBuilder = defaultNotificationBuilder
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .addAction(
-            NotificationCompat.Action(
-                null,
-                context.getString(R.string.start),
-                notificationIntentManager.resumeIntent
+    val pauseNotificationBuilder: NotificationCompat.Builder
+        get() = defaultNotificationBuilder
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .addAction(
+                NotificationCompat.Action(
+                    null,
+                    context.getString(R.string.start),
+                    notificationIntentManager.resumeIntent
+                )
             )
-        )
-        .addAction(
-            NotificationCompat.Action(
-                null,
-                context.getString(R.string.stop),
-                notificationIntentManager.stopIntent
+            .addAction(
+                NotificationCompat.Action(
+                    null,
+                    context.getString(R.string.stop),
+                    notificationIntentManager.stopIntent
+                )
             )
-        )
 
-    val finishNotificationBuilder = defaultNotificationBuilder
-        .setContentTitle(context.getString(R.string.time_is_up))
-        .setPriority(NotificationCompat.PRIORITY_MAX)
-        .setSilent(false)
-        .setOngoing(false)
-        .setAutoCancel(true)
+    val finishNotificationBuilder: NotificationCompat.Builder
+        get() = defaultNotificationBuilder
+            .setContentTitle(context.getString(R.string.time_is_up))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setSilent(false)
+            .setOngoing(false)
+            .setAutoCancel(true)
+
+    fun build(activityClassName: Class<out Activity>): Notification {
+        this.activityClassName = activityClassName
+        return defaultNotificationBuilder.build()
+    }
 }

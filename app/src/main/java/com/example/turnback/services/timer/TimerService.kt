@@ -1,5 +1,6 @@
 package com.example.turnback.services.timer
 
+import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -44,13 +45,13 @@ class TimerService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    fun start(duration: Duration, context: Context) {
+    fun start(duration: Duration, context: Context, activityClassName: Class<out Activity>) {
         startService(context)
-        start(duration)
+        start(duration, activityClassName)
     }
 
-    private fun start(duration: Duration) {
-        startForegroundService()
+    private fun start(duration: Duration, activityClassName: Class<out Activity>) {
+        startForeground(activityClassName)
         timerManager.start(duration)
     }
 
@@ -68,20 +69,20 @@ class TimerService : Service() {
     }
 
     private fun startService(context: Context) {
-        ContextCompat.startForegroundService(context, Intent(context, TimerService::class.java))
+        ContextCompat.startForegroundService(context, Intent(context, this::class.java))
     }
 
-    private fun startForegroundService() {
+    private fun startForeground(activityClassName: Class<out Activity>) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             startForeground(
                 NotificationConstants.NOTIFICATION_ID,
-                notificationManager.notification,
+                notificationManager.getNotification(activityClassName),
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
             )
         } else {
             startForeground(
                 NotificationConstants.NOTIFICATION_ID,
-                notificationManager.notification
+                notificationManager.getNotification(activityClassName)
             )
         }
     }

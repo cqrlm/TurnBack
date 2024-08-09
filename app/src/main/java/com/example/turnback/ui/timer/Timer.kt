@@ -37,6 +37,7 @@ import com.example.turnback.services.timer.TimerState
 import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.common.FadeAnimatedVisibility
 import com.example.turnback.ui.common.TimePicker
+import com.example.turnback.ui.main.MainActivity
 import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.theme.Typography
 import com.example.turnback.ui.timer.state.TimerScreenActions
@@ -61,7 +62,7 @@ fun TimerScreen(
         TimerContent(
             state = state,
             actions = viewModel.screenActions.copy(
-                start = { duration -> start(duration, context) },
+                start = { duration -> start(duration, context, MainActivity::class.java) },
                 pause = ::pause,
                 resume = ::resume,
                 stop = ::stop,

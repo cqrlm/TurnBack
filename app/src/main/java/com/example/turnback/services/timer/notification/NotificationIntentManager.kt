@@ -1,10 +1,10 @@
 package com.example.turnback.services.timer.notification
 
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.turnback.services.timer.TimerService
-import com.example.turnback.ui.main.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
@@ -14,12 +14,12 @@ class NotificationIntentManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    val clickIntent: PendingIntent = run {
-        val intent = Intent(context, MainActivity::class.java).apply {
+    fun clickIntent(activityClassName: Class<out Activity>): PendingIntent {
+        val intent = Intent(context, activityClassName).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        PendingIntent.getActivity(
+        return PendingIntent.getActivity(
             context,
             NotificationConstants.CLICK_REQUEST_CODE,
             intent,

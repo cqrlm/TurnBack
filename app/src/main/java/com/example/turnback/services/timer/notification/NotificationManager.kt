@@ -1,6 +1,7 @@
 package com.example.turnback.services.timer.notification
 
 import android.Manifest
+import android.app.Activity
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -28,8 +29,8 @@ class NotificationManager @Inject constructor(
         createNotificationChannel()
     }
 
-    val notification: Notification
-        get() = notificationBuilderManager.defaultNotificationBuilder.build()
+    fun getNotification(activityClassName: Class<out Activity>): Notification =
+        notificationBuilderManager.build(activityClassName)
 
     private val notificationManagerCompat = NotificationManagerCompat.from(context)
 
