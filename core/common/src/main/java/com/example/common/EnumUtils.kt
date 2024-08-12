@@ -1,4 +1,4 @@
-package com.example.turnback.utils
+package com.example.common
 
 import kotlin.enums.enumEntries
 

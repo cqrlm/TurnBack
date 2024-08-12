@@ -1,9 +1,9 @@
 package com.example.turnback.services.sharedpreferences
 
 import android.content.Context
+import com.example.common.enumValueOrDefault
 import com.example.turnback.services.stopwatch.StopwatchState
 import com.example.turnback.ui.theme.ThemeState
-import com.example.turnback.utils.enumValueOrDefault
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.time.Duration
