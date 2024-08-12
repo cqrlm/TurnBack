@@ -1,6 +1,6 @@
 package com.example.turnback.services.stopwatch
 
-import com.example.turnback.services.SharedPreferencesService
+import com.example.turnback.services.sharedpreferences.SharedPreferencesService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach

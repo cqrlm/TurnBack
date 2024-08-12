@@ -2,7 +2,7 @@ package com.example.turnback.ui.main
 
 import androidx.lifecycle.viewModelScope
 import com.example.turnback.navigaiton.Screen
-import com.example.turnback.services.SharedPreferencesService
+import com.example.turnback.services.sharedpreferences.SharedPreferencesService
 import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.services.timer.preset.TimerPresetManager
 import com.example.turnback.ui.base.ScreenViewModel
