@@ -1,6 +1,8 @@
 package com.example.turnback.services.stopwatch
 
-import com.example.turnback.services.sharedpreferences.SharedPreferencesService
+import com.example.sharedpreferences.SharedPreferencesService
+import com.example.turnback.utils.getState
+import com.example.turnback.utils.saveState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
@@ -19,7 +21,10 @@ class StopwatchService @Inject constructor(
     private val _timeFlow = MutableStateFlow(sharedPreferencesService.getTime())
     val timeFlow = _timeFlow.asStateFlow()
 
-    private var _stopwatchStateFlow = MutableStateFlow(sharedPreferencesService.getStopwatchState())
+    private var _stopwatchStateFlow = MutableStateFlow(
+        sharedPreferencesService.getState<StopwatchState>()
+    )
+
     val stopwatchStateFlow = _stopwatchStateFlow.onEach { stopwatchState ->
         when (stopwatchState) {
             StopwatchState.START ->
@@ -38,7 +43,7 @@ class StopwatchService @Inject constructor(
 
     fun saveTime(time: Duration) {
         sharedPreferencesService.saveTime(time.inWholeMilliseconds)
-        sharedPreferencesService.saveStopwatchState(_stopwatchStateFlow.value)
+        sharedPreferencesService.saveState(_stopwatchStateFlow.value)
     }
 
     fun start() {
