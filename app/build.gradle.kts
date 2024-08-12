@@ -86,6 +86,8 @@ dependencies {
     implementation(libs.androidx.profileinstaller)
     baselineProfile(projects.baselineprofile)
 
+    implementation(projects.core.common)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

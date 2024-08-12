@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 rootProject.name = "TurnBack"
 include(":app")
 include(":baselineprofile")
+include(":core:common")
