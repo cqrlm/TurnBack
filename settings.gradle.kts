@@ -19,3 +19,4 @@ rootProject.name = "TurnBack"
 include(":app")
 include(":baselineprofile")
 include(":core:common")
+include(":core:shared-preferences")

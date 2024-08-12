@@ -87,6 +87,7 @@ dependencies {
     baselineProfile(projects.baselineprofile)
 
     implementation(projects.core.common)
+    implementation(projects.core.sharedPreferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
