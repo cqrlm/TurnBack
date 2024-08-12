@@ -84,7 +84,7 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.androidx.profileinstaller)
-    "baselineProfile"(project(":app:baselineprofile"))
+    "baselineProfile"(project(":baselineprofile"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
