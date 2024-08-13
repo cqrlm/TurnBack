@@ -1,7 +1,7 @@
 package com.example.turnback.ui.stopwatch
 
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.services.stopwatch.StopwatchService
+import com.example.stopwatch.StopwatchService
 import com.example.turnback.ui.base.ScreenViewModel
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
