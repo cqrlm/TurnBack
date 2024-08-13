@@ -88,6 +88,7 @@ dependencies {
 
     implementation(projects.core.common)
     implementation(projects.core.sharedPreferences)
+    implementation(projects.core.stopwatch)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
