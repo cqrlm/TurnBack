@@ -16,7 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.turnback.navigaiton.Screen
-import com.example.turnback.ui.theme.TurnBackTheme
+import com.example.ui.theme.TurnBackTheme
 
 @Composable
 fun BottomNavBar(navController: NavHostController, changeScreen: (Screen) -> Unit) {

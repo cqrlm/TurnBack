@@ -8,9 +8,9 @@ import com.example.turnback.services.timer.preset.TimerPresetManager
 import com.example.turnback.ui.base.ScreenViewModel
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
-import com.example.turnback.ui.theme.ThemeState
 import com.example.turnback.utils.getState
 import com.example.turnback.utils.saveState
+import com.example.ui.theme.ThemeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

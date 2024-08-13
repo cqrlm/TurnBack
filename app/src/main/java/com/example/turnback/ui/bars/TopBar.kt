@@ -28,8 +28,8 @@ import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.common.SingleChoiceDialog
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
-import com.example.turnback.ui.theme.ThemeState
-import com.example.turnback.ui.theme.TurnBackTheme
+import com.example.ui.theme.ThemeState
+import com.example.ui.theme.TurnBackTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -30,8 +30,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Velocity
 import com.example.turnback.ui.common.Time.Companion.toTime
-import com.example.turnback.ui.theme.TurnBackTheme
-import com.example.turnback.ui.theme.Typography
+import com.example.ui.theme.TurnBackTheme
+import com.example.ui.theme.Typography
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes

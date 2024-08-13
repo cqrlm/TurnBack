@@ -39,11 +39,11 @@ import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.common.FadeAnimatedVisibility
 import com.example.turnback.ui.common.TimePicker
 import com.example.turnback.ui.main.MainActivity
-import com.example.turnback.ui.theme.TurnBackTheme
-import com.example.turnback.ui.theme.Typography
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.ui.timer.state.TimerScreenState
 import com.example.turnback.utils.formatElapsedTime
+import com.example.ui.theme.TurnBackTheme
+import com.example.ui.theme.Typography
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds

@@ -43,8 +43,8 @@ import com.example.turnback.ui.bars.TopBar
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.turnback.ui.stopwatch.StopwatchScreen
-import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.timer.TimerScreen
+import com.example.ui.theme.TurnBackTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

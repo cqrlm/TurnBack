@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.turnback.ui.theme.TurnBackTheme
+import com.example.ui.theme.TurnBackTheme
 
 @Composable
 fun <T> SingleChoiceColumn(

@@ -25,9 +25,9 @@ import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.common.DraggableItem
 import com.example.turnback.ui.common.dragContainer
 import com.example.turnback.ui.common.rememberGridDragDropState
-import com.example.turnback.ui.theme.TurnBackTheme
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.utils.formatElapsedTime
+import com.example.ui.theme.TurnBackTheme
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds

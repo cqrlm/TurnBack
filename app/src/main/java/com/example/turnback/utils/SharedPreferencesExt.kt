@@ -3,7 +3,7 @@ package com.example.turnback.utils
 import com.example.sharedpreferences.SharedPreferencesConstants
 import com.example.sharedpreferences.SharedPreferencesService
 import com.example.stopwatch.StopwatchState
-import com.example.turnback.ui.theme.ThemeState
+import com.example.ui.theme.ThemeState
 
 inline fun <reified T : Enum<T>> SharedPreferencesService.getState(): T =
     when (T::class) {

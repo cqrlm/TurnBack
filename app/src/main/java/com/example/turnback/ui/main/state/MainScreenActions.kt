@@ -2,7 +2,7 @@ package com.example.turnback.ui.main.state
 
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.ui.base.ScreenActions
-import com.example.turnback.ui.theme.ThemeState
+import com.example.ui.theme.ThemeState
 
 data class MainScreenActions(
     val changeScreen: (Screen) -> Unit = {},

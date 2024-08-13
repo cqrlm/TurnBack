@@ -3,7 +3,7 @@ package com.example.turnback.ui.main.state
 import com.example.turnback.navigaiton.Screen
 import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.base.ScreenState
-import com.example.turnback.ui.theme.ThemeState
+import com.example.ui.theme.ThemeState
 
 data class MainScreenState(
     val themeState: ThemeState = ThemeState.SYSTEM,

@@ -32,9 +32,9 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import com.example.turnback.ui.stopwatch.state.StopwatchButtonData
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
-import com.example.turnback.ui.theme.TurnBackTheme
-import com.example.turnback.ui.theme.Typography
 import com.example.turnback.utils.formatTime
+import com.example.ui.theme.TurnBackTheme
+import com.example.ui.theme.Typography
 
 @Composable
 fun StopwatchScreen(viewModel: StopwatchViewModel = hiltViewModel()) {
