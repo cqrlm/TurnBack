@@ -1,4 +1,4 @@
-package com.example.turnback.ui.common
+package com.example.ui.common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope

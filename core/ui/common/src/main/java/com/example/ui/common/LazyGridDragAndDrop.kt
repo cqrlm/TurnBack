@@ -1,4 +1,4 @@
-package com.example.turnback.ui.common
+package com.example.ui.common
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring

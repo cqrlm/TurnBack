@@ -1,4 +1,4 @@
-package com.example.turnback.ui.common
+package com.example.ui.common
 
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.width
@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -29,9 +30,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Velocity
-import com.example.turnback.ui.common.Time.Companion.toTime
-import com.example.ui.theme.TurnBackTheme
-import com.example.ui.theme.Typography
+import com.example.ui.common.Time.Companion.toTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -41,7 +40,7 @@ import kotlin.time.Duration.Companion.seconds
 fun TimePicker(
     modifier: Modifier = Modifier,
     initialValue: Duration = Duration.ZERO,
-    textStyle: TextStyle = Typography.displayMedium,
+    textStyle: TextStyle = MaterialTheme.typography.displayMedium,
     onValueChange: ((Duration) -> Unit)? = null,
     onDone: (Duration) -> Unit,
 ) {
@@ -145,7 +144,7 @@ private fun Modifier.disableHorizontalScroll() =
 @Preview(showBackground = true)
 @Composable
 private fun TimePickerPreview() {
-    TurnBackTheme {
+    MaterialTheme {
         TimePicker {}
     }
 }

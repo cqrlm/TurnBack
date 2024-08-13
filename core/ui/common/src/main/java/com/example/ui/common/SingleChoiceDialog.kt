@@ -1,7 +1,8 @@
-package com.example.turnback.ui.common
+package com.example.ui.common
 
 import android.content.res.Configuration
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -9,14 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.turnback.R
-import com.example.ui.theme.TurnBackTheme
 
 @Composable
 fun <T> SingleChoiceDialog(
     title: String,
+    dismissTitle: String,
     dismiss: () -> Unit,
     options: List<Pair<T, String>>,
     selected: T,
@@ -27,7 +26,7 @@ fun <T> SingleChoiceDialog(
         onDismissRequest = dismiss,
         dismissButton = {
             TextButton(onClick = dismiss) {
-                Text(text = stringResource(id = R.string.cancel))
+                Text(text = dismissTitle)
             }
         },
         confirmButton = {},
@@ -48,9 +47,10 @@ private fun SingleChoiceDialogPreview() {
     val options = listOf("First", "Second", "Third")
     var selected by remember { mutableIntStateOf(0) }
 
-    TurnBackTheme {
+    MaterialTheme {
         SingleChoiceDialog(
             title = "Title",
+            dismissTitle = "Cancel",
             dismiss = {},
             options = options.mapIndexed { index, option -> index to option },
             selected = selected,
