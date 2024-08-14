@@ -1,6 +1,6 @@
 package com.example.turnback.ui.timer.state
 
-import com.example.turnback.model.TimerPreset
+import com.example.data.model.TimerPreset
 import com.example.turnback.ui.base.ScreenActions
 import kotlin.time.Duration
 

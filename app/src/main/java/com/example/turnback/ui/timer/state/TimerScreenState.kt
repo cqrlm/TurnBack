@@ -2,7 +2,7 @@ package com.example.turnback.ui.timer.state
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.example.turnback.model.TimerPreset
+import com.example.data.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
 import com.example.turnback.services.timer.preset.TimerEditMode
 import com.example.turnback.ui.base.ScreenState

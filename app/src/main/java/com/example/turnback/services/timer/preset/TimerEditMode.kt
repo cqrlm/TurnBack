@@ -1,6 +1,6 @@
 package com.example.turnback.services.timer.preset
 
-import com.example.turnback.model.TimerPreset
+import com.example.data.model.TimerPreset
 
 sealed class TimerEditMode {
 

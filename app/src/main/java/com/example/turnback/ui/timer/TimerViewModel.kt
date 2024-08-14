@@ -1,7 +1,7 @@
 package com.example.turnback.ui.timer
 
 import androidx.lifecycle.viewModelScope
-import com.example.turnback.model.TimerPreset
+import com.example.data.model.TimerPreset
 import com.example.turnback.services.timer.preset.TimerPresetManager
 import com.example.turnback.ui.base.ScreenViewModel
 import com.example.turnback.ui.timer.state.TimerScreenActions

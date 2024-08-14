@@ -1,11 +1,11 @@
 package com.example.turnback.services.timer.preset
 
 import androidx.compose.runtime.mutableStateListOf
+import com.example.data.mappers.toTimerPreset
+import com.example.data.mappers.toTimerPresetDBO
+import com.example.data.model.TimerPreset
+import com.example.data.repositories.TimerPresetRepository
 import com.example.database.entities.TimerPresetDBO
-import com.example.turnback.database.repositories.TimerPresetRepository
-import com.example.turnback.mappers.toTimerPreset
-import com.example.turnback.mappers.toTimerPresetDBO
-import com.example.turnback.model.TimerPreset
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
