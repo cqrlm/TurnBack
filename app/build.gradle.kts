@@ -92,6 +92,7 @@ dependencies {
     implementation(projects.core.ui.theme)
     implementation(projects.core.ui.common)
     implementation(projects.core.database)
+    implementation(projects.core.data)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
