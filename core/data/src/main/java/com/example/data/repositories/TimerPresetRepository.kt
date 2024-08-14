@@ -1,4 +1,4 @@
-package com.example.turnback.database.repositories
+package com.example.data.repositories
 
 import com.example.database.dao.TimerPresetDao
 import com.example.database.entities.TimerPresetDBO

@@ -1,4 +1,4 @@
-package com.example.turnback.model
+package com.example.data.model
 
 import kotlin.time.Duration
 
