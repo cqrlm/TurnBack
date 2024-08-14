@@ -1,11 +1,11 @@
-package com.example.turnback.database.dao
+package com.example.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.turnback.database.entities.TimerPresetDBO
+import com.example.database.entities.TimerPresetDBO
 import kotlinx.coroutines.flow.Flow
 
 @Dao
