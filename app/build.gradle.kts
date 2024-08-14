@@ -91,6 +91,7 @@ dependencies {
     implementation(projects.core.stopwatch)
     implementation(projects.core.ui.theme)
     implementation(projects.core.ui.common)
+    implementation(projects.core.database)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
