@@ -1,6 +1,6 @@
 package com.example.turnback.mappers
 
-import com.example.turnback.database.entities.TimerPresetDBO
+import com.example.database.entities.TimerPresetDBO
 import com.example.turnback.model.TimerPreset
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration

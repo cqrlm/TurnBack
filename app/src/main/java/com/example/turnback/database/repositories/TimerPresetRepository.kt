@@ -1,7 +1,7 @@
 package com.example.turnback.database.repositories
 
-import com.example.turnback.database.dao.TimerPresetDao
-import com.example.turnback.database.entities.TimerPresetDBO
+import com.example.database.dao.TimerPresetDao
+import com.example.database.entities.TimerPresetDBO
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

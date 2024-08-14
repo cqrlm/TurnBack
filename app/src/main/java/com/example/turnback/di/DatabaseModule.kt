@@ -1,9 +1,8 @@
 package com.example.turnback.di
 
 import android.content.Context
-import androidx.room.Room
-import com.example.turnback.database.AppDatabase
-import com.example.turnback.database.dao.TimerPresetDao
+import com.example.database.AppDatabase
+import com.example.database.dao.TimerPresetDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +17,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase =
-        Room
-            .databaseBuilder(appContext, AppDatabase::class.java, "app_database")
-            .createFromAsset("database/timer_presets.db")
-            .build()
+        AppDatabase.getInstance(appContext)
 
     @Provides
     fun provideTimerPresetDao(appDatabase: AppDatabase): TimerPresetDao =

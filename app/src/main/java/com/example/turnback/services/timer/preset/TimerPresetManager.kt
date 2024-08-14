@@ -1,7 +1,7 @@
 package com.example.turnback.services.timer.preset
 
 import androidx.compose.runtime.mutableStateListOf
-import com.example.turnback.database.entities.TimerPresetDBO
+import com.example.database.entities.TimerPresetDBO
 import com.example.turnback.database.repositories.TimerPresetRepository
 import com.example.turnback.mappers.toTimerPreset
 import com.example.turnback.mappers.toTimerPresetDBO
