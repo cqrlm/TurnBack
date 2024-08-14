@@ -1,11 +1,8 @@
 package com.example.turnback.services.timer.preset
 
 import androidx.compose.runtime.mutableStateListOf
-import com.example.data.mappers.toTimerPreset
-import com.example.data.mappers.toTimerPresetDBO
 import com.example.data.model.TimerPreset
 import com.example.data.repositories.TimerPresetRepository
-import com.example.database.entities.TimerPresetDBO
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,9 +30,7 @@ class TimerPresetManager @Inject constructor(
     val timerPresetsFlow = timerPresetRepository
         .getAll()
         .flowOn(Dispatchers.IO)
-        .flatMapConcat { timerPresetsDBOS ->
-            val databaseTimerPresets = timerPresetsDBOS.map(TimerPresetDBO::toTimerPreset)
-
+        .flatMapConcat { databaseTimerPresets ->
             timerPresets.clear()
             timerPresets.addAll(databaseTimerPresets)
 
@@ -44,7 +39,7 @@ class TimerPresetManager @Inject constructor(
 
     suspend fun saveToDB(timerPreset: TimerPreset) {
         withContext(Dispatchers.IO) {
-            timerPresetRepository.insert(timerPreset.toTimerPresetDBO())
+            timerPresetRepository.insert(timerPreset)
         }
     }
 
@@ -80,12 +75,10 @@ class TimerPresetManager @Inject constructor(
     }
 
     suspend fun deleteSelectedTimerPresets() {
-        val timerPresetsDBOS = timerPresets
-            .filter(TimerPreset::selected)
-            .map(TimerPreset::toTimerPresetDBO)
+        val timerPresets = timerPresets.filter(TimerPreset::selected)
 
         withContext(Dispatchers.IO) {
-            timerPresetRepository.delete(*timerPresetsDBOS.toTypedArray())
+            timerPresetRepository.delete(*timerPresets.toTypedArray())
         }
 
         _timerEditModeFlow.value = TimerEditMode.Idle
@@ -127,14 +120,11 @@ class TimerPresetManager @Inject constructor(
     }
 
     suspend fun saveEditingChanges() {
-        val timerPresetsDBOS = timerPresets
+        val timerPresets = timerPresets
             .mapIndexed { index, timerPreset -> timerPreset.copy(order = index) }
-            .map(TimerPreset::toTimerPresetDBO)
 
         withContext(Dispatchers.IO) {
-            timerPresetRepository.update(
-                *timerPresetsDBOS.toTypedArray()
-            )
+            timerPresetRepository.update(*timerPresets.toTypedArray())
         }
 
         _timerEditModeFlow.value = TimerEditMode.Idle
