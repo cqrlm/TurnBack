@@ -19,7 +19,7 @@
         tools:targetApi="34">
 
         <service
-            android:name=".services.timer.TimerService"
+            android:name="com.example.timer.TimerService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse">

@@ -1,6 +1,7 @@
-package com.example.turnback.services.timer
+package com.example.timer
 
-import com.example.turnback.services.timer.notification.NotificationManager
+import com.example.timer.notification.NotificationManager
+import com.example.timer.state.TimerState
 import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,9 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @ServiceScoped
-class TimerManager @Inject constructor(private val notificationManager: NotificationManager) {
+internal class TimerManager @Inject constructor(
+    private val notificationManager: NotificationManager
+) {
 
     private val _timeFlow = MutableStateFlow(Duration.ZERO)
     val timeFlow = _timeFlow.asStateFlow()

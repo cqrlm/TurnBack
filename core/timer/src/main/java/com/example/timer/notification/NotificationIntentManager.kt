@@ -1,16 +1,16 @@
-package com.example.turnback.services.timer.notification
+package com.example.timer.notification
 
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.example.turnback.services.timer.TimerService
+import com.example.timer.TimerService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
 @ServiceScoped
-class NotificationIntentManager @Inject constructor(
+internal class NotificationIntentManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 

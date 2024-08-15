@@ -1,16 +1,16 @@
-package com.example.turnback.services.timer.notification
+package com.example.timer.notification
 
 import android.app.Activity
 import android.app.Notification
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import com.example.turnback.R
+import com.example.timer.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
 @ServiceScoped
-class NotificationBuilderManager @Inject constructor(
+internal class NotificationBuilderManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val notificationIntentManager: NotificationIntentManager
 ) {

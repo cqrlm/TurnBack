@@ -1,4 +1,4 @@
-package com.example.turnback.services.timer
+package com.example.timer
 
 import android.app.Activity
 import android.app.Service
@@ -9,9 +9,11 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.content.ContextCompat
-import com.example.turnback.services.timer.notification.NotificationAction
-import com.example.turnback.services.timer.notification.NotificationConstants
-import com.example.turnback.services.timer.notification.NotificationManager
+import com.example.timer.notification.NotificationAction
+import com.example.timer.notification.NotificationConstants
+import com.example.timer.notification.NotificationManager
+import com.example.timer.state.TimerServiceActions
+import com.example.timer.state.TimerServiceState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -26,10 +28,10 @@ import kotlin.time.Duration
 class TimerService : Service(), CoroutineScope by MainScope() {
 
     @Inject
-    lateinit var notificationManager: NotificationManager
+    internal lateinit var notificationManager: NotificationManager
 
     @Inject
-    lateinit var timerManager: TimerManager
+    internal lateinit var timerManager: TimerManager
 
     val timerServiceState by lazy {
         combine(

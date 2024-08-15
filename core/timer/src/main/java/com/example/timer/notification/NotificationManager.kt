@@ -1,4 +1,4 @@
-package com.example.turnback.services.timer.notification
+package com.example.timer.notification
 
 import android.Manifest
 import android.app.Activity
@@ -13,14 +13,14 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.common.formatElapsedTime
-import com.example.turnback.R
+import com.example.timer.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 import kotlin.time.Duration
 
 @ServiceScoped
-class NotificationManager @Inject constructor(
+internal class NotificationManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val notificationBuilderManager: NotificationBuilderManager
 ) {

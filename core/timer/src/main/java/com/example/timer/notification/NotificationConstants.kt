@@ -1,6 +1,6 @@
-package com.example.turnback.services.timer.notification
+package com.example.timer.notification
 
-object NotificationConstants {
+internal object NotificationConstants {
 
     const val CHANNEL_ID = "timer_notifications"
     const val NOTIFICATION_ID = 7

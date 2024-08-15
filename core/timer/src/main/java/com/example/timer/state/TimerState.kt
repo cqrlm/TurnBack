@@ -1,4 +1,4 @@
-package com.example.turnback.services.timer
+package com.example.timer.state
 
 enum class TimerState {
 
