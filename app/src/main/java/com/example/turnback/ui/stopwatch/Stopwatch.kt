@@ -29,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import com.example.common.formatTime
 import com.example.turnback.ui.stopwatch.state.StopwatchButtonData
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
-import com.example.turnback.utils.formatTime
 import com.example.ui.theme.TurnBackTheme
 import com.example.ui.theme.Typography
 

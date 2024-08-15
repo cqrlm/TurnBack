@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.common.formatElapsedTime
 import com.example.data.model.TimerPreset
 import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.timer.state.TimerScreenActions
-import com.example.turnback.utils.formatElapsedTime
 import com.example.ui.common.DraggableItem
 import com.example.ui.common.dragContainer
 import com.example.ui.common.rememberGridDragDropState

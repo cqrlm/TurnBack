@@ -12,8 +12,8 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.common.formatElapsedTime
 import com.example.turnback.R
-import com.example.turnback.utils.formatElapsedTime
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
