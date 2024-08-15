@@ -13,5 +13,4 @@
     <string name="edit">Редактировать</string>
     <string name="edit_timer_preset">Редактировать предустановку таймера</string>
     <string name="time_is_up">Время вышло</string>
-    <string name="timer_notifications">Уведомления таймера</string>
 </resources>
