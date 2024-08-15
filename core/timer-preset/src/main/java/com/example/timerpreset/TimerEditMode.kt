@@ -1,4 +1,4 @@
-package com.example.turnback.services.timer.preset
+package com.example.timerpreset
 
 import com.example.data.model.TimerPreset
 

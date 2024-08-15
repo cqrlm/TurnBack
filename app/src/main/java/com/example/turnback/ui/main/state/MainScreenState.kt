@@ -1,7 +1,7 @@
 package com.example.turnback.ui.main.state
 
 import com.example.turnback.navigaiton.Screen
-import com.example.turnback.services.timer.preset.TimerEditMode
+import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.base.ScreenState
 import com.example.ui.theme.ThemeState
 

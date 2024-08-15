@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.turnback.R
-import com.example.turnback.services.timer.preset.TimerEditMode
+import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
 import com.example.ui.common.SingleChoiceDialog

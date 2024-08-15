@@ -3,8 +3,8 @@ package com.example.turnback.ui.main
 import androidx.lifecycle.viewModelScope
 import com.example.sharedpreferences.SharedPreferencesService
 import com.example.turnback.navigaiton.Screen
-import com.example.turnback.services.timer.preset.TimerEditMode
-import com.example.turnback.services.timer.preset.TimerPresetManager
+import com.example.timerpreset.TimerEditMode
+import com.example.timerpreset.TimerPresetManager
 import com.example.turnback.ui.base.ScreenViewModel
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState

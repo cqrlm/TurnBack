@@ -35,7 +35,7 @@ import com.example.data.model.TimerPreset
 import com.example.turnback.services.timer.TimerServiceActions
 import com.example.turnback.services.timer.TimerServiceState
 import com.example.turnback.services.timer.TimerState
-import com.example.turnback.services.timer.preset.TimerEditMode
+import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.main.MainActivity
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.ui.timer.state.TimerScreenState

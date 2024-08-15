@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.data.model.TimerPreset
 import com.example.turnback.services.timer.TimerState
-import com.example.turnback.services.timer.preset.TimerEditMode
+import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.base.ScreenState
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

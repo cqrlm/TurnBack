@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.data.model.TimerPreset
-import com.example.turnback.services.timer.preset.TimerEditMode
+import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.utils.formatElapsedTime
 import com.example.ui.common.DraggableItem
