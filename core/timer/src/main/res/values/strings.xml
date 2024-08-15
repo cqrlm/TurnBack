@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timer">Timer</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+    <string name="time_is_up">Time is up</string>
+    <string name="timer_notifications">Timer notifications</string>
+</resources>
