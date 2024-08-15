@@ -94,6 +94,7 @@ dependencies {
     implementation(projects.core.database)
     implementation(projects.core.data)
     implementation(projects.core.timerPreset)
+    implementation(projects.core.timer)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
