@@ -1,7 +1,7 @@
 package com.example.turnback.ui.timer.state
 
+import com.example.architecture.ScreenActions
 import com.example.data.model.TimerPreset
-import com.example.turnback.ui.base.ScreenActions
 import kotlin.time.Duration
 
 data class TimerScreenActions(

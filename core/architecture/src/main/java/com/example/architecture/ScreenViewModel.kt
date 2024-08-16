@@ -1,4 +1,4 @@
-package com.example.turnback.ui.base
+package com.example.architecture
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

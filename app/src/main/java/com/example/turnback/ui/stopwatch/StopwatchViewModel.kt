@@ -1,8 +1,8 @@
 package com.example.turnback.ui.stopwatch
 
 import androidx.lifecycle.viewModelScope
+import com.example.architecture.ScreenViewModel
 import com.example.stopwatch.StopwatchService
-import com.example.turnback.ui.base.ScreenViewModel
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
 import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

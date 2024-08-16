@@ -1,6 +1,6 @@
 package com.example.turnback.ui.stopwatch.state
 
-import com.example.turnback.ui.base.ScreenActions
+import com.example.architecture.ScreenActions
 
 data class StopwatchScreenActions(
     val start: () -> Unit = {},

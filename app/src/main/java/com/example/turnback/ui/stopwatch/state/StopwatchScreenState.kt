@@ -1,7 +1,7 @@
 package com.example.turnback.ui.stopwatch.state
 
+import com.example.architecture.ScreenState
 import com.example.stopwatch.StopwatchState
-import com.example.turnback.ui.base.ScreenState
 import kotlin.time.Duration
 
 data class StopwatchScreenState(
