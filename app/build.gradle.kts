@@ -95,6 +95,7 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.timerPreset)
     implementation(projects.core.timer)
+    implementation(projects.core.architecture)
 
     implementation(projects.resources)
 
