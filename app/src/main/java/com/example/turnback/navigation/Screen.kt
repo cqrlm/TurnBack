@@ -1,4 +1,4 @@
-package com.example.turnback.navigaiton
+package com.example.turnback.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

@@ -36,8 +36,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.turnback.navigaiton.Screen
 import com.example.timer.TimerService
+import com.example.turnback.navigation.Screen
 import com.example.turnback.ui.bars.BottomNavBar
 import com.example.turnback.ui.bars.TopBar
 import com.example.turnback.ui.main.state.MainScreenActions

@@ -15,7 +15,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.turnback.navigaiton.Screen
+import com.example.turnback.navigation.Screen
 import com.example.ui.theme.TurnBackTheme
 
 @Composable
