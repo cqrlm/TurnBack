@@ -38,4 +38,6 @@ dependencies {
     implementation(platform(libs.compose.bom.alpha))
     implementation(libs.ui)
     implementation(libs.material3)
+
+    implementation(projects.resources)
 }

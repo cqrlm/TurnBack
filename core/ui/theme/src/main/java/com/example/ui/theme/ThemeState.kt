@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
+import com.example.resources.R
 
 enum class ThemeState(@StringRes val stringId: Int) {
 
