@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="timer">Таймер</string>
+    <string name="stopwatch">Секундомер</string>
+    <string name="start">Старт</string>
+    <string name="pause">Пауза</string>
+    <string name="stop">Стоп</string>
+    <string name="select_theme">Выбрать тему</string>
+    <string name="system">Системная</string>
+    <string name="light">Светлая</string>
+    <string name="dark">Тёмная</string>
+    <string name="cancel">Отменить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="delete_dialog_text">Вы уверены, что хотите удалить выбранные предустановки таймера?</string>
+    <string name="new_timer_preset">Новая предустановка таймера</string>
+    <string name="edit">Редактировать</string>
+    <string name="edit_timer_preset">Редактировать предустановку таймера</string>
+    <string name="time_is_up">Время вышло</string>
+    <string name="timer_notifications">Уведомления таймера</string>
+</resources>
