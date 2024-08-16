@@ -2,7 +2,7 @@ package com.example.turnback.ui.stopwatch.state
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.example.turnback.R
+import com.example.resources.R
 
 data class StopwatchButtonData(
     @DrawableRes

@@ -16,8 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.turnback.R
 import com.example.data.model.TimerPreset
+import com.example.resources.R
 import com.example.ui.common.TimePicker
 import com.example.ui.theme.TurnBackTheme
 import kotlin.time.Duration

@@ -2,7 +2,7 @@ package com.example.turnback.navigaiton
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.example.turnback.R
+import com.example.resources.R
 
 sealed class Screen(open val route: String, open val titleId: Int? = null) {
 

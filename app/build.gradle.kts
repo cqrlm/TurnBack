@@ -96,6 +96,8 @@ dependencies {
     implementation(projects.core.timerPreset)
     implementation(projects.core.timer)
 
+    implementation(projects.resources)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

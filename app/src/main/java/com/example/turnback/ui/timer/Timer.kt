@@ -32,11 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.formatElapsedTime
 import com.example.data.model.TimerPreset
-import com.example.timerpreset.TimerEditMode
-import com.example.turnback.R
+import com.example.resources.R
 import com.example.timer.state.TimerServiceActions
 import com.example.timer.state.TimerServiceState
 import com.example.timer.state.TimerState
+import com.example.timerpreset.TimerEditMode
 import com.example.turnback.ui.main.MainActivity
 import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.turnback.ui.timer.state.TimerScreenState
