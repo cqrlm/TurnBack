@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Notification
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import com.example.timer.R
+import com.example.resources.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject

@@ -13,7 +13,7 @@ import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.common.formatElapsedTime
-import com.example.timer.R
+import com.example.resources.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
