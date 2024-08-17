@@ -97,6 +97,8 @@ dependencies {
     implementation(projects.core.timer)
     implementation(projects.core.architecture)
 
+    implementation(projects.features.featureStopwatch)
+
     implementation(projects.resources)
 
     testImplementation(libs.junit)
