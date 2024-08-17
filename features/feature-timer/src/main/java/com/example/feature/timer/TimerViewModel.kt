@@ -1,11 +1,11 @@
-package com.example.turnback.ui.timer
+package com.example.feature.timer
 
 import androidx.lifecycle.viewModelScope
 import com.example.architecture.ScreenViewModel
 import com.example.data.model.TimerPreset
+import com.example.feature.timer.state.TimerScreenActions
+import com.example.feature.timer.state.TimerScreenState
 import com.example.timerpreset.TimerPresetManager
-import com.example.turnback.ui.timer.state.TimerScreenActions
-import com.example.turnback.ui.timer.state.TimerScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -1,6 +1,7 @@
 package com.example.turnback.ui.main
 
 import android.Manifest
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -37,13 +38,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.feature.stopwatch.StopwatchScreen
+import com.example.feature.timer.TimerScreen
 import com.example.timer.TimerService
 import com.example.turnback.navigation.Screen
 import com.example.turnback.ui.bars.BottomNavBar
 import com.example.turnback.ui.bars.TopBar
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
-import com.example.turnback.ui.timer.TimerScreen
 import com.example.ui.theme.TurnBackTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -67,7 +68,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MainScreen(timerService)
+            MainScreen(
+                activityClassName = this::class.java,
+                timerService = timerService
+            )
 
             NotificationCheck()
         }
@@ -92,6 +96,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainScreen(
+    activityClassName: Class<out Activity>,
     timerService: TimerService?,
     viewModel: MainViewModel = hiltViewModel()
 ) {
@@ -118,6 +123,7 @@ private fun MainScreen(
                     val timerServiceState by timerServiceState.collectAsState()
 
                     TimerScreen(
+                        activityClassName = activityClassName,
                         timerServiceState = timerServiceState,
                         timerServiceActions = timerServiceActions
                     )

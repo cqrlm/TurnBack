@@ -1,4 +1,4 @@
-package com.example.turnback.ui.timer
+package com.example.feature.timer
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.common.formatElapsedTime
 import com.example.data.model.TimerPreset
+import com.example.feature.timer.state.TimerScreenActions
 import com.example.timerpreset.TimerEditMode
-import com.example.turnback.ui.timer.state.TimerScreenActions
 import com.example.ui.common.DraggableItem
 import com.example.ui.common.dragContainer
 import com.example.ui.common.rememberGridDragDropState

@@ -1,4 +1,4 @@
-package com.example.turnback.ui.timer.state
+package com.example.feature.timer.state
 
 import com.example.architecture.ScreenActions
 import com.example.data.model.TimerPreset

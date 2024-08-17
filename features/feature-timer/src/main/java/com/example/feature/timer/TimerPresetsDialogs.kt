@@ -1,4 +1,4 @@
-package com.example.turnback.ui.timer
+package com.example.feature.timer
 
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons

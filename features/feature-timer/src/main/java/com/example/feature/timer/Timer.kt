@@ -1,5 +1,6 @@
-package com.example.turnback.ui.timer
+package com.example.feature.timer
 
+import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,14 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.formatElapsedTime
 import com.example.data.model.TimerPreset
+import com.example.feature.timer.state.TimerScreenActions
+import com.example.feature.timer.state.TimerScreenState
 import com.example.resources.R
 import com.example.timer.state.TimerServiceActions
 import com.example.timer.state.TimerServiceState
 import com.example.timer.state.TimerState
 import com.example.timerpreset.TimerEditMode
-import com.example.turnback.ui.main.MainActivity
-import com.example.turnback.ui.timer.state.TimerScreenActions
-import com.example.turnback.ui.timer.state.TimerScreenState
 import com.example.ui.common.FadeAnimatedVisibility
 import com.example.ui.common.TimePicker
 import com.example.ui.theme.TurnBackTheme
@@ -50,6 +50,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TimerScreen(
+    activityClassName: Class<out Activity>,
     timerServiceState: TimerServiceState,
     timerServiceActions: TimerServiceActions,
     viewModel: TimerViewModel = hiltViewModel()
@@ -65,7 +66,7 @@ fun TimerScreen(
                 timerState = timerServiceState.timerState
             ),
             actions = viewModel.screenActions.copy(
-                start = { start(it, context, MainActivity::class.java) },
+                start = { start(it, context, activityClassName) },
                 pause = pause,
                 resume = resume,
                 stop = stop
