@@ -45,12 +45,13 @@ class TimerService : Service(), CoroutineScope by MainScope() {
         }.stateIn(this, SharingStarted.Lazily, TimerServiceState())
     }
 
-    val timerServiceActions = TimerServiceActions(
-        start = ::start,
-        pause = ::pause,
-        resume = ::resume,
-        stop = ::stop
-    )
+    fun actions(context: Context, activityClassName: Class<out Activity>): TimerServiceActions =
+        TimerServiceActions(
+            start = { duration -> start(duration, context, activityClassName) },
+            pause = ::pause,
+            resume = ::resume,
+            stop = ::stop
+        )
 
     private val binder by lazy { TimerBinder() }
 

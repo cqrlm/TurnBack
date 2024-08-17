@@ -101,6 +101,7 @@ private fun MainScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
     val state by viewModel.collectState()
 
@@ -123,9 +124,8 @@ private fun MainScreen(
                     val timerServiceState by timerServiceState.collectAsState()
 
                     TimerScreen(
-                        activityClassName = activityClassName,
                         timerServiceState = timerServiceState,
-                        timerServiceActions = timerServiceActions
+                        timerServiceActions = actions(context, activityClassName)
                     )
                 }
             }

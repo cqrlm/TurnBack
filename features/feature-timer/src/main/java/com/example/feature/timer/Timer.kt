@@ -1,6 +1,5 @@
 package com.example.feature.timer
 
-import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,13 +48,10 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TimerScreen(
-    activityClassName: Class<out Activity>,
     timerServiceState: TimerServiceState,
     timerServiceActions: TimerServiceActions,
     viewModel: TimerViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-
     val state by viewModel.collectState()
 
     with(timerServiceActions) {
@@ -66,7 +61,7 @@ fun TimerScreen(
                 timerState = timerServiceState.timerState
             ),
             actions = viewModel.screenActions.copy(
-                start = { start(it, context, activityClassName) },
+                start = start,
                 pause = pause,
                 resume = resume,
                 stop = stop
