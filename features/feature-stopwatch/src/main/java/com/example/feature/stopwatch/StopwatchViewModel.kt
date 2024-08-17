@@ -1,10 +1,10 @@
-package com.example.turnback.ui.stopwatch
+package com.example.feature.stopwatch
 
 import androidx.lifecycle.viewModelScope
 import com.example.architecture.ScreenViewModel
+import com.example.feature.stopwatch.state.StopwatchScreenActions
+import com.example.feature.stopwatch.state.StopwatchScreenState
 import com.example.stopwatch.StopwatchService
-import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
-import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

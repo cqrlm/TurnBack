@@ -1,4 +1,4 @@
-package com.example.turnback.ui.stopwatch
+package com.example.feature.stopwatch
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
@@ -30,9 +30,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.example.common.formatTime
-import com.example.turnback.ui.stopwatch.state.StopwatchButtonData
-import com.example.turnback.ui.stopwatch.state.StopwatchScreenActions
-import com.example.turnback.ui.stopwatch.state.StopwatchScreenState
+import com.example.feature.stopwatch.state.StopwatchButtonData
+import com.example.feature.stopwatch.state.StopwatchScreenActions
+import com.example.feature.stopwatch.state.StopwatchScreenState
 import com.example.ui.theme.TurnBackTheme
 import com.example.ui.theme.Typography
 

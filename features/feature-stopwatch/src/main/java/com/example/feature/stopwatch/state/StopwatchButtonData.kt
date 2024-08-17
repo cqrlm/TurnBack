@@ -1,4 +1,4 @@
-package com.example.turnback.ui.stopwatch.state
+package com.example.feature.stopwatch.state
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

@@ -1,4 +1,4 @@
-package com.example.turnback.ui.stopwatch.state
+package com.example.feature.stopwatch.state
 
 import com.example.architecture.ScreenActions
 
