@@ -98,6 +98,7 @@ dependencies {
     implementation(projects.core.architecture)
 
     implementation(projects.features.featureStopwatch)
+    implementation(projects.features.featureTimer)
 
     implementation(projects.resources)
 
