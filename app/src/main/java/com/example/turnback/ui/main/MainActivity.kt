@@ -40,8 +40,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.feature.stopwatch.StopwatchScreen
 import com.example.feature.timer.TimerScreen
 import com.example.navigation.Screen
+import com.example.navigation.isSelected
+import com.example.navigation.navigate
 import com.example.timer.TimerService
-import com.example.turnback.ui.bars.BottomNavBar
+import com.example.turnback.ui.bars.BottomBar
 import com.example.turnback.ui.bars.TopBar
 import com.example.turnback.ui.main.state.MainScreenActions
 import com.example.turnback.ui.main.state.MainScreenState
@@ -151,9 +153,12 @@ private fun MainContent(
                 )
             },
             bottomBar = {
-                BottomNavBar(
-                    navController = navController,
-                    changeScreen = actions.changeScreen
+                BottomBar(
+                    selected = { screen -> navController.isSelected(screen) },
+                    onClick = { screen ->
+                        navController.navigate(screen)
+                        actions.changeScreen(screen)
+                    }
                 )
             }
         ) { paddingValues -> content(paddingValues) }
