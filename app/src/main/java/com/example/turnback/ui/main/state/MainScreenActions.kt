@@ -1,7 +1,7 @@
 package com.example.turnback.ui.main.state
 
 import com.example.architecture.ScreenActions
-import com.example.turnback.navigation.Screen
+import com.example.navigation.Screen
 import com.example.ui.theme.ThemeState
 
 data class MainScreenActions(

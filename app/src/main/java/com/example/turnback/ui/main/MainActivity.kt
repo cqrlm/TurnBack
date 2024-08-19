@@ -39,8 +39,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.feature.stopwatch.StopwatchScreen
 import com.example.feature.timer.TimerScreen
+import com.example.navigation.Screen
 import com.example.timer.TimerService
-import com.example.turnback.navigation.Screen
 import com.example.turnback.ui.bars.BottomNavBar
 import com.example.turnback.ui.bars.TopBar
 import com.example.turnback.ui.main.state.MainScreenActions
