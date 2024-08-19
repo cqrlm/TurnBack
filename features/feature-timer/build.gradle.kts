@@ -37,14 +37,12 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
 
     implementation(projects.core.architecture)
     implementation(projects.core.ui.theme)
@@ -53,5 +51,6 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.timer)
     implementation(projects.core.timerPreset)
+    implementation(projects.core.navigation)
     implementation(projects.resources)
 }
