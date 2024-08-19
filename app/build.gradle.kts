@@ -96,6 +96,7 @@ dependencies {
     implementation(projects.core.timerPreset)
     implementation(projects.core.timer)
     implementation(projects.core.architecture)
+    implementation(projects.core.navigation)
 
     implementation(projects.features.featureStopwatch)
     implementation(projects.features.featureTimer)
