@@ -42,10 +42,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation(platform(libs.compose.bom.alpha))
-    implementation(libs.ui)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)

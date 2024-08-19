@@ -35,9 +35,10 @@ android {
 dependencies {
 
     implementation(libs.core.ktx)
-    implementation(platform(libs.compose.bom.alpha))
-    implementation(libs.ui)
-    implementation(libs.material3)
+    api(platform(libs.compose.bom.alpha))
+    api(libs.ui)
+    api(libs.material3)
+    api(libs.ui.tooling.preview)
 
     implementation(projects.resources)
 }
