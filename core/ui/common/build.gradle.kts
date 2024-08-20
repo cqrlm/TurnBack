@@ -34,7 +34,6 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
     implementation(platform(libs.compose.bom.alpha))
     implementation(libs.ui)
     implementation(libs.material3)

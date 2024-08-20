@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.room)
     alias(libs.plugins.detekt)
     alias(libs.plugins.baselineprofile)
 }
@@ -54,9 +53,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
     hilt {
         enableAggregatingTask = true
     }
@@ -64,45 +60,18 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.lifecycle.runtime.compose)
-    implementation(libs.lifecycle.viewmodel.compose)
-    implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom.alpha))
     implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.navigation.compose)
-    implementation(libs.room)
-    annotationProcessor(libs.room.compiler)
-    ksp(libs.room.compiler)
-    implementation(libs.room.ktx)
     implementation(libs.androidx.profileinstaller)
     baselineProfile(projects.baselineprofile)
 
-    implementation(projects.core.common)
-    implementation(projects.core.sharedPreferences)
-    implementation(projects.core.stopwatch)
-    implementation(projects.core.ui.theme)
-    implementation(projects.core.ui.common)
     implementation(projects.core.database)
-    implementation(projects.core.data)
-    implementation(projects.core.timerPreset)
     implementation(projects.core.timer)
-    implementation(projects.core.architecture)
-    implementation(projects.core.navigation)
 
-    implementation(projects.features.featureStopwatch)
-    implementation(projects.features.featureTimer)
     implementation(projects.features.featureMain)
-
-    implementation(projects.resources)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

@@ -38,8 +38,7 @@ android {
 
 dependencies {
 
-    implementation(libs.core.ktx)
-    implementation(libs.room)
+    api(libs.room)
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
