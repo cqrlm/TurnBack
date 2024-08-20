@@ -100,6 +100,7 @@ dependencies {
 
     implementation(projects.features.featureStopwatch)
     implementation(projects.features.featureTimer)
+    implementation(projects.features.featureMain)
 
     implementation(projects.resources)
 
