@@ -1,4 +1,4 @@
-package com.example.turnback.ui.bars
+package com.example.feature.main.bars
 
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
@@ -23,10 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.feature.main.state.MainScreenActions
+import com.example.feature.main.state.MainScreenState
 import com.example.resources.R
 import com.example.timerpreset.TimerEditMode
-import com.example.turnback.ui.main.state.MainScreenActions
-import com.example.turnback.ui.main.state.MainScreenState
 import com.example.ui.common.SingleChoiceDialog
 import com.example.ui.theme.ThemeState
 import com.example.ui.theme.TurnBackTheme

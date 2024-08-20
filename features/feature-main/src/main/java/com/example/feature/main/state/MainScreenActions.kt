@@ -1,4 +1,4 @@
-package com.example.turnback.ui.main.state
+package com.example.feature.main.state
 
 import com.example.architecture.ScreenActions
 import com.example.navigation.Screen

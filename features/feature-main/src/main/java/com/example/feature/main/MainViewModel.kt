@@ -1,15 +1,15 @@
-package com.example.turnback.ui.main
+package com.example.feature.main
 
 import androidx.lifecycle.viewModelScope
 import com.example.architecture.ScreenViewModel
+import com.example.feature.main.state.MainScreenActions
+import com.example.feature.main.state.MainScreenState
+import com.example.feature.main.utils.getState
+import com.example.feature.main.utils.saveState
 import com.example.navigation.Screen
 import com.example.sharedpreferences.SharedPreferencesService
 import com.example.timerpreset.TimerEditMode
 import com.example.timerpreset.TimerPresetManager
-import com.example.turnback.ui.main.state.MainScreenActions
-import com.example.turnback.ui.main.state.MainScreenState
-import com.example.turnback.utils.getState
-import com.example.turnback.utils.saveState
 import com.example.ui.theme.ThemeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ class MainViewModel @Inject constructor(
     private val timerPresetManager: TimerPresetManager
 ) : ScreenViewModel<MainScreenState, MainScreenActions>() {
 
-    private val themeStateFlow = MutableStateFlow(sharedPreferencesService.getState<ThemeState>())
+    private val themeStateFlow = MutableStateFlow(sharedPreferencesService.getState())
     private val currentScreenFlow = MutableStateFlow(Screen.START_DESTINATION)
 
     override val screenState: StateFlow<MainScreenState> =

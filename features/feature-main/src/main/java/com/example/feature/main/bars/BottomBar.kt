@@ -1,4 +1,4 @@
-package com.example.turnback.ui.bars
+package com.example.feature.main.bars
 
 import android.content.res.Configuration
 import androidx.compose.material3.Icon
