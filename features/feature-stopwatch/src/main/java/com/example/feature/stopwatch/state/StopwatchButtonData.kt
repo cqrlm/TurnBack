@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.resources.R
 
-data class StopwatchButtonData(
+internal data class StopwatchButtonData(
     @DrawableRes
     val iconId: Int,
     @StringRes

@@ -24,7 +24,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun TimerPresetCreationDialog(
+internal fun TimerPresetCreationDialog(
     dismiss: () -> Unit,
     save: (Duration) -> Unit
 ) {
@@ -42,7 +42,7 @@ fun TimerPresetCreationDialog(
 }
 
 @Composable
-fun TimerPresetEditingDialog(
+internal fun TimerPresetEditingDialog(
     timerPreset: TimerPreset,
     dismiss: () -> Unit,
     update: (TimerPreset) -> Unit

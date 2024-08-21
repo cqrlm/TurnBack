@@ -33,7 +33,7 @@ import com.example.ui.theme.TurnBackTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(
+internal fun TopBar(
     state: MainScreenState,
     actions: MainScreenActions
 ) {

@@ -14,7 +14,7 @@ import com.example.navigation.Screen
 import com.example.ui.theme.TurnBackTheme
 
 @Composable
-fun BottomBar(selected: (Screen) -> Boolean, onClick: (Screen) -> Unit) {
+internal fun BottomBar(selected: (Screen) -> Boolean, onClick: (Screen) -> Unit) {
     val items = remember {
         listOf(Screen.BottomBarItem.Timer, Screen.BottomBarItem.Stopwatch)
     }

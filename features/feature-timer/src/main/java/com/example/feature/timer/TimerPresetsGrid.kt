@@ -33,7 +33,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun TimerPresetsGrid(
+internal fun TimerPresetsGrid(
     timerEditMode: TimerEditMode,
     timerPresets: SnapshotStateList<TimerPreset>,
     actions: TimerScreenActions
