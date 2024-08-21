@@ -39,6 +39,7 @@ dependencies {
     api(platform(libs.compose.bom.alpha))
     api(libs.ui)
     api(libs.material3)
+    api(libs.ui.tooling)
     api(libs.ui.tooling.preview)
 
     implementation(projects.resources)
