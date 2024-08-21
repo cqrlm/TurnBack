@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -45,4 +46,6 @@ dependencies {
     implementation(libs.hilt.android)
 
     implementation(projects.core.sharedPreferences)
+
+    detektPlugins(libs.detekt.formatting)
 }

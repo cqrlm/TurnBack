@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -48,4 +49,6 @@ dependencies {
     implementation(libs.ui)
 
     implementation(projects.core.data)
+
+    detektPlugins(libs.detekt.formatting)
 }

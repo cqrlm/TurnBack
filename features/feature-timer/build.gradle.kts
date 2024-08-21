@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -53,4 +54,6 @@ dependencies {
     implementation(projects.core.timerPreset)
     implementation(projects.core.navigation)
     implementation(projects.resources)
+
+    detektPlugins(libs.detekt.formatting)
 }

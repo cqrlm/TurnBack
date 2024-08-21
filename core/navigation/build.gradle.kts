@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -38,4 +39,6 @@ dependencies {
     api(libs.navigation.compose)
 
     implementation(projects.resources)
+
+    detektPlugins(libs.detekt.formatting)
 }
