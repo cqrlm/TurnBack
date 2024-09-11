@@ -28,7 +28,7 @@ internal fun BottomBar(selected: (Screen) -> Boolean, onClick: (Screen) -> Unit)
                 icon = {
                     Icon(
                         painter = painterResource(screen.iconId),
-                        contentDescription = screen.route
+                        contentDescription = stringResource(id = screen.titleId)
                     )
                 }
             )
