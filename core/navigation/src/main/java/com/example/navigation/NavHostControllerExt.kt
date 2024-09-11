@@ -4,8 +4,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
-fun NavHostController.navigate(screen: Screen) {
-    navigate(screen.route) {
+fun NavHostController.navigateToScreen(screen: Screen) {
+    navigate(screen) {
         // Pop up to the start destination of the graph to
         // avoid building up a large stack of destinations
         // on the back stack as users select items
@@ -22,5 +22,5 @@ fun NavHostController.navigate(screen: Screen) {
 
 fun NavHostController.isSelected(screen: Screen): Boolean {
     val currentDestination = currentBackStackEntry?.destination
-    return currentDestination?.hierarchy?.any { it.route == screen.route } == true
+    return currentDestination?.hierarchy?.any { it == screen } == true
 }

@@ -3,20 +3,26 @@ package com.example.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.resources.R
+import kotlinx.serialization.Serializable
 
-sealed class Screen(open val route: String, open val titleId: Int? = null) {
+@Serializable
+sealed interface Screen {
 
+    val titleId: Int?
+
+    @Serializable
     sealed class BottomBarItem(
-        override val route: String,
         @StringRes
         override val titleId: Int,
         @DrawableRes
         val iconId: Int
-    ) : Screen(route) {
+    ) : Screen {
 
-        data object Timer : BottomBarItem("timer", R.string.timer, R.drawable.ic_stopwatch)
+        @Serializable
+        data object Timer : BottomBarItem(R.string.timer, R.drawable.ic_stopwatch)
 
-        data object Stopwatch : BottomBarItem("stopwatch", R.string.stopwatch, R.drawable.ic_timer)
+        @Serializable
+        data object Stopwatch : BottomBarItem(R.string.stopwatch, R.drawable.ic_timer)
     }
 
     companion object {
