@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -37,6 +38,8 @@ dependencies {
 
     api(libs.hilt.navigation.compose)
     api(libs.navigation.compose)
+
+    implementation(libs.serialization.json)
 
     implementation(projects.resources)
 
