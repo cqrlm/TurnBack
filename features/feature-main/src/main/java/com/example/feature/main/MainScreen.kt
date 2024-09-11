@@ -27,7 +27,7 @@ import com.example.feature.stopwatch.StopwatchScreen
 import com.example.feature.timer.TimerScreen
 import com.example.navigation.Screen
 import com.example.navigation.isSelected
-import com.example.navigation.navigate
+import com.example.navigation.navigateToScreen
 import com.example.timer.TimerService
 import com.example.ui.theme.TurnBackTheme
 
@@ -49,14 +49,14 @@ fun MainScreen(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Screen.START_DESTINATION.route,
+            startDestination = Screen.START_DESTINATION,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            composable(Screen.BottomBarItem.Timer.route) {
+            composable<Screen.BottomBarItem.Timer> {
                 timerService?.run {
                     val timerServiceState by timerServiceState.collectAsState()
 
@@ -67,7 +67,7 @@ fun MainScreen(
                 }
             }
 
-            composable(Screen.BottomBarItem.Stopwatch.route) { StopwatchScreen() }
+            composable<Screen.BottomBarItem.Stopwatch> { StopwatchScreen() }
         }
     }
 }
@@ -91,7 +91,7 @@ private fun MainContent(
                 BottomBar(
                     selected = { screen -> navController.isSelected(screen) },
                     onClick = { screen ->
-                        navController.navigate(screen)
+                        navController.navigateToScreen(screen)
                         actions.changeScreen(screen)
                     }
                 )
