@@ -45,7 +45,7 @@ dependencies {
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
-    implementation(platform(libs.compose.bom.alpha))
+    implementation(platform(libs.compose.bom))
     implementation(libs.ui)
 
     implementation(projects.core.data)

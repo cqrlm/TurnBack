@@ -36,7 +36,7 @@ android {
 dependencies {
 
     implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(platform(libs.compose.bom.alpha))
+    implementation(platform(libs.compose.bom))
     implementation(libs.ui)
 
     detektPlugins(libs.detekt.formatting)
