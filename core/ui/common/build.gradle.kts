@@ -35,10 +35,7 @@ android {
 
 dependencies {
 
-    implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.material3)
-    implementation(libs.ui.tooling.preview)
+    implementation(projects.core.ui.theme)
 
     detektPlugins(libs.detekt.formatting)
 }
